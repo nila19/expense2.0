@@ -1,0 +1,18 @@
+{
+  "name": "expense-api",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Node application",
+  "keywords": [],
+  "dependencies": {},
+  "scripts": {
+    "dev": "node api/bin/server.js --region=dev | bunyan",
+    "nodemon": "nodemon api/bin/server.js --region=dev | bunyan"
+  },
+  "main": "bin/server.js",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "eslint": "^6.8.0"
+  }
+}
