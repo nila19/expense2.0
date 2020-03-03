@@ -49,27 +49,27 @@ const watchCounter = () => {
   }, 1000);
 };
 
-async function take0() {
-  // Harvesting
-  const results = [];
-  for (const argument of listOfArguments) {
-    const index = await asyncOperation(argument);
-    results.push(index);
-  }
-  return results;
-}
+// async function take0() {
+//   // Harvesting
+//   const results = [];
+//   for (const argument of listOfArguments) {
+//     const index = await asyncOperation(argument);
+//     results.push(index);
+//   }
+//   return results;
+// }
 
 async function take1() {
   const results = listOfArguments.map(async e => await asyncOperation(e));
   return results;
 }
 
-async function take2() {
-  // creating the promise will start executing the promise immediately.
-  const promises = listOfArguments.map(e => asyncOperation(e));
-  const results = promises.map(async e => await e);
-  return results;
-}
+// async function take2() {
+//   // creating the promise will start executing the promise immediately.
+//   const promises = listOfArguments.map(e => asyncOperation(e));
+//   const results = promises.map(async e => await e);
+//   return results;
+// }
 
 watchCounter();
 // take0();
