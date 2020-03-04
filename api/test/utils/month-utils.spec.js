@@ -26,9 +26,10 @@ describe('utils.month-utils', function() {
   describe('buildMonthsList', function() {
     it('should add current month with multiple years and sort them..', function(done) {
       const input = ['2015-03-21', '2015-02-01', '2016-04-15'];
+      // note: the first 2 dates should be based on current month when the test is run.
       const output = [
-        { id: '2017-12-31', bills: null, aggregate: true, name: '2017', seq: 201713, year: 2017 },
-        { id: '2017-06-01', bills: null, aggregate: false, name: 'Jun-17', seq: 201706, year: 2017 },
+        { id: '2020-12-31', bills: null, aggregate: true, name: '2020', seq: 202013, year: 2020 },
+        { id: '2020-03-01', bills: null, aggregate: false, name: 'Mar-20', seq: 202003, year: 2020 },
         { id: '2016-12-31', bills: null, aggregate: true, name: '2016', seq: 201613, year: 2016 },
         { id: '2016-04-01', bills: null, aggregate: false, name: 'Apr-16', seq: 201604, year: 2016 },
         { id: '2015-12-31', bills: null, aggregate: true, name: '2015', seq: 201513, year: 2015 },

@@ -56,6 +56,18 @@
     "mocha": "^7.1.0",
     "nodemon": "^2.0.2",
     "nyc": "^15.0.0",
+    "reify": "^0.20.12",
     "sinon": "^9.0.0"
+  },
+  "mocha": {
+    "diff": true,
+    "extension": [
+      "js"
+    ],
+    "reporter": "spec",
+    "slow": 75,
+    "timeout": 2000,
+    "ui": "bdd",
+    "recursive": true
   }
 }

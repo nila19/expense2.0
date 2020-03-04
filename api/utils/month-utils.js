@@ -5,7 +5,7 @@ import { waterfall } from 'async';
 import _ from 'lodash';
 
 import { logErr } from './common-utils';
-import { YYYY, MMMYY, YYYYMM, YYYYMMDD } from '../config/formats';
+import format from '../config/formats';
 
 // utility methods to generate appropriate json..
 export const getMonth = (date, year = false) => {
@@ -13,9 +13,9 @@ export const getMonth = (date, year = false) => {
     id: date,
     bills: null,
     aggregate: year,
-    name: moment(date).format(year ? YYYY : MMMYY),
-    seq: _.toNumber(moment(date).format(YYYYMM)) + (year ? 1 : 0),
-    year: _.toNumber(moment(date).format(YYYY))
+    name: moment(date).format(year ? format.YYYY : format.MMMYY),
+    seq: _.toNumber(moment(date).format(format.YYYYMM)) + (year ? 1 : 0),
+    year: _.toNumber(moment(date).format(format.YYYY))
   };
 };
 
@@ -37,19 +37,19 @@ const buildMonths = (dates, next) => {
   const months = dates.map(date => {
     const month = moment(date)
       .startOf('month')
-      .format(YYYYMMDD);
-    getMonth(month);
+      .format(format.YYYYMMDD);
+    return getMonth(month);
   });
   return next(null, months);
 };
 
 // step 2.2 - check if current month is in the list, if not add it.
 const addCurrentMonth = (months, next) => {
-  const seq = getMonth(moment().format(YYYYMMDD)).seq;
+  const seq = getMonth(moment().format(format.YYYYMMDD)).seq;
   if (!_.find(months, ['seq', seq])) {
     const month = moment()
       .startOf('month')
-      .format(YYYYMMDD);
+      .format(format.YYYYMMDD);
     months.push(getMonth(month));
   }
   return next(null, months);
@@ -60,7 +60,7 @@ const buildYear = month => {
     .year(month.year)
     .endOf('year')
     .startOf('day')
-    .format(YYYYMMDD);
+    .format(format.YYYYMMDD);
   return getMonth(year, true);
 };
 
