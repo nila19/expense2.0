@@ -1,50 +1,52 @@
 'use strict';
 
-import { tally } from '../services/tally-service';
+import { tallyAccount as _tallyAccount } from '../services/tally-service';
 import { addExpense as _addExpense } from '../services/add-service';
 import { deleteExpense as _deleteExpense } from '../services/delete-service';
 import { modifyExpense as _modifyExpense } from '../services/modify-service';
 import { payBill as _payBill } from '../services/bill-pay-service';
 import { swapExpenses as _swapExpenses } from '../services/swap-service';
-import { buildParm } from '../utils/common-utils';
-import { error } from '../config/config';
 
-export const tallyAccount = (req, resp, acctId) => {
+export const tallyAccount = async (req, resp, acctId) => {
   const parms = buildParm(req);
-  parms.acctId = acctId;
-  tally(parms, err => {
-    return err ? resp.json({ code: error, msg: err.message }) : resp.json({ code: 0 });
-  });
+  await _tallyAccount({ ...parms, acctId: acctId });
+  return resp.json({ code: 0 });
 };
 
-export const addExpense = (req, resp) => {
-  _addExpense(buildParm(req), req.body, (err, trans) => {
-    return err ? resp.json({ code: error, msg: err.message }) : resp.json({ code: 0, data: trans });
-  });
-};
-
-export const modifyExpense = (req, resp) => {
-  _modifyExpense(buildParm(req), req.body, err => {
-    return err ? resp.json({ code: error, msg: err.message }) : resp.json({ code: 0 });
-  });
-};
-
-export const deleteExpense = (req, resp, transId) => {
+export const addExpense = async (req, resp) => {
   const parms = buildParm(req);
-  parms.transId = transId;
-  _deleteExpense(parms, err => {
-    return err ? resp.json({ code: error, msg: err.message }) : resp.json({ code: 0 });
-  });
+  const trans = await _addExpense(parms, req.body);
+  return resp.json({ code: 0, data: trans });
 };
 
-export const swapExpenses = (req, resp) => {
-  _swapExpenses(buildParm(req), req.body, err => {
-    return err ? resp.json({ code: error, msg: err.message }) : resp.json({ code: 0 });
-  });
+export const modifyExpense = async (req, resp) => {
+  const parms = buildParm(req);
+  await _modifyExpense(parms, req.body);
+  return resp.json({ code: 0 });
 };
 
-export const payBill = (req, resp) => {
-  _payBill(buildParm(req), req.body, (err, trans) => {
-    return err ? resp.json({ code: error, msg: err.message }) : resp.json({ code: 0, data: trans });
-  });
+export const deleteExpense = async (req, resp, transId) => {
+  const parms = buildParm(req);
+  await _deleteExpense({ ...parms, transId: transId });
+  return resp.json({ code: 0 });
+};
+
+export const swapExpenses = async (req, resp) => {
+  const parms = buildParm(req);
+  await _swapExpenses(parms, req.body);
+  return resp.json({ code: 0 });
+};
+
+export const payBill = async (req, resp) => {
+  const parms = buildParm(req);
+  const trans = await _payBill(parms, req.body);
+  return resp.json({ code: 0, data: trans });
+};
+
+// utility method
+const buildParm = req => {
+  return {
+    db: req.app.locals.db,
+    log: req.app.locals.log
+  };
 };

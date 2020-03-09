@@ -6,6 +6,7 @@ env:
   mocha: true
 extends:
   - 'eslint:recommended'
+  - 'google'
   # - "plugin:@typescript-eslint/eslint-recommended"
 globals:
   Atomics: readonly

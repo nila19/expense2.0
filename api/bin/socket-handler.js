@@ -8,11 +8,11 @@ export const PIPE = {
 
 let app = null;
 
-export const onConnect = function(ap) {
-  app = ap;
+export const onConnect = _app => {
+  app = _app;
 };
 
-export const publish = function(pipe, data) {
+export const publish = (pipe, data) => {
   if (app && app.locals) {
     app.locals.io.emit(pipe, { code: 0, data: data });
   }

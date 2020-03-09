@@ -5,7 +5,7 @@ import { Router } from 'express';
 
 import { inject404 } from './error-route';
 import {
-  canConnect,
+  doConnect,
   getAllCities,
   getDefaultCity,
   getCityById,
@@ -29,7 +29,7 @@ router.all('*', (req, res, next) => {
 });
 
 router.get('/connect', (req, res) => {
-  canConnect(req, res);
+  doConnect(req, res);
 });
 
 router.get('/cities', (req, res) => {

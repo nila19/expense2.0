@@ -1,36 +1,27 @@
 'use strict';
 
 import moment from 'moment';
-import async from 'async';
 
 import { accounts, sequences, tallyhistories, transactions } from '../models';
 
-import { checkCityEditable, logErr } from '../utils/common-utils';
+import { checkCityEditable } from '../utils/common-utils';
 import format from '../config/formats';
 
-export const tally = function(parms, next) {
+export const tallyAccount = async parms => {
   const tallyDt = moment().format(format.YYYYMMDDHHmmss);
-  let acct = null;
-  accounts
-    .findById(parms.db, parms.acctId)
-    .then(account => {
-      acct = account;
-      return checkCityEditable(parms.db, acct.cityId);
-    })
-    .then(() => accounts.update(parms.db, { id: acct.id }, { $set: { tallyBalance: acct.balance, tallyDt: tallyDt } }))
-    .then(() => sequences.getNextSeq(parms.db, { table: 'tallyhistories', cityId: acct.cityId }))
-    .then(seq => tallyhistories.insert(parms.db, buildTallyHistory(seq, acct, tallyDt)))
-    .then(() => transactions.findForAcct(parms.db, acct.cityId, acct.id))
-    .then(trans => {
-      async.each(trans, function(tran, cb) {
-        return updateTran(parms.db, tran, tallyDt, cb);
-      });
-    })
-    .then(() => next())
-    .catch(err => {
-      logErr(parms.log, err);
-      return next(err);
-    });
+
+  const account = await accounts.findById(parms.db, parms.acctId);
+  await checkCityEditable(parms.db, account.cityId);
+  await accounts.update(parms.db, { id: account.id }, { $set: { tallyBalance: account.balance, tallyDt: tallyDt } });
+  const seq = await sequences.getNextSeq(parms.db, { table: 'tallyhistories', cityId: account.cityId });
+  await tallyhistories.insert(parms.db, buildTallyHistory(seq, account, tallyDt));
+  const trans = await transactions.findForAcct(parms.db, account.cityId, account.id);
+
+  for (const tran of trans) {
+    if (!tran.tallied) {
+      await transactions.update(parms.db, { id: tran.id }, { $set: { tallied: true, tallyDt: tallyDt } });
+    }
+  }
 };
 
 const buildTallyHistory = (seq, ac, tallyDt) => {
@@ -41,14 +32,4 @@ const buildTallyHistory = (seq, ac, tallyDt) => {
     tallyDt: tallyDt,
     balance: ac.balance
   };
-};
-
-const updateTran = (db, tran, tallyDt, next) => {
-  if (tran.tallied) {
-    return next();
-  }
-  transactions
-    .update(db, { id: tran.id }, { $set: { tallied: true, tallyDt: tallyDt } })
-    .then(() => next())
-    .catch(err => next(err));
 };

@@ -76,7 +76,7 @@ class Bills extends Model {
   }
 
   // utility method
-  getName(acct, bill) {
+  buildBillName(acct, bill) {
     return bill.id ? acct.name + ' : ' + bill.billDt + ' #' + bill.id : acct.name + ' #0';
   }
 }

@@ -19,8 +19,9 @@ import { cache } from '../config/config';
 import { routes } from '../config/route-config';
 import { connect } from '../config/mongodb-config';
 import logger from '../utils/logger';
+import { errorHandler } from './handler';
 
-// TODO: make it run
+// * TODO: make it run
 // TODO: change to async/await
 // TODO: change to mongoose
 // TODO: Redo front-end with React
@@ -67,5 +68,8 @@ app.use(favicon(faviconPath));
 
 // inject application routes.
 routes(app);
+
+// send error json
+app.use(errorHandler);
 
 export default app;

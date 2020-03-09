@@ -5,11 +5,11 @@
   "description": "Node application",
   "keywords": [],
   "scripts": {
-    "start": "node bin/server.js --region=dev | bunyan",
+    "start": "babel-node bin/server.js --region=dev | bunyan",
     "babel-node": "babel-node",
     "nodemon": "nodemon --exec npm run babel-node bin/server.js --region=dev | bunyan",
     "test": "mocha --require @babel/register --debug-brk",
-    "debug": "mocha --require @babel/register",
+    "debug": "babel-node --inspect-brk bin/server.js --region=dev | bunyan",
     "istanbul": "nyc mocha"
   },
   "dependencies": {

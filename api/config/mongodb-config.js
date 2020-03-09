@@ -3,7 +3,7 @@
 import monk from 'monk';
 
 import config from './config';
-import { execute } from '../services/bill-closer-service';
+import { executeBillClosure } from '../services/bill-closer-service';
 
 let okToLog = true;
 let billClosed = false;
@@ -40,7 +40,7 @@ const setDatabase = (err, db, app) => {
   app.locals.db = db;
   // ensure billCloser runs only one time for every server start.
   if (!err && config.billCloser && !billClosed) {
-    execute({ db: app.locals.db, log: app.locals.log });
+    executeBillClosure({ db: app.locals.db, log: app.locals.log });
     billClosed = true;
   }
 };
