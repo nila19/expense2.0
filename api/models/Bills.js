@@ -2,7 +2,7 @@
 
 import Model from './Model';
 
-import { publish as _publish, PIPE } from '../bin/socket-handler';
+import { publish, PIPE } from '../bin/socket-handler';
 
 const schema = {
   id: 'int not-null primarykey autoincrement',
@@ -54,30 +54,25 @@ class Bills extends Model {
 
   findOneAndUpdate(db, filter, mod, options) {
     const promise = super.findOneAndUpdate(db, filter, mod, options);
-    this.publish(db, filter.id, promise);
+    this._publish(db, filter.id, promise);
     return promise;
   }
 
   update(db, filter, mod, options) {
     const promise = super.update(db, filter, mod, options);
-    this.publish(db, filter.id, promise);
+    this._publish(db, filter.id, promise);
     return promise;
   }
 
-  // utility method
-  publish(db, id, promise) {
-    promise
-      .then(() => {
-        return this.findById(db, id);
-      })
-      .then(bill => {
-        _publish(PIPE.BILL, bill);
-      });
+  buildBillName(acct, bill) {
+    return bill.id ? acct.name + ' : ' + bill.billDt + ' #' + bill.id : acct.name + ' #0';
   }
 
   // utility method
-  buildBillName(acct, bill) {
-    return bill.id ? acct.name + ' : ' + bill.billDt + ' #' + bill.id : acct.name + ' #0';
+  async _publish(db, id, promise) {
+    await promise;
+    const bill = await this.findById(db, id);
+    publish(PIPE.BILL, bill);
   }
 }
 

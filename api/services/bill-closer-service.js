@@ -7,7 +7,6 @@ import { accounts, bills, cities, sequences, transactions } from '../models';
 
 import format from '../config/formats';
 
-// it does not have a callback or does not need to return a promise.
 export const executeBillClosure = async parms => {
   const stats = { closed: 0, opened: 0 };
   const city = await cities.findDefault(parms.db);

@@ -48,7 +48,7 @@ const sortMonths = months => {
 };
 
 // utility methods to generate appropriate json..
-const buildMonth = (date, year = false) => {
+export const buildMonth = (date, year = false) => {
   return {
     id: date,
     bills: null,

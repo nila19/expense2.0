@@ -22,7 +22,7 @@ import logger from '../utils/logger';
 import { errorHandler } from './handler';
 
 // * TODO: make it run
-// TODO: change to async/await
+// * TODO: change to async/await
 // TODO: change to mongoose
 // TODO: Redo front-end with React
 // TODO: Use Docker/Kube
@@ -35,11 +35,11 @@ const ONE_YEAR = 31536000;
 
 const app = express();
 
-// mongodb connection
-connect(app);
-
 // store logger in app context for use from other components.
 app.locals.log = logger;
+
+// mongodb connection
+connect(app);
 
 // serving static files
 const staticPath = join(__dirname, '../public');

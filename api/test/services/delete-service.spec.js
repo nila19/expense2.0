@@ -96,90 +96,72 @@ describe('services.deleteService', () => {
     // case #0
     describe('delete expense for an inactive city', () => {
       const transId = 3169;
-      let deleted = false;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
         bill: null
       };
 
-      before('fetch trans details', async () => {
-        await fetchData(db, transId, data);
+      before('fetch trans details', done => {
+        fetchData(db, transId, data)
+          .then(() => done())
+          .catch(err => done(err));
       });
       it('should throw an error for delete transaction with inactive city', async () => {
         try {
           await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
-          deleted = true;
           expect.fail('ok', 'error', 'Exception not thrown in the delete expense with inactive city');
+          await reInsertTrans(db, data);
         } catch (err) {
           expect(err.message).to.equal('City is not active.');
-        }
-      });
-      after('add the deleted expense', done => {
-        if (!deleted) {
-          done();
-        } else {
-          reInsertTrans(db, data, done);
         }
       });
     });
     // case #1
     describe('delete expense - inactive account', () => {
       const transId = 7931;
-      let deleted = false;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
         bill: null
       };
 
-      before('fetch trans details', async () => {
-        await fetchData(db, transId, data);
+      before('fetch trans details', done => {
+        fetchData(db, transId, data)
+          .then(() => done())
+          .catch(err => done(err));
       });
       it('should throw an error for delete transaction with inactive account', async () => {
         try {
           await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
-          deleted = true;
           expect.fail('ok', 'error', 'Exception not thrown in the delete expense with inactive account.');
+          await reInsertTrans(db, data);
         } catch (err) {
           expect(err.message).to.equal('Change invalid. Account(s) involved are not active...');
-        }
-      });
-      after('add the deleted expense', done => {
-        if (!deleted) {
-          done();
-        } else {
-          reInsertTrans(db, data, done);
         }
       });
     });
     // case #2
     describe('delete expense - one account inactive', () => {
       const transId = 7838;
-      let deleted = false;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
         bill: null
       };
 
-      before('fetch trans details', async () => {
-        await fetchData(db, transId, data);
+      before('fetch trans details', done => {
+        fetchData(db, transId, data)
+          .then(() => done())
+          .catch(err => done(err));
       });
       it('should throw an error for delete transaction with one inactive account', async () => {
         try {
           await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
-          deleted = true;
           expect.fail('ok', 'error', 'Exception not thrown in the delete expense with one inactive account.');
+          await reInsertTrans(db, data);
         } catch (err) {
           expect(err.message).to.equal('Change invalid. Account(s) involved are not active...');
-        }
-      });
-      after('add the deleted expense', done => {
-        if (!deleted) {
-          done();
-        } else {
-          reInsertTrans(db, data, done);
         }
       });
     });
@@ -215,7 +197,6 @@ describe('services.deleteService', () => {
     // case #4
     describe('delete expense - negative amount', () => {
       const transId = 5611;
-      let deleted = false;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
@@ -244,7 +225,6 @@ describe('services.deleteService', () => {
     // case #6
     describe('delete expense - open bill', () => {
       const transId = 6983;
-      let deleted = false;
       const data = {
         trans: null,
         accounts: { from: null, to: null },

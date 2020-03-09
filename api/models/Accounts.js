@@ -1,11 +1,9 @@
 'use strict';
 
-import Promise from 'bluebird';
-
 import Model from './Model';
 import Bills from '../models/Bills';
 
-import { publish as _publish, PIPE } from '../bin/socket-handler';
+import { publish, PIPE } from '../bin/socket-handler';
 
 const bills = Bills();
 
@@ -36,27 +34,13 @@ class Accounts extends Model {
     this.schema = schema;
   }
 
-  findForCity(db, cityId) {
-    const vm = this;
-    return new Promise((resolve, reject) => {
-      const promises = [];
-      let accts = null;
-      vm.find(db, { cityId: cityId, active: true }, { fields: { _id: 0 }, sort: { seq: 1 } })
-        .then(acs => {
-          accts = acs;
-          accts.forEach(acct => {
-            promises.push(vm.injectLastBill(db, acct));
-            promises.push(vm.injectOpenBill(db, acct));
-          });
-          return Promise.all(promises);
-        })
-        .then(() => {
-          return resolve(accts);
-        })
-        .catch(err => {
-          return reject(err);
-        });
-    });
+  async findForCity(db, cityId) {
+    const accts = await this.find(db, { cityId: cityId, active: true }, { fields: { _id: 0 }, sort: { seq: 1 } });
+    for (const acct of accts) {
+      await this._injectLastBill(db, acct);
+      await this._injectOpenBill(db, acct);
+    }
+    return accts;
   }
 
   findForCityThin(db, cityId) {
@@ -76,75 +60,34 @@ class Accounts extends Model {
 
   update(db, filter, mod, options) {
     const promise = super.update(db, filter, mod, options);
-    this.publish(db, filter.id, promise);
+    this._publish(db, filter.id, promise);
     return promise;
   }
 
-  findById(db, id) {
-    const vm = this;
-    return new Promise((resolve, reject) => {
-      let acct = null;
-      vm.findOne(db, { id: id })
-        .then(ac => {
-          acct = ac;
-          const promises = [];
-          promises.push(vm.injectLastBill(db, acct));
-          promises.push(vm.injectOpenBill(db, acct));
-          return Promise.all(promises);
-        })
-        .then(() => {
-          return resolve(acct);
-        })
-        .catch(err => {
-          return reject(err);
-        });
-    });
-  }
-
-  // utility method
-  publish(db, id, promise) {
-    promise
-      .then(() => {
-        return this.findById(db, id);
-      })
-      .then(acc => {
-        _publish(PIPE.ACCOUNT, acc);
-      });
+  async findById(db, id) {
+    const acct = await this.findOne(db, { id: id });
+    await this._injectLastBill(db, acct);
+    await this._injectOpenBill(db, acct);
+    return acct;
   }
 
   // internal methods
-  injectLastBill(db, acct) {
-    return new Promise((resolve, reject) => {
-      if (!acct.billed || !acct.bills.last || !acct.bills.last.id) {
-        return resolve(acct);
-      }
-      bills
-        .findById(db, acct.bills.last.id)
-        .then(bill => {
-          acct.bills.last = bill;
-          return resolve(acct);
-        })
-        .catch(err => {
-          return reject(err);
-        });
-    });
+  async _publish(db, id, promise) {
+    await promise;
+    const acct = await this.findById(db, id);
+    publish(PIPE.ACCOUNT, acct);
   }
 
-  injectOpenBill(db, acct) {
-    return new Promise((resolve, reject) => {
-      if (!acct.billed || !acct.bills.open || !acct.bills.open.id) {
-        return resolve(acct);
-      }
-      bills
-        .findById(db, acct.bills.open.id)
-        .then(bill => {
-          acct.bills.open = bill;
-          return resolve(acct);
-        })
-        .catch(err => {
-          return reject(err);
-        });
-    });
+  async _injectLastBill(db, acct) {
+    if (acct.billed && acct.bills.last && acct.bills.last.id) {
+      acct.bills.last = await bills.findById(db, acct.bills.last.id);
+    }
+  }
+
+  async _injectOpenBill(db, acct) {
+    if (acct.billed && acct.bills.open && acct.bills.open.id) {
+      acct.bills.open = await bills.findById(db, acct.bills.open.id);
+    }
   }
 }
 

@@ -2,7 +2,7 @@
 
 'use strict';
 import { expect } from 'chai';
-import { getMonth, buildMonthsList } from '../../utils/month-utils';
+import { buildMonth, buildMonthsList } from '../../utils/month-utils';
 
 // const chaiAsPromised = require('chai-as-promised');
 
@@ -13,14 +13,12 @@ describe('utils.month-utils', function() {
   describe('getMonth', function() {
     it('should be equal to month obj', function() {
       const result = { id: '2017-02-01', bills: null, aggregate: false, name: 'Feb-17', seq: 201702, year: 2017 };
-
       // expect(JSON.stringify(mu.getMonth('2017-02-01', false))).to.equal(JSON.stringify(result));
-      expect(getMonth('2017-02-01', false)).to.deep.equal(result);
+      expect(buildMonth('2017-02-01', false)).to.deep.equal(result);
     });
     it('should be equal to year obj', function() {
       const result = { id: '2016-12-31', bills: null, aggregate: true, name: '2016', seq: 201613, year: 2016 };
-
-      expect(getMonth('2016-12-31', true)).to.deep.equal(result);
+      expect(buildMonth('2016-12-31', true)).to.deep.equal(result);
     });
   });
   describe('buildMonthsList', function() {
