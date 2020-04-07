@@ -2,7 +2,6 @@
 
 import _ from 'lodash';
 import moment from 'moment';
-import string from 'sugar/string';
 
 import { accounts, bills, transactions } from '../models';
 
@@ -86,14 +85,14 @@ const adjustCash = async (parms, data, trans, finImpact) => {
     from: trans.accounts.to,
     to: trans.accounts.from,
     amount: trans.amount,
-    seq: trans.seq
+    seq: trans.seq,
   });
   await transferCash({
     db: parms.db,
     from: data.accounts.from,
     to: data.accounts.to,
     amount: data.amount,
-    seq: data.seq
+    seq: data.seq,
   });
 };
 
@@ -109,16 +108,14 @@ const copyTransData = (data, trans) => {
     trans.bill = {
       id: data.bill.id,
       name: data.bill.name,
-      account: { id: data.accounts.from.id, name: data.accounts.from.name }
+      account: { id: data.accounts.from.id, name: data.accounts.from.name },
     };
   }
-  trans.description = string.String(data.description.name || data.description).capitalize(false, true).raw;
+  trans.description = _.startCase(_.lowerCase(data.description.name || data.description));
   trans.amount = _.toNumber(data.amount);
   if (trans.transDt !== data.transDt) {
     trans.transDt = moment(data.transDt, format.DDMMMYYYY).format(format.YYYYMMDD);
-    trans.transMonth = moment(data.transDt, format.DDMMMYYYY)
-      .date(1)
-      .format(format.YYYYMMDD);
+    trans.transMonth = moment(data.transDt, format.DDMMMYYYY).date(1).format(format.YYYYMMDD);
   }
   trans.adhoc = data.adhoc;
   trans.adjust = data.adjust;
@@ -131,7 +128,7 @@ const copyTransData = (data, trans) => {
       id: data.accounts.from.id,
       name: data.accounts.from.name,
       balanceBf: trans.accounts.from.balanceBf,
-      balanceAf: trans.accounts.from.balanceAf
+      balanceAf: trans.accounts.from.balanceAf,
     };
   } else {
     trans.accounts.from = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
@@ -141,7 +138,7 @@ const copyTransData = (data, trans) => {
       id: data.accounts.to.id,
       name: data.accounts.to.name,
       balanceBf: trans.accounts.to.balanceBf,
-      balanceAf: trans.accounts.to.balanceAf
+      balanceAf: trans.accounts.to.balanceAf,
     };
   } else {
     trans.accounts.to = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };

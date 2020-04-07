@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: app.Dockerfile
+  #   image: expense_web
+  #   environment:
+  #     - MONGO_URL=mongodb/expense-test
+  #     - LOG_PATH=/logs2.0
+  #     - PORT=8000
+  #   volumes:
+  #     - 'C:/Java/logs:/logs'
+  #   ports:
+  #     - 8000:8000
+  #   networks:
+  #     - expensetestnet
+  #   depends_on:
+  #     - mongodb
+  mongodb:
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    image: expense_test_db
+    volumes:
+      - 'mongotestdata:/data/db'
+      # - '/mnt/c/Java/mongodb/data:/data/db'
+    ports:
+      - 27017:27017
+    expose:
+      - '27017'
+    networks:
+      - expensetestnet
+  # this is commented out, just to disable.
+  # mongo-express:
+  #   image: mongo-express
+  #   links:
+  #     - mongodb:mongo
+  #   ports:
+  #     - 8081:8081
+  #   networks:
+  #     - expensenet
+
+networks:
+  expensetestnet:
+
+volumes:
+  mongotestdata:

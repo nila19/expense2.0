@@ -2,7 +2,6 @@
 
 import moment from 'moment';
 import numeral from 'numeral';
-import string from 'sugar/string';
 
 import { accounts, bills, sequences, transactions } from '../models/index';
 
@@ -23,7 +22,7 @@ export const addExpense = async (parms, data) => {
     from: data.accounts.from,
     to: data.accounts.to,
     amount: tran.amount,
-    seq: 0
+    seq: 0,
   });
   // re-fetch from DB to get the revised balances after cash transfer
   await loadAccountsInfo(parms, data);
@@ -33,8 +32,8 @@ export const addExpense = async (parms, data) => {
     {
       $set: {
         'accounts.from.balanceAf': data.accounts.from.balance,
-        'accounts.to.balanceAf': data.accounts.to.balance
-      }
+        'accounts.to.balanceAf': data.accounts.to.balance,
+      },
     }
   );
   return tran;
@@ -47,31 +46,27 @@ const loadAccountsInfo = async (parms, data) => {
 };
 
 // step 2: copy transaction data from input to transaction record.
-const copyTransData = data => {
+const copyTransData = (data) => {
   const trans = {
     id: 0,
     cityId: data.city.id,
     entryDt: moment().format(format.YYYYMMDDHHmmss),
-    entryMonth: moment()
-      .date(1)
-      .format(format.YYYYMMDD),
+    entryMonth: moment().date(1).format(format.YYYYMMDD),
     category: { id: 0, name: ' ~ ' },
-    description: string.String(data.description.name || data.description).capitalize(false, true).raw,
+    description: _.startCase(_.lowerCase(data.description.name || data.description)),
     amount: numeral(data.amount).value(),
     transDt: moment(data.transDt, format.DDMMMYYYY).format(format.YYYYMMDD),
-    transMonth: moment(data.transDt, format.DDMMMYYYY)
-      .date(1)
-      .format(format.YYYYMMDD),
+    transMonth: moment(data.transDt, format.DDMMMYYYY).date(1).format(format.YYYYMMDD),
     seq: 0,
     accounts: {
       from: { id: 0, name: '', balanceBf: 0, balanceAf: 0 },
-      to: { id: 0, name: '', balanceBf: 0, balanceAf: 0 }
+      to: { id: 0, name: '', balanceBf: 0, balanceAf: 0 },
     },
     adhoc: data.adhoc,
     adjust: data.adjust,
     status: true,
     tallied: false,
-    tallyDt: null
+    tallyDt: null,
   };
   if (data.category) {
     trans.category.id = data.category.id;
@@ -89,13 +84,13 @@ const copyAccountsData = (data, trans) => {
       id: from.id,
       name: from.name,
       balanceBf: from.balance,
-      balanceAf: from.balance
+      balanceAf: from.balance,
     };
     if (from.billed && from.bills && from.bills.open) {
       trans.bill = {
         id: from.bills.open.id,
         account: { id: from.id, name: from.name },
-        billDt: from.bills.open.billDt
+        billDt: from.bills.open.billDt,
       };
       trans.bill.name = bills.buildBillName(from, trans.bill);
     }
@@ -105,7 +100,7 @@ const copyAccountsData = (data, trans) => {
       id: to.id,
       name: to.name,
       balanceBf: to.balance,
-      balanceAf: to.balance
+      balanceAf: to.balance,
     };
   }
 };
