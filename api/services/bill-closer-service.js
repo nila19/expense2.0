@@ -110,6 +110,7 @@ const buildEmptyBill = (city, ac, seq) => {
     closed: false,
     amount: 0,
     balance: 0,
+    payments: [],
   };
   bill.name = bills.buildBillName(bill.account, bill);
   return bill;

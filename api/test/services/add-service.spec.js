@@ -43,7 +43,7 @@ describe('services.addService', () => {
       done();
     });
   });
-  describe('addExpensePromise', () => {
+  describe('addExpense', () => {
     // case #0
     describe('add expense with an inactive city', () => {
       const acctId = 68;
@@ -82,7 +82,7 @@ describe('services.addService', () => {
         city: { id: 20140301 },
         adjust: false,
         adhoc: false,
-        category: { id: 188 },
+        category: { id: 188, name: 'House ~ School' },
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '15-May-2017',
@@ -133,7 +133,7 @@ describe('services.addService', () => {
         city: { id: 20140301 },
         adjust: false,
         adhoc: false,
-        category: { id: 188 },
+        category: { id: 188, name: 'House ~ School' },
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '15-May-2017',

@@ -2,20 +2,12 @@
 
 import Model from './Model';
 
-const schema = {
-  id: 'int not-null primarykey',
-  name: 'string',
-  active: 'boolean',
-  default: 'boolean',
-  currency: 'string default-USD',
-  startDt: 'date',
-  endDt: 'date',
-};
+import { city } from './schema';
 
 class Cities extends Model {
   constructor() {
-    super('cities', schema);
-    this.schema = schema;
+    super('cities', city);
+    this.schema = city;
   }
 
   findAllCities(db) {

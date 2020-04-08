@@ -2,21 +2,12 @@
 
 import Model from './Model';
 
-const schema = {
-  id: 'int not-null primarykey autoincrement',
-  name: 'string',
-  cityId: 'int not-null',
-  mainDesc: 'string default-NA',
-  subDesc: 'string default-NA',
-  icon: 'string default- ',
-  active: 'boolean',
-  seq: 'int default-0',
-};
+import { category } from './schema';
 
 class Categories extends Model {
   constructor() {
-    super('categories', schema);
-    this.schema = schema;
+    super('categories', category);
+    this.schema = category;
   }
 
   findForCity(db, cityId) {

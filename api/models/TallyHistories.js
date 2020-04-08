@@ -2,18 +2,12 @@
 
 import Model from './Model';
 
-const schema = {
-  id: 'int not-null primarykey autoincrement',
-  cityId: 'int not-null',
-  account: { id: 'int not-null', name: 'string' },
-  tallyDt: 'date',
-  balance: 'float',
-};
+import { tallyHistory } from './schema';
 
 class TallyHistories extends Model {
   constructor() {
-    super('tallyhistories', schema);
-    this.schema = schema;
+    super('tallyhistories', tallyHistory);
+    this.schema = tallyHistory;
   }
 
   findForAcct(db, acctId) {

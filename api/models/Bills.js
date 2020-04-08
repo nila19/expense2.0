@@ -1,27 +1,14 @@
 'use strict';
 
 import Model from './Model';
-
 import { publish, PIPE } from '../bin/socket-handler';
 
-const schema = {
-  id: 'int not-null primarykey autoincrement',
-  name: 'string',
-  cityId: 'int not-null',
-  account: { id: 'int not-null', name: 'string' },
-  createdDt: 'timestamp',
-  billDt: 'date',
-  dueDt: 'date',
-  closed: 'boolean',
-  amount: 'float',
-  balance: 'float',
-  payments: [{ id: 'int', transDt: 'date', amount: 'float' }],
-};
+import { bill } from './schema';
 
 class Bills extends Model {
   constructor() {
-    super('bills', schema);
-    this.schema = schema;
+    super('bills', bill);
+    this.schema = bill;
   }
 
   // paid = null, get all;

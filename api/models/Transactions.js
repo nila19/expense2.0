@@ -9,43 +9,7 @@ import Model from './Model';
 import config from '../config/config';
 import format from '../config/formats';
 
-const schema = {
-  id: 'int not-null primarykey autoincrement',
-  cityId: 'int not-null',
-  entryDt: 'timestamp',
-  entryMonth: 'date',
-  category: { id: 'int', name: 'string' },
-  description: 'string not-null',
-  amount: 'float',
-  transDt: 'date',
-  transMonth: 'date',
-  seq: 'int',
-  accounts: {
-    from: {
-      id: 'int',
-      name: 'string',
-      balanceBf: 'float default-0',
-      balanceAf: 'float default-0',
-    },
-    to: {
-      id: 'int',
-      name: 'string',
-      balanceBf: 'float default-0',
-      balanceAf: 'float default-0',
-    },
-  },
-  bill: {
-    id: 'int',
-    name: 'string',
-    account: { id: 'int', name: 'string' },
-  },
-  adhoc: 'boolean',
-  adjust: 'boolean',
-  status: 'boolean',
-  tallied: 'boolean',
-  tallyDt: 'timestamp',
-  FLAGS: {},
-};
+import { transaction } from './schema';
 
 const searchUI = {
   cityId: 'int',
@@ -65,8 +29,8 @@ const searchUI = {
 
 class Transactions extends Model {
   constructor() {
-    super('transactions', schema);
-    this.schema = schema;
+    super('transactions', transaction);
+    this.schema = transaction;
     this.searchUI = searchUI;
   }
 

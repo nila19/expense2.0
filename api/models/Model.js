@@ -45,6 +45,11 @@ export default class Model {
   }
 
   insertOne(db, data) {
+    const { error, value } = this.schema.validate(data);
+    if (error) {
+      console.log('==> Schema validation failed:' + this.collection + ' => ' + error);
+      throw error;
+    }
     return db.collection(this.collection).insertOne(data);
   }
 
