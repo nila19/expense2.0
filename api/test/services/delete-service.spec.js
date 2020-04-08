@@ -36,11 +36,12 @@ const reInsertTrans = async (db, data) => {
     transDt: moment(data.trans.transDt, format.YYYYMMDD).format(format.DDMMMYYYY),
     accounts: {
       from: { id: data.accounts.from ? data.accounts.from.id : 0 },
-      to: { id: data.accounts.to ? data.accounts.to.id : 0 }
-    }
+      to: { id: data.accounts.to ? data.accounts.to.id : 0 },
+    },
   };
 
   const tran = await addExpense({ db: db, log: { error: () => {} } }, form);
+
   const mod1 = {
     id: data.trans.id,
     seq: data.trans.seq,
@@ -49,23 +50,27 @@ const reInsertTrans = async (db, data) => {
     'accounts.to.balanceBf': data.trans.accounts.to.balanceBf,
     'accounts.to.balanceAf': data.trans.accounts.to.balanceAf,
     tallied: data.trans.tallied,
-    tallyDt: data.trans.tallyDt
+    tallyDt: data.trans.tallyDt,
   };
-
   await transactions.findOneAndUpdate(db, { id: tran.id }, { $set: mod1 });
+
   const fromAc = await accounts.findById(db, data.accounts.from.id);
   const fromBalance = range(data.accounts.from.balance);
   expect(fromAc.balance).to.be.within(fromBalance.low, fromBalance.high);
+
   const toAc = await accounts.findById(db, data.accounts.to.id);
   if (data.accounts.to.id) {
     const toBalance = range(data.accounts.to.balance);
     expect(toAc.balance).to.be.within(toBalance.low, toBalance.high);
   }
+
   if (data.bill) {
     const mod2 = { 'bill.id': data.bill.id, 'bill.billDt': data.bill.billDt, 'bill.name': data.bill.name };
     await transactions.findOneAndUpdate(db, { id: data.trans.id }, { $set: mod2 });
+
     const mod3 = { amount: data.trans.amount, balance: data.trans.amount };
     await bills.findOneAndUpdate(db, { id: data.bill.id }, { $inc: mod3 });
+
     const bill = await bills.findById(db, data.bill.id);
     const billAmount = range(data.bill.amount);
     const billBalance = range(data.bill.balance);
@@ -74,19 +79,33 @@ const reInsertTrans = async (db, data) => {
   }
 };
 
-const range = value => {
+const range = (value) => {
   const rounded = _.round(value, 2);
   return {
     low: rounded - 0.01,
-    high: rounded + 0.01
+    high: rounded + 0.01,
   };
+};
+
+const checkBalances = async (db, transId, data) => {
+  const tr = await transactions.findById(db, transId);
+  expect(tr).to.be.null;
+
+  const ac = await accounts.findById(db, data.accounts.from.id);
+  expect(ac).to.have.property('balance', data.accounts.from.balance - data.trans.amount);
+
+  if (!data.trans.adjust && data.trans.bill) {
+    const bill = await bills.findById(db, data.bill.id);
+    expect(bill).to.have.property('amount', data.bill.amount - data.trans.amount);
+    expect(bill).to.have.property('balance', data.bill.balance - data.trans.amount);
+  }
 };
 
 // ====================== Test Cases ======================//
 describe('services.deleteService', () => {
   let db = null;
 
-  before('get db connection', done => {
+  before('get db connection', (done) => {
     ping(null, (err, db1) => {
       db = db1;
       done();
@@ -99,19 +118,16 @@ describe('services.deleteService', () => {
       const data = {
         trans: null,
         accounts: { from: null, to: null },
-        bill: null
+        bill: null,
       };
 
-      before('fetch trans details', done => {
-        fetchData(db, transId, data)
-          .then(() => done())
-          .catch(err => done(err));
+      before('fetch trans details', async () => {
+        await fetchData(db, transId, data);
       });
       it('should throw an error for delete transaction with inactive city', async () => {
         try {
           await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
           expect.fail('ok', 'error', 'Exception not thrown in the delete expense with inactive city');
-          await reInsertTrans(db, data);
         } catch (err) {
           expect(err.message).to.equal('City is not active.');
         }
@@ -123,19 +139,16 @@ describe('services.deleteService', () => {
       const data = {
         trans: null,
         accounts: { from: null, to: null },
-        bill: null
+        bill: null,
       };
 
-      before('fetch trans details', done => {
-        fetchData(db, transId, data)
-          .then(() => done())
-          .catch(err => done(err));
+      before('fetch trans details', async () => {
+        await fetchData(db, transId, data);
       });
       it('should throw an error for delete transaction with inactive account', async () => {
         try {
           await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
           expect.fail('ok', 'error', 'Exception not thrown in the delete expense with inactive account.');
-          await reInsertTrans(db, data);
         } catch (err) {
           expect(err.message).to.equal('Change invalid. Account(s) involved are not active...');
         }
@@ -147,19 +160,16 @@ describe('services.deleteService', () => {
       const data = {
         trans: null,
         accounts: { from: null, to: null },
-        bill: null
+        bill: null,
       };
 
-      before('fetch trans details', done => {
-        fetchData(db, transId, data)
-          .then(() => done())
-          .catch(err => done(err));
+      before('fetch trans details', async () => {
+        await fetchData(db, transId, data);
       });
       it('should throw an error for delete transaction with one inactive account', async () => {
         try {
           await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
           expect.fail('ok', 'error', 'Exception not thrown in the delete expense with one inactive account.');
-          await reInsertTrans(db, data);
         } catch (err) {
           expect(err.message).to.equal('Change invalid. Account(s) involved are not active...');
         }
@@ -167,121 +177,93 @@ describe('services.deleteService', () => {
     });
     // case #3
     describe('delete expense - positive amount', () => {
-      const transId = 5601;
+      const transId = 10816;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
-        bill: null
+        bill: null,
       };
 
-      before('fetch trans details', done => {
-        fetchData(db, transId, data)
-          .then(() => done())
-          .catch(err => done(err));
+      before('fetch trans details', async () => {
+        await fetchData(db, transId, data);
       });
       it('should delete expense with positive amount', async () => {
         await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
-        const tr = await transactions.findById(db, transId);
-        expect(tr).to.be.null;
-        const ac = await accounts.findById(db, data.accounts.from.id);
-        expect(ac).to.have.property('balance', data.accounts.from.balance - data.trans.amount);
-
-        if (!data.trans.adjust && data.trans.bill) {
-          const bill = await bills.findById(db, data.bill.id);
-          expect(bill).to.have.property('amount', data.bill.amount - data.trans.amount);
-          expect(bill).to.have.property('balance', data.bill.balance - data.trans.amount);
-        }
+        await checkBalances(db, transId, data);
         await reInsertTrans(db, data);
       });
     });
     // case #4
     describe('delete expense - negative amount', () => {
-      const transId = 5611;
+      const transId = 10935;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
-        bill: null
+        bill: null,
       };
 
-      before('fetch trans details', done => {
-        fetchData(db, transId, data)
-          .then(() => done())
-          .catch(err => done(err));
+      before('fetch trans details', async () => {
+        await fetchData(db, transId, data);
       });
       it('should delete expense with negative amount', async () => {
         await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
-        const tr = await transactions.findById(db, transId);
-        expect(tr).to.be.null;
-        const ac = await accounts.findById(db, data.accounts.from.id);
-        expect(ac).to.have.property('balance', data.accounts.from.balance - data.trans.amount);
-        if (!data.trans.adjust && data.trans.bill) {
-          const bill = await bills.findById(db, data.bill.id);
-          expect(bill).to.have.property('amount', data.bill.amount - data.trans.amount);
-          expect(bill).to.have.property('balance', data.bill.balance - data.trans.amount);
-        }
+        await checkBalances(db, transId, data);
         await reInsertTrans(db, data);
       });
     });
     // case #6
     describe('delete expense - open bill', () => {
-      const transId = 6983;
+      const transId = 10935;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
-        bill: null
+        bill: null,
       };
 
-      before('fetch trans details', done => {
-        fetchData(db, transId, data)
-          .then(() => done())
-          .catch(err => done(err));
+      before('fetch trans details', async () => {
+        await fetchData(db, transId, data);
       });
       it('should delete expense with open bill', async () => {
         await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
-        const tr = await transactions.findById(db, transId);
-        expect(tr).to.be.null;
-        const ac = await accounts.findById(db, data.accounts.from.id);
-        expect(ac).to.have.property('balance', data.accounts.from.balance - data.trans.amount);
-        if (!data.trans.adjust && data.trans.bill) {
-          const bill = await bills.findById(db, data.bill.id);
-          expect(bill).to.have.property('amount', data.bill.amount - data.trans.amount);
-          expect(bill).to.have.property('balance', data.bill.balance - data.trans.amount);
-        }
+        await checkBalances(db, transId, data);
         await reInsertTrans(db, data);
       });
     });
     // case #7
     describe('delete expense - adjustment', () => {
-      const transId = 6073;
+      const transId = 11017;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
-        bill: null
+        bill: null,
       };
 
-      before('fetch trans details', done => {
-        fetchData(db, transId, data)
-          .then(() => done())
-          .catch(err => done(err));
+      before('fetch trans details', async () => {
+        await fetchData(db, transId, data);
       });
       it('should delete adjustment expense', async () => {
         await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
+
         const tr = await transactions.findById(db, transId);
         expect(tr).to.be.null;
+
         const fromAc = await accounts.findById(db, data.accounts.from.id);
         expect(fromAc).to.have.property('balance', data.accounts.from.balance + data.trans.amount);
+
         const toAc = await accounts.findById(db, data.accounts.to.id);
         expect(toAc).to.have.property('balance', data.accounts.to.balance + data.trans.amount);
+
         if (!data.trans.adjust && data.trans.bill) {
           const bill = await bills.findById(db, data.bill.id);
           expect(bill).to.have.property('amount', data.bill.amount - data.trans.amount);
           expect(bill).to.have.property('balance', data.bill.balance - data.trans.amount);
         }
+
         await reInsertTrans(db, data);
       });
     });
   });
-  after('close db connection', function() {
+  after('close db connection', function () {
     // do nothing.
   });
 });

@@ -5,7 +5,7 @@ import Model from './Model';
 const schema = {
   table: 'string not-null primarykey',
   cityId: 'int not-null',
-  seq: 'int not-null'
+  seq: 'int not-null',
 };
 
 class Sequences extends Model {
@@ -14,13 +14,13 @@ class Sequences extends Model {
     this.schema = schema;
   }
 
-  getNextSeq(db, filter) {
+  findOneAndUpdate(db, filter) {
     // return db.get(this.collection).findAndModify({query: filter, update: {$inc: {seq: 1}}, new: true});
     // return db.get(this.collection).findOneAndUpdate(filter, {$inc: {seq: 1}}, {returnOriginal: false});
-    return this.findOneAndUpdate(db, filter, { $inc: { seq: 1 } }, { returnOriginal: false });
+    return super.findOneAndUpdate(db, filter, { $inc: { seq: 1 } }, { returnOriginal: false });
   }
 }
 
-export default function() {
+export default function () {
   return new Sequences();
 }

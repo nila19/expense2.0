@@ -3,34 +3,31 @@
 'use strict';
 import { should, use } from 'chai';
 
-import Categories from '../../models/Categories';
+import { categories } from '../../models/index';
+
 import { ping } from '../../config/mongodb-config.js';
 
 should();
 use(require('chai-things'));
 
-const categories = Categories();
-
-describe('models.categories', function() {
+describe('models.categories', () => {
   const cityId = 20140301;
   let db = null;
 
-  before('get db connection', function(done) {
-    ping(null, function(err, db1) {
+  before('get db connection', (done) => {
+    ping(null, (err, db1) => {
       db = db1;
       done();
     });
   });
-  describe('findForCity', function() {
-    it('should fetch all categories', function(done) {
-      categories.findForCity(db, cityId).then(cats => {
-        cats.should.all.have.property('cityId', cityId);
-        done();
-      });
+  describe('findForCity', () => {
+    it('should fetch all categories', async () => {
+      const cats = await categories.findForCity(db, cityId);
+      cats.should.all.have.property('cityId', cityId);
     });
   });
 
-  after('close db connection', function() {
+  after('close db connection', () => {
     // do nothing.
   });
 });

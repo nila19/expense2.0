@@ -9,7 +9,7 @@ const schema = {
   default: 'boolean',
   currency: 'string default-USD',
   startDt: 'date',
-  endDt: 'date'
+  endDt: 'date',
 };
 
 class Cities extends Model {
@@ -19,11 +19,11 @@ class Cities extends Model {
   }
 
   findAllCities(db) {
-    return this.findAll(db, { fields: { _id: 0 }, sort: { startDt: -1 } });
+    return this.findAll(db, { projection: { _id: 0 }, sort: { startDt: -1 } });
   }
 
   findActive(db) {
-    return this.find(db, { active: true }, { fields: { _id: 0 }, sort: { startDt: -1 } });
+    return this.find(db, { active: true }, { projection: { _id: 0 }, sort: { startDt: -1 } });
   }
 
   findDefault(db) {
@@ -31,6 +31,6 @@ class Cities extends Model {
   }
 }
 
-export default function() {
+export default function () {
   return new Cities();
 }

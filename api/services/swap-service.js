@@ -44,7 +44,7 @@ const loadAcct = async (parms, accts, balances, acctId) => {
 };
 
 // step 3.3: check seq of the 2 accounts & find out which is older.
-const adjustAccountsSeq = trans => {
+const adjustAccountsSeq = (trans) => {
   let tran = null;
   let seq = 0;
   // oldest (the one with smaller seq) should be first.
@@ -92,29 +92,29 @@ const replayTran = (accts, balances, tr) => {
 
 const updateTransactions = async (parms, trans) => {
   if (!trans.accounts.from.id) {
-    await transactions.update(
+    await transactions.updateOne(
       parms.db,
       { id: trans.id },
       {
         $set: {
           'accounts.from.balanceBf': trans.accounts.from.balanceBf,
           'accounts.from.balanceAf': trans.accounts.from.balanceAf,
-          seq: trans.seq
-        }
+          seq: trans.seq,
+        },
       }
     );
   }
 
   if (!trans.accounts.to.id) {
-    await transactions.update(
+    await transactions.updateOne(
       parms.db,
       { id: trans.id },
       {
         $set: {
           'accounts.to.balanceBf': trans.accounts.to.balanceBf,
           'accounts.to.balanceAf': trans.accounts.to.balanceAf,
-          seq: trans.seq
-        }
+          seq: trans.seq,
+        },
       }
     );
   }

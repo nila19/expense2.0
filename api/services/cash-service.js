@@ -3,7 +3,7 @@
 import { accounts, transactions } from '../models';
 
 // transfer cash from one account to another
-export const transferCash = async parms => {
+export const transferCash = async (parms) => {
   const fromAcct = await accounts.findById(parms.db, parms.from.id);
   await updateAccount(parms, fromAcct, parms.amount * -1, parms.seq);
 
@@ -18,7 +18,7 @@ const updateAccount = async (parms, acct, amount, seq) => {
     return;
   }
   const amt = acct.cash ? amount : amount * -1;
-  await accounts.update(parms.db, { id: acct.id }, { $inc: { balance: amt } });
+  await accounts.updateOne(parms.db, { id: acct.id }, { $inc: { balance: amt } });
   // if seq = 0, it is an 'add'. ignore the updateTransItemBalances step. that's used only for modify.
   if (seq) {
     await updateTransItemBalances(parms, acct, amt, seq);
@@ -45,7 +45,7 @@ const updateTransItemBalances = async (parms, acct, amount, seq) => {
 
 // step 2.1.1.1 : save the ac balances changes to DB.
 const updateTrans = async (parms, tran) => {
-  await transactions.update(
+  await transactions.updateOne(
     parms.db,
     { id: tran.id },
     {
@@ -53,8 +53,8 @@ const updateTrans = async (parms, tran) => {
         'accounts.from.balanceBf': tran.accounts.from.balanceBf,
         'accounts.from.balanceAf': tran.accounts.from.balanceAf,
         'accounts.to.balanceBf': tran.accounts.to.balanceBf,
-        'accounts.to.balanceAf': tran.accounts.to.balanceAf
-      }
+        'accounts.to.balanceAf': tran.accounts.to.balanceAf,
+      },
     }
   );
 };

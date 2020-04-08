@@ -7,7 +7,7 @@ const schema = {
   cityId: 'int not-null',
   account: { id: 'int not-null', name: 'string' },
   tallyDt: 'date',
-  balance: 'float'
+  balance: 'float',
 };
 
 class TallyHistories extends Model {
@@ -17,10 +17,10 @@ class TallyHistories extends Model {
   }
 
   findForAcct(db, acctId) {
-    return this.find(db, { 'account.id': acctId }, { fields: { _id: 0 }, sort: { id: -1 } });
+    return this.find(db, { 'account.id': acctId }, { projection: { _id: 0 }, sort: { id: -1 } });
   }
 }
 
-export default function() {
+export default function () {
   return new TallyHistories();
 }

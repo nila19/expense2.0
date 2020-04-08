@@ -20,26 +20,27 @@ const argv = minimist(process.argv.slice(2));
 const root = {
   port: process.env.PORT,
   dburl: process.env.MONGO_URL,
+  dbName: process.env.DB_NAME,
   thinList: 100,
   pct75: 0.75,
   pct125: 1.25,
   error: 1000,
   pulse: {
     on: true,
-    interval: 30000 // milliseconds
+    interval: 30000, // milliseconds
   },
   billCloser: true,
   blocked: {
-    on: false
+    on: false,
   },
   cache: {
-    on: false
+    on: false,
   },
   log: {
     path: process.env.LOG_PATH + '/expense-tracker.log',
     period: '1m',
-    count: 12
-  }
+    count: 12,
+  },
 };
 
 const regions = {
@@ -47,15 +48,15 @@ const regions = {
     env: 'PROD',
     blocked: {
       on: true,
-      threshold: 50 // milliseconds
+      threshold: 50, // milliseconds
     },
     cache: {
-      on: true
-    }
+      on: true,
+    },
   },
   dev: {
-    env: 'DEV'
-  }
+    env: 'DEV',
+  },
 };
 
 const loadConfig = () => {

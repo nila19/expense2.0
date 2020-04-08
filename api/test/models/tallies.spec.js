@@ -3,34 +3,31 @@
 'use strict';
 import { should, use } from 'chai';
 
-import TallyHistories from '../../models/TallyHistories';
+import { tallyhistories } from '../../models/index';
+
 import { ping } from '../../config/mongodb-config.js';
 
 should();
 use(require('chai-things'));
 
-const tallies = TallyHistories();
-
-describe('models.tallies', function() {
+describe('models.tallyhistories', () => {
   const acctId = 83;
   let db = null;
 
-  before('get db connection', function(done) {
-    ping(null, function(err, db1) {
+  before('get db connection', (done) => {
+    ping(null, (err, db1) => {
       db = db1;
       done();
     });
   });
-  describe('findForAcct', function() {
-    it('should fetch all tallies for account', function(done) {
-      tallies.findForAcct(db, acctId).then(tls => {
-        tls.map(t => t.account).should.all.have.property('id', acctId);
-        done();
-      });
+  describe('findForAcct', () => {
+    it('should fetch all tallyhistories for account', async () => {
+      const tls = await tallyhistories.findForAcct(db, acctId);
+      tls.map((t) => t.account).should.all.have.property('id', acctId);
     });
   });
 
-  after('close db connection', function() {
+  after('close db connection', () => {
     // do nothing.
   });
 });

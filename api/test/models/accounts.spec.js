@@ -3,68 +3,56 @@
 'use strict';
 import { should, use, expect } from 'chai';
 
-import Accounts from '../../models/Accounts';
+import { accounts } from '../../models/index';
+
 import { ping } from '../../config/mongodb-config.js';
 
 should();
 use(require('chai-things'));
 
-const accounts = Accounts();
-
-describe('models.accounts', function() {
+describe('models.accounts', () => {
   const cityId = 20140301;
   const acctId = 81;
   let db = null;
 
-  before('get db connection', function(done) {
+  before('get db connection', (done) => {
     ping(null, (err, db1) => {
       db = db1;
       done();
     });
   });
-  describe('findForCity', function() {
-    it('should fetch all active accounts = 9', function(done) {
-      accounts.findForCity(db, cityId).then(accts => {
-        accts.should.all.have.property('active', true);
-        done();
-      });
+  describe('findForCity', () => {
+    it('should fetch all active accounts = 9', async () => {
+      const accts = await accounts.findForCity(db, cityId);
+      accts.should.all.have.property('active', true);
     });
   });
-  describe('findBillable', function() {
-    it('should fetch all active, billable accounts = 4', function(done) {
-      accounts.findBillable(db, cityId).then(accts => {
-        accts.should.all.have.property('active', true);
-        accts.should.all.have.property('billed', true);
-        done();
-      });
+  describe('findBillable', () => {
+    it('should fetch all active, billable accounts = 4', async () => {
+      const accts = await accounts.findBillable(db, cityId);
+      accts.should.all.have.property('active', true);
+      accts.should.all.have.property('billed', true);
     });
   });
-  describe('update', function() {
+  describe('update', () => {
     const newBal = 10;
     let balance = 0;
 
-    before('backup db values', function(done) {
-      accounts.findById(db, acctId).then(acct => {
-        balance = acct.balance;
-        done();
-      });
+    before('backup db values', async () => {
+      const acct = await accounts.findById(db, acctId);
+      balance = acct.balance;
     });
-    it('should update account', function(done) {
-      accounts.update(db, { id: acctId }, { $set: { balance: newBal } }).then(() => {
-        accounts.findById(db, acctId).then(acct => {
-          expect(acct).to.have.property('balance', newBal);
-          done();
-        });
-      });
+    it('should update account', async () => {
+      await accounts.updateOne(db, { id: acctId }, { $set: { balance: newBal } });
+      const acct = await accounts.findById(db, acctId);
+      expect(acct).to.have.property('balance', newBal);
     });
-    after('restore db values', function(done) {
-      accounts.update(db, { id: acctId }, { $set: { balance: balance } }).then(() => {
-        done();
-      });
+    after('restore db values', async () => {
+      await accounts.updateOne(db, { id: acctId }, { $set: { balance: balance } });
     });
   });
 
-  after('close db connection', function() {
+  after('close db connection', () => {
     // do nothing.
   });
 });

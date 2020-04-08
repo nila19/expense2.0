@@ -4,30 +4,48 @@
 import moment from 'moment';
 import { should, use, expect } from 'chai';
 
-import Accounts from '../../models/Accounts';
-import Transactions from '../../models/Transactions';
-import { addExpensePromise } from '../../services/add-service';
+import { accounts, transactions } from '../../models/index';
+
+import { addExpense } from '../../services/add-service';
 import { deleteExpense } from '../../services/delete-service';
 import { ping } from '../../config/mongodb-config.js';
 
 should();
 use(require('chai-things'));
 
-const accounts = Accounts();
-const transactions = Transactions();
+const checkBalances = async (db, amt, fromAcctId, fromAcBalance, toAcctId, toAcBalance) => {
+  const fromAc = await accounts.findById(db, fromAcctId);
+  expect(fromAc).to.have.property('balance', fromAcBalance + amt);
 
-describe('services.addService', function() {
+  if (toAcctId) {
+    const toAc = await accounts.findById(db, toAcctId);
+    expect(toAc).to.have.property('balance', toAcBalance + amt);
+  }
+};
+
+const dropExpense = async (db, transId, fromAcctId, fromAcBalance, toAcctId, toAcBalance) => {
+  await deleteExpense({ db: db, log: console, transId: transId });
+  const fromAc = await accounts.findById(db, fromAcctId);
+  expect(fromAc).to.have.property('balance', fromAcBalance);
+
+  if (toAcctId) {
+    const toAc = await accounts.findById(db, toAcctId);
+    expect(toAc).to.have.property('balance', toAcBalance);
+  }
+};
+
+describe('services.addService', () => {
   let db = null;
 
-  before('get db connection', function(done) {
+  before('get db connection', (done) => {
     ping(null, (err, db1) => {
       db = db1;
       done();
     });
   });
-  describe('addExpensePromise', function() {
+  describe('addExpensePromise', () => {
     // case #0
-    describe('add expense with an inactive city', function() {
+    describe('add expense with an inactive city', () => {
       const acctId = 68;
       const amt = 100.25;
       const formData = {
@@ -38,44 +56,26 @@ describe('services.addService', function() {
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '15-May-2017',
-        accounts: { from: { id: acctId }, to: null }
+        accounts: { from: { id: acctId }, to: null },
       };
       let transId = 0;
       let acBalance = 0;
 
-      before('fetch account balance', function(done) {
-        accounts.findById(db, acctId).then(ac => {
-          acBalance = ac.balance;
-          done();
-        });
+      before('fetch account balance', async () => {
+        const ac = await accounts.findById(db, acctId);
+        acBalance = ac.balance;
       });
-      it('should throw an error', function(done) {
-        addExpensePromise({ db: db, log: { error: () => {} } }, formData)
-          .then(t => {
-            transId = t.id;
-            expect().fail('Exception not thrown in the add expense with inactive city');
-            done();
-          })
-          .catch(e => {
-            expect(e.message).to.equal('City is not active.');
-            done();
-          });
-      });
-      after('delete the added expense', function(done) {
-        if (!transId) {
-          done();
-        } else {
-          deleteExpense({ db: db, log: console, transId: transId }, () => {
-            accounts.findById(db, acctId).then(ac => {
-              expect(ac).to.have.property('balance', acBalance);
-              done();
-            });
-          });
+      it('should throw an error', async () => {
+        try {
+          await addExpense({ db: db, log: { error: () => {} } }, formData);
+          expect().fail('Exception not thrown in the add expense with inactive city');
+        } catch (e) {
+          expect(e.message).to.equal('City is not active.');
         }
       });
     });
     // case #1
-    describe('add a regular expense', function() {
+    describe('add a regular expense', () => {
       const acctId = 68;
       const amt = 100.25;
       const formData = {
@@ -86,61 +86,47 @@ describe('services.addService', function() {
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '15-May-2017',
-        accounts: { from: { id: acctId }, to: null }
+        accounts: { from: { id: acctId }, to: null },
       };
       let transId = 0;
       let acBalance = 0;
-      const entryMth = moment()
-        .startOf('month')
-        .format('YYYY-MM-DD');
+      const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
-      before('fetch account balance', function(done) {
-        accounts.findById(db, acctId).then(ac => {
-          acBalance = ac.balance;
-          done();
-        });
+      before('fetch account balance', async () => {
+        const ac = await accounts.findById(db, acctId);
+        acBalance = ac.balance;
       });
-      it('should add a regular expense', function(done) {
-        addExpensePromise({ db: db, log: console }, formData).then(t => {
-          transId = t.id;
-          transactions.findById(db, transId).then(tr => {
-            expect(tr).to.have.property('id', transId);
-            expect(tr).to.have.property('cityId', 20140301);
-            expect(tr).to.have.property('entryMonth', entryMth);
-            expect(tr.category).to.have.property('id', 188);
-            expect(tr).to.have.property('description', 'Mocha Testing');
-            expect(tr).to.have.property('amount', amt);
-            expect(tr).to.have.property('transDt', '2017-05-15');
-            expect(tr).to.have.property('transMonth', '2017-05-01');
-            expect(tr).to.have.property('seq', transId);
-            expect(tr.accounts.from).to.have.property('id', acctId);
-            expect(tr.accounts.from).to.have.property('balanceBf', acBalance);
-            expect(tr.accounts.from).to.have.property('balanceAf', acBalance + amt);
-            expect(tr.accounts.to).to.have.property('id', 0);
-            expect(tr).to.have.property('adjust', false);
-            expect(tr).to.have.property('adhoc', false);
-            expect(tr).to.have.property('status', true);
-            expect(tr).to.have.property('tallied', false);
-            expect(tr).to.have.property('tallyDt', null);
-            expect(tr.bill.account).to.have.property('id', acctId);
-            accounts.findById(db, acctId).then(ac => {
-              expect(ac).to.have.property('balance', acBalance + amt);
-              done();
-            });
-          });
-        });
-      });
-      after('delete the added expense', function(done) {
-        deleteExpense({ db: db, log: console, transId: transId }, () => {
-          accounts.findById(db, acctId).then(ac => {
-            expect(ac).to.have.property('balance', acBalance);
-            done();
-          });
-        });
+      it('should add a regular expense', async () => {
+        const t = await addExpense({ db: db, log: console }, formData);
+        transId = t.id;
+
+        const tr = await transactions.findById(db, transId);
+        expect(tr).to.have.property('id', transId);
+        expect(tr).to.have.property('cityId', 20140301);
+        expect(tr).to.have.property('entryMonth', entryMth);
+        expect(tr.category).to.have.property('id', 188);
+        expect(tr).to.have.property('description', 'Mocha Testing');
+        expect(tr).to.have.property('amount', amt);
+        expect(tr).to.have.property('transDt', '2017-05-15');
+        expect(tr).to.have.property('transMonth', '2017-05-01');
+        expect(tr).to.have.property('seq', transId);
+        expect(tr.accounts.from).to.have.property('id', acctId);
+        expect(tr.accounts.from).to.have.property('balanceBf', acBalance);
+        expect(tr.accounts.from).to.have.property('balanceAf', acBalance + amt);
+        expect(tr.accounts.to).to.have.property('id', 0);
+        expect(tr).to.have.property('adjust', false);
+        expect(tr).to.have.property('adhoc', false);
+        expect(tr).to.have.property('status', true);
+        expect(tr).to.have.property('tallied', false);
+        expect(tr).to.have.property('tallyDt', null);
+        expect(tr.bill.account).to.have.property('id', acctId);
+
+        await checkBalances(db, amt, acctId, acBalance);
+        await dropExpense(db, transId, acctId, acBalance);
       });
     });
     // case #2
-    describe('add a regular expense - negative amount', function() {
+    describe('add a regular expense - negative amount', () => {
       const acctId = 68;
       const amt = -100.25;
       const formData = {
@@ -151,343 +137,258 @@ describe('services.addService', function() {
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '15-May-2017',
-        accounts: { from: { id: acctId }, to: null }
+        accounts: { from: { id: acctId }, to: null },
       };
       let transId = 0;
       let acBalance = 0;
-      const entryMth = moment()
-        .startOf('month')
-        .format('YYYY-MM-DD');
+      const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
-      before('fetch account balance', function(done) {
-        accounts.findById(db, acctId).then(ac => {
-          acBalance = ac.balance;
-          done();
-        });
+      before('fetch account balance', async () => {
+        const ac = await accounts.findById(db, acctId);
+        acBalance = ac.balance;
       });
-      it('should add a regular expense - negative amount', function(done) {
-        addExpensePromise({ db: db, log: console }, formData).then(t => {
-          transId = t.id;
-          transactions.findById(db, transId).then(tr => {
-            expect(tr).to.have.property('id', transId);
-            expect(tr).to.have.property('cityId', 20140301);
-            expect(tr).to.have.property('entryMonth', entryMth);
-            expect(tr.category).to.have.property('id', 188);
-            expect(tr).to.have.property('description', 'Mocha Testing');
-            expect(tr).to.have.property('amount', amt);
-            expect(tr).to.have.property('transDt', '2017-05-15');
-            expect(tr).to.have.property('transMonth', '2017-05-01');
-            expect(tr).to.have.property('seq', transId);
-            expect(tr.accounts.from).to.have.property('id', acctId);
-            expect(tr.accounts.from).to.have.property('balanceBf', acBalance);
-            expect(tr.accounts.from).to.have.property('balanceAf', acBalance + amt);
-            expect(tr.accounts.to).to.have.property('id', 0);
-            expect(tr).to.have.property('adjust', false);
-            expect(tr).to.have.property('adhoc', false);
-            expect(tr).to.have.property('status', true);
-            expect(tr).to.have.property('tallied', false);
-            expect(tr).to.have.property('tallyDt', null);
-            expect(tr.bill.account).to.have.property('id', acctId);
-            accounts.findById(db, acctId).then(ac => {
-              expect(ac).to.have.property('balance', acBalance + amt);
-              done();
-            });
-          });
-        });
-      });
-      after('delete the added expense', function(done) {
-        deleteExpense({ db: db, log: console, transId: transId }, () => {
-          accounts.findById(db, acctId).then(ac => {
-            expect(ac).to.have.property('balance', acBalance);
-            done();
-          });
-        });
-      });
-    });
-    // case #3
-    describe('add an adjustment', function() {
-      const fromAcctId = 62;
-      const toAcctId = 68;
-      const amt = 100.25;
-      const formData = {
-        city: { id: 20140301 },
-        adjust: true,
-        adhoc: false,
-        category: null,
-        description: 'Mocha testing #3',
-        amount: amt,
-        transDt: '20-May-2017',
-        accounts: { from: { id: fromAcctId }, to: { id: toAcctId } }
-      };
-      let transId = 0;
-      let frAcBalance = 0;
-      let toAcBalance = 0;
-      const entryMth = moment()
-        .startOf('month')
-        .format('YYYY-MM-DD');
+      it('should add a regular expense - negative amount', async () => {
+        const t = await addExpense({ db: db, log: console }, formData);
+        transId = t.id;
 
-      before('fetch account balance', function(done) {
-        accounts.findById(db, fromAcctId).then(ac => {
-          frAcBalance = ac.balance;
-          accounts.findById(db, toAcctId).then(ac => {
-            toAcBalance = ac.balance;
-            done();
-          });
-        });
-      });
-      it('should add an adjustment', function(done) {
-        addExpensePromise({ db: db, log: console }, formData).then(t => {
-          transId = t.id;
-          transactions.findById(db, transId).then(tr => {
-            expect(tr).to.have.property('id', transId);
-            expect(tr).to.have.property('cityId', 20140301);
-            expect(tr).to.have.property('entryMonth', entryMth);
-            expect(tr.category).to.have.property('id', 0);
-            expect(tr).to.have.property('description', 'Mocha Testing #3');
-            expect(tr).to.have.property('amount', amt);
-            expect(tr).to.have.property('transDt', '2017-05-20');
-            expect(tr).to.have.property('transMonth', '2017-05-01');
-            expect(tr).to.have.property('seq', transId);
-            expect(tr.accounts.from).to.have.property('id', fromAcctId);
-            expect(tr.accounts.from).to.have.property('balanceBf', frAcBalance);
-            expect(tr.accounts.from).to.have.property('balanceAf', frAcBalance - amt);
-            expect(tr.accounts.to).to.have.property('id', toAcctId);
-            expect(tr.accounts.to).to.have.property('balanceBf', toAcBalance);
-            expect(tr.accounts.to).to.have.property('balanceAf', toAcBalance - amt);
-            expect(tr).to.have.property('adjust', true);
-            expect(tr).to.have.property('adhoc', false);
-            expect(tr).to.have.property('status', true);
-            expect(tr).to.have.property('tallied', false);
-            expect(tr).to.have.property('tallyDt', null);
-            accounts.findById(db, fromAcctId).then(ac => {
-              expect(ac).to.have.property('balance', frAcBalance - amt);
-              accounts.findById(db, toAcctId).then(ac => {
-                expect(ac).to.have.property('balance', toAcBalance - amt);
-                done();
-              });
-            });
-          });
-        });
-      });
-      after('delete the added expense', function(done) {
-        deleteExpense({ db: db, log: console, transId: transId }, () => {
-          accounts.findById(db, fromAcctId).then(ac => {
-            expect(ac).to.have.property('balance', frAcBalance);
-            accounts.findById(db, toAcctId).then(ac => {
-              expect(ac).to.have.property('balance', toAcBalance);
-              done();
-            });
-          });
-        });
-      });
-    });
-    // case #4
-    describe('add an adjustment - negative amount', function() {
-      const fromAcctId = 62;
-      const toAcctId = 68;
-      const amt = -100.25;
-      const formData = {
-        city: { id: 20140301 },
-        adjust: true,
-        adhoc: false,
-        category: null,
-        description: 'Mocha testing #3',
-        amount: amt,
-        transDt: '20-May-2017',
-        accounts: { from: { id: fromAcctId }, to: { id: toAcctId } }
-      };
-      let transId = 0;
-      let frAcBalance = 0;
-      let toAcBalance = 0;
-      const entryMth = moment()
-        .startOf('month')
-        .format('YYYY-MM-DD');
+        const tr = await transactions.findById(db, transId);
+        expect(tr).to.have.property('id', transId);
+        expect(tr).to.have.property('cityId', 20140301);
+        expect(tr).to.have.property('entryMonth', entryMth);
+        expect(tr.category).to.have.property('id', 188);
+        expect(tr).to.have.property('description', 'Mocha Testing');
+        expect(tr).to.have.property('amount', amt);
+        expect(tr).to.have.property('transDt', '2017-05-15');
+        expect(tr).to.have.property('transMonth', '2017-05-01');
+        expect(tr).to.have.property('seq', transId);
+        expect(tr.accounts.from).to.have.property('id', acctId);
+        expect(tr.accounts.from).to.have.property('balanceBf', acBalance);
+        expect(tr.accounts.from).to.have.property('balanceAf', acBalance + amt);
+        expect(tr.accounts.to).to.have.property('id', 0);
+        expect(tr).to.have.property('adjust', false);
+        expect(tr).to.have.property('adhoc', false);
+        expect(tr).to.have.property('status', true);
+        expect(tr).to.have.property('tallied', false);
+        expect(tr).to.have.property('tallyDt', null);
+        expect(tr.bill.account).to.have.property('id', acctId);
 
-      before('fetch account balance', function(done) {
-        accounts.findById(db, fromAcctId).then(ac => {
-          frAcBalance = ac.balance;
-          accounts.findById(db, toAcctId).then(ac => {
-            toAcBalance = ac.balance;
-            done();
-          });
-        });
-      });
-      it('should add an adjustment - negative amount', function(done) {
-        addExpensePromise({ db: db, log: console }, formData).then(t => {
-          transId = t.id;
-          transactions.findById(db, transId).then(tr => {
-            expect(tr).to.have.property('id', transId);
-            expect(tr).to.have.property('cityId', 20140301);
-            expect(tr).to.have.property('entryMonth', entryMth);
-            expect(tr.category).to.have.property('id', 0);
-            expect(tr).to.have.property('description', 'Mocha Testing #3');
-            expect(tr).to.have.property('amount', amt);
-            expect(tr).to.have.property('transDt', '2017-05-20');
-            expect(tr).to.have.property('transMonth', '2017-05-01');
-            expect(tr).to.have.property('seq', transId);
-            expect(tr.accounts.from).to.have.property('id', fromAcctId);
-            expect(tr.accounts.from).to.have.property('balanceBf', frAcBalance);
-            expect(tr.accounts.from).to.have.property('balanceAf', frAcBalance - amt);
-            expect(tr.accounts.to).to.have.property('id', toAcctId);
-            expect(tr.accounts.to).to.have.property('balanceBf', toAcBalance);
-            expect(tr.accounts.to).to.have.property('balanceAf', toAcBalance - amt);
-            expect(tr).to.have.property('adjust', true);
-            expect(tr).to.have.property('adhoc', false);
-            expect(tr).to.have.property('status', true);
-            expect(tr).to.have.property('tallied', false);
-            expect(tr).to.have.property('tallyDt', null);
-            accounts.findById(db, fromAcctId).then(ac => {
-              expect(ac).to.have.property('balance', frAcBalance - amt);
-              accounts.findById(db, toAcctId).then(ac => {
-                expect(ac).to.have.property('balance', toAcBalance - amt);
-                done();
-              });
-            });
-          });
-        });
-      });
-      after('delete the added expense', function(done) {
-        deleteExpense({ db: db, log: console, transId: transId }, () => {
-          accounts.findById(db, fromAcctId).then(ac => {
-            expect(ac).to.have.property('balance', frAcBalance);
-            accounts.findById(db, toAcctId).then(ac => {
-              expect(ac).to.have.property('balance', toAcBalance);
-              done();
-            });
-          });
-        });
-      });
-    });
-    // case #5
-    describe('add an adjustment - fromAccount blank', function() {
-      const toAcctId = 68;
-      const amt = 100.25;
-      const formData = {
-        city: { id: 20140301 },
-        adjust: true,
-        adhoc: false,
-        category: null,
-        description: 'Mocha testing #3',
-        amount: amt,
-        transDt: '20-May-2017',
-        accounts: { from: null, to: { id: toAcctId } }
-      };
-      let transId = 0;
-      let toAcBalance = 0;
-      const entryMth = moment()
-        .startOf('month')
-        .format('YYYY-MM-DD');
-
-      before('fetch account balance', function(done) {
-        accounts.findById(db, toAcctId).then(ac => {
-          toAcBalance = ac.balance;
-          done();
-        });
-      });
-      it('should add an adjustment - fromAccount blank', function(done) {
-        addExpensePromise({ db: db, log: console }, formData).then(t => {
-          transId = t.id;
-          transactions.findById(db, transId).then(tr => {
-            expect(tr).to.have.property('id', transId);
-            expect(tr).to.have.property('cityId', 20140301);
-            expect(tr).to.have.property('entryMonth', entryMth);
-            expect(tr.category).to.have.property('id', 0);
-            expect(tr).to.have.property('description', 'Mocha Testing #3');
-            expect(tr).to.have.property('amount', amt);
-            expect(tr).to.have.property('transDt', '2017-05-20');
-            expect(tr).to.have.property('transMonth', '2017-05-01');
-            expect(tr).to.have.property('seq', transId);
-            expect(tr.accounts.from).to.have.property('id', 0);
-            expect(tr.accounts.to).to.have.property('id', toAcctId);
-            expect(tr.accounts.to).to.have.property('balanceBf', toAcBalance);
-            expect(tr.accounts.to).to.have.property('balanceAf', toAcBalance - amt);
-            expect(tr).to.have.property('adjust', true);
-            expect(tr).to.have.property('adhoc', false);
-            expect(tr).to.have.property('status', true);
-            expect(tr).to.have.property('tallied', false);
-            expect(tr).to.have.property('tallyDt', null);
-            accounts.findById(db, toAcctId).then(ac => {
-              expect(ac).to.have.property('balance', toAcBalance - amt);
-              done();
-            });
-          });
-        });
-      });
-      after('delete the added expense', function(done) {
-        deleteExpense({ db: db, log: console, transId: transId }, () => {
-          accounts.findById(db, toAcctId).then(ac => {
-            expect(ac).to.have.property('balance', toAcBalance);
-            done();
-          });
-        });
-      });
-    });
-    // case #6
-    describe('add an adjustment - toAccount blank', function() {
-      const fromAcctId = 62;
-      const amt = 100.25;
-      const formData = {
-        city: { id: 20140301 },
-        adjust: true,
-        adhoc: false,
-        category: null,
-        description: 'Mocha testing #3',
-        amount: amt,
-        transDt: '20-May-2017',
-        accounts: { from: { id: fromAcctId }, to: null }
-      };
-      let transId = 0;
-      let frAcBalance = 0;
-      const entryMth = moment()
-        .startOf('month')
-        .format('YYYY-MM-DD');
-
-      before('fetch account balance', function(done) {
-        accounts.findById(db, fromAcctId).then(ac => {
-          frAcBalance = ac.balance;
-          done();
-        });
-      });
-      it('should add an adjustment - toAccount blank', function(done) {
-        addExpensePromise({ db: db, log: console }, formData).then(t => {
-          transId = t.id;
-          transactions.findById(db, transId).then(tr => {
-            expect(tr).to.have.property('id', transId);
-            expect(tr).to.have.property('cityId', 20140301);
-            expect(tr).to.have.property('entryMonth', entryMth);
-            expect(tr.category).to.have.property('id', 0);
-            expect(tr).to.have.property('description', 'Mocha Testing #3');
-            expect(tr).to.have.property('amount', amt);
-            expect(tr).to.have.property('transDt', '2017-05-20');
-            expect(tr).to.have.property('transMonth', '2017-05-01');
-            expect(tr).to.have.property('seq', transId);
-            expect(tr.accounts.from).to.have.property('id', fromAcctId);
-            expect(tr.accounts.from).to.have.property('balanceBf', frAcBalance);
-            expect(tr.accounts.from).to.have.property('balanceAf', frAcBalance - amt);
-            expect(tr.accounts.to).to.have.property('id', 0);
-            expect(tr).to.have.property('adjust', true);
-            expect(tr).to.have.property('adhoc', false);
-            expect(tr).to.have.property('status', true);
-            expect(tr).to.have.property('tallied', false);
-            expect(tr).to.have.property('tallyDt', null);
-            accounts.findById(db, fromAcctId).then(ac => {
-              expect(ac).to.have.property('balance', frAcBalance - amt);
-              done();
-            });
-          });
-        });
-      });
-      after('delete the added expense', function(done) {
-        deleteExpense({ db: db, log: console, transId: transId }, () => {
-          accounts.findById(db, fromAcctId).then(ac => {
-            expect(ac).to.have.property('balance', frAcBalance);
-            done();
-          });
-        });
+        await checkBalances(db, amt, acctId, acBalance);
+        await dropExpense(db, transId, acctId, acBalance);
       });
     });
   });
-  after('close db connection', function() {
-    // do nothing.
+  // case #3
+  describe('add an adjustment', () => {
+    const fromAcctId = 62;
+    const toAcctId = 68;
+    const amt = 100.25;
+    const formData = {
+      city: { id: 20140301 },
+      adjust: true,
+      adhoc: false,
+      category: null,
+      description: 'Mocha testing 3',
+      amount: amt,
+      transDt: '20-May-2017',
+      accounts: { from: { id: fromAcctId }, to: { id: toAcctId } },
+    };
+    let transId = 0;
+    let frAcBalance = 0;
+    let toAcBalance = 0;
+    const entryMth = moment().startOf('month').format('YYYY-MM-DD');
+
+    before('fetch account balance', async () => {
+      const fromAc = await accounts.findById(db, fromAcctId);
+      frAcBalance = fromAc.balance;
+
+      const toAc = await accounts.findById(db, toAcctId);
+      toAcBalance = toAc.balance;
+    });
+    it('should add an adjustment', async () => {
+      const t = await addExpense({ db: db, log: console }, formData);
+      transId = t.id;
+
+      const tr = await transactions.findById(db, transId);
+      expect(tr).to.have.property('id', transId);
+      expect(tr).to.have.property('cityId', 20140301);
+      expect(tr).to.have.property('entryMonth', entryMth);
+      expect(tr.category).to.have.property('id', 0);
+      expect(tr).to.have.property('description', 'Mocha Testing 3');
+      expect(tr).to.have.property('amount', amt);
+      expect(tr).to.have.property('transDt', '2017-05-20');
+      expect(tr).to.have.property('transMonth', '2017-05-01');
+      expect(tr).to.have.property('seq', transId);
+      expect(tr.accounts.from).to.have.property('id', fromAcctId);
+      expect(tr.accounts.from).to.have.property('balanceBf', frAcBalance);
+      expect(tr.accounts.from).to.have.property('balanceAf', frAcBalance - amt);
+      expect(tr.accounts.to).to.have.property('id', toAcctId);
+      expect(tr.accounts.to).to.have.property('balanceBf', toAcBalance);
+      expect(tr.accounts.to).to.have.property('balanceAf', toAcBalance - amt);
+      expect(tr).to.have.property('adjust', true);
+      expect(tr).to.have.property('adhoc', false);
+      expect(tr).to.have.property('status', true);
+      expect(tr).to.have.property('tallied', false);
+      expect(tr).to.have.property('tallyDt', null);
+
+      await checkBalances(db, amt * -1, fromAcctId, frAcBalance, toAcctId, toAcBalance);
+      await dropExpense(db, transId, fromAcctId, frAcBalance, toAcctId, toAcBalance);
+    });
+  });
+  // case #4
+  describe('add an adjustment - negative amount', () => {
+    const fromAcctId = 62;
+    const toAcctId = 68;
+    const amt = -100.25;
+    const formData = {
+      city: { id: 20140301 },
+      adjust: true,
+      adhoc: false,
+      category: null,
+      description: 'Mocha testing 3',
+      amount: amt,
+      transDt: '20-May-2017',
+      accounts: { from: { id: fromAcctId }, to: { id: toAcctId } },
+    };
+    let transId = 0;
+    let frAcBalance = 0;
+    let toAcBalance = 0;
+    const entryMth = moment().startOf('month').format('YYYY-MM-DD');
+
+    before('fetch account balance', async () => {
+      const fromAc = await accounts.findById(db, fromAcctId);
+      frAcBalance = fromAc.balance;
+
+      const toAc = await accounts.findById(db, toAcctId);
+      toAcBalance = toAc.balance;
+    });
+    it('should add an adjustment - negative amount', async () => {
+      const t = await addExpense({ db: db, log: console }, formData);
+      transId = t.id;
+
+      const tr = await transactions.findById(db, transId);
+      expect(tr).to.have.property('id', transId);
+      expect(tr).to.have.property('cityId', 20140301);
+      expect(tr).to.have.property('entryMonth', entryMth);
+      expect(tr.category).to.have.property('id', 0);
+      expect(tr).to.have.property('description', 'Mocha Testing 3');
+      expect(tr).to.have.property('amount', amt);
+      expect(tr).to.have.property('transDt', '2017-05-20');
+      expect(tr).to.have.property('transMonth', '2017-05-01');
+      expect(tr).to.have.property('seq', transId);
+      expect(tr.accounts.from).to.have.property('id', fromAcctId);
+      expect(tr.accounts.from).to.have.property('balanceBf', frAcBalance);
+      expect(tr.accounts.from).to.have.property('balanceAf', frAcBalance - amt);
+      expect(tr.accounts.to).to.have.property('id', toAcctId);
+      expect(tr.accounts.to).to.have.property('balanceBf', toAcBalance);
+      expect(tr.accounts.to).to.have.property('balanceAf', toAcBalance - amt);
+      expect(tr).to.have.property('adjust', true);
+      expect(tr).to.have.property('adhoc', false);
+      expect(tr).to.have.property('status', true);
+      expect(tr).to.have.property('tallied', false);
+      expect(tr).to.have.property('tallyDt', null);
+
+      await checkBalances(db, amt * -1, fromAcctId, frAcBalance, toAcctId, toAcBalance);
+      await dropExpense(db, transId, fromAcctId, frAcBalance, toAcctId, toAcBalance);
+    });
+  });
+  // case #5
+  describe('add an adjustment - fromAccount blank', () => {
+    const toAcctId = 68;
+    const amt = 100.25;
+    const formData = {
+      city: { id: 20140301 },
+      adjust: true,
+      adhoc: false,
+      category: null,
+      description: 'Mocha testing 3',
+      amount: amt,
+      transDt: '20-May-2017',
+      accounts: { from: null, to: { id: toAcctId } },
+    };
+    let transId = 0;
+    let toAcBalance = 0;
+    const entryMth = moment().startOf('month').format('YYYY-MM-DD');
+
+    before('fetch account balance', async () => {
+      const ac = await accounts.findById(db, toAcctId);
+      toAcBalance = ac.balance;
+    });
+    it('should add an adjustment - fromAccount blank', async () => {
+      const t = await addExpense({ db: db, log: console }, formData);
+      transId = t.id;
+
+      const tr = await transactions.findById(db, transId);
+      expect(tr).to.have.property('id', transId);
+      expect(tr).to.have.property('cityId', 20140301);
+      expect(tr).to.have.property('entryMonth', entryMth);
+      expect(tr.category).to.have.property('id', 0);
+      expect(tr).to.have.property('description', 'Mocha Testing 3');
+      expect(tr).to.have.property('amount', amt);
+      expect(tr).to.have.property('transDt', '2017-05-20');
+      expect(tr).to.have.property('transMonth', '2017-05-01');
+      expect(tr).to.have.property('seq', transId);
+      expect(tr.accounts.from).to.have.property('id', 0);
+      expect(tr.accounts.to).to.have.property('id', toAcctId);
+      expect(tr.accounts.to).to.have.property('balanceBf', toAcBalance);
+      expect(tr.accounts.to).to.have.property('balanceAf', toAcBalance - amt);
+      expect(tr).to.have.property('adjust', true);
+      expect(tr).to.have.property('adhoc', false);
+      expect(tr).to.have.property('status', true);
+      expect(tr).to.have.property('tallied', false);
+      expect(tr).to.have.property('tallyDt', null);
+
+      await checkBalances(db, amt * -1, toAcctId, toAcBalance);
+      await dropExpense(db, transId, toAcctId, toAcBalance);
+    });
+  });
+  // case #6
+  describe('add an adjustment - toAccount blank', () => {
+    const fromAcctId = 62;
+    const amt = 100.25;
+    const formData = {
+      city: { id: 20140301 },
+      adjust: true,
+      adhoc: false,
+      category: null,
+      description: 'Mocha testing 3',
+      amount: amt,
+      transDt: '20-May-2017',
+      accounts: { from: { id: fromAcctId }, to: null },
+    };
+    let transId = 0;
+    let frAcBalance = 0;
+    const entryMth = moment().startOf('month').format('YYYY-MM-DD');
+
+    before('fetch account balance', async () => {
+      const ac = await accounts.findById(db, fromAcctId);
+      frAcBalance = ac.balance;
+    });
+    it('should add an adjustment - toAccount blank', async () => {
+      const t = await addExpense({ db: db, log: console }, formData);
+      transId = t.id;
+
+      const tr = await transactions.findById(db, transId);
+      expect(tr).to.have.property('id', transId);
+      expect(tr).to.have.property('cityId', 20140301);
+      expect(tr).to.have.property('entryMonth', entryMth);
+      expect(tr.category).to.have.property('id', 0);
+      expect(tr).to.have.property('description', 'Mocha Testing 3');
+      expect(tr).to.have.property('amount', amt);
+      expect(tr).to.have.property('transDt', '2017-05-20');
+      expect(tr).to.have.property('transMonth', '2017-05-01');
+      expect(tr).to.have.property('seq', transId);
+      expect(tr.accounts.from).to.have.property('id', fromAcctId);
+      expect(tr.accounts.from).to.have.property('balanceBf', frAcBalance);
+      expect(tr.accounts.from).to.have.property('balanceAf', frAcBalance - amt);
+      expect(tr.accounts.to).to.have.property('id', 0);
+      expect(tr).to.have.property('adjust', true);
+      expect(tr).to.have.property('adhoc', false);
+      expect(tr).to.have.property('status', true);
+      expect(tr).to.have.property('tallied', false);
+      expect(tr).to.have.property('tallyDt', null);
+
+      await checkBalances(db, amt * -1, fromAcctId, frAcBalance);
+      await dropExpense(db, transId, fromAcctId, frAcBalance);
+    });
   });
 });

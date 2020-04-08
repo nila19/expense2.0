@@ -1,6 +1,7 @@
 'use strict';
 
 import monk from 'monk';
+import { MongoClient } from 'mongodb';
 
 import config from './config';
 import { executeBillClosure } from '../services/bill-closer-service';
@@ -8,7 +9,7 @@ import { executeBillClosure } from '../services/bill-closer-service';
 let okToLog = true;
 let billClosed = false;
 
-export const connect = app => {
+export const connect = (app) => {
   ping(app.locals.log, (err, db) => setDatabase(err, db, app));
 
   // keep trying every x seconds.
@@ -19,19 +20,20 @@ export const connect = app => {
 
 //TODO: convert to async/await
 export const ping = (log, next) => {
-  monk(config.dburl)
-    .then(db => {
-      if (okToLog && log && log.info) {
+  const client = new MongoClient(config.dburl, { useUnifiedTopology: true, useNewUrlParser: true });
+
+  client.connect((err) => {
+    if (okToLog && log && log.info) {
+      if (!err) {
         log.info('Connected to :: ' + config.dburl);
+      } else {
+        log.info('Error connecting to DB - ' + err);
       }
-      next(null, db);
-    })
-    .catch(err => {
-      if (log && log.error) {
-        log.error(log.chalk.magenta(err));
-      }
-      next(err);
-    });
+    }
+    const db = client.db(config.dbName);
+    console.log('Created connection...');
+    next(err, db);
+  });
 };
 
 const setDatabase = (err, db, app) => {

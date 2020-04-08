@@ -5,7 +5,7 @@ import { accounts, bills, transactions } from '../models';
 import { transferCash } from './cash-service';
 import { checkCityEditable, checkAccountsActive } from '../utils/common-utils';
 
-export const deleteExpense = async parms => {
+export const deleteExpense = async (parms) => {
   const tran = await transactions.findById(parms.db, parms.transId);
   await checkCityEditable(parms.db, tran.cityId);
   const accts = await fetchAccounts(parms, tran);
@@ -14,7 +14,7 @@ export const deleteExpense = async parms => {
   // reverse the from / to accounts to reverse cash.
   await transferCash({ db: parms.db, from: accts.to, to: accts.from, amount: tran.amount, seq: tran.seq });
   await modifyBillBalance(parms, tran);
-  await transactions.remove(parms.db, { id: parms.transId });
+  await transactions.deleteOne(parms.db, { id: parms.transId });
 };
 
 // step 3: fetch from & to accounts info from DB

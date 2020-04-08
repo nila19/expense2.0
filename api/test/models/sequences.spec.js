@@ -3,51 +3,43 @@
 'use strict';
 import { should, use, expect } from 'chai';
 
-import Sequences from '../../models/Sequences';
+import { sequences } from '../../models/index';
 import { ping } from '../../config/mongodb-config.js';
 
 should();
 use(require('chai-things'));
 
-const sequences = Sequences();
-
-describe('models.sequences', function() {
+describe('models.sequences', () => {
   const cityId = 20140301;
   const table = 'transactions';
   let db = null;
 
-  before('get db connection', function(done) {
-    ping(null, function(err, db1) {
+  before('get db connection', (done) => {
+    ping(null, (err, db1) => {
       db = db1;
       done();
     });
   });
-  describe('getNextSeq', function() {
+  describe('getNextSeq', () => {
     let oldSeq = 0;
 
-    before('backup db values', function(done) {
-      sequences.find(db, { cityId: cityId, table: table }).then(s => {
-        oldSeq = s[0].seq;
-        done();
-      });
+    before('backup db values', async () => {
+      const seqs = await sequences.find(db, { cityId: cityId, table: table });
+      oldSeq = seqs[0].seq;
     });
-    it('should get next sequence', function(done) {
-      sequences.getNextSeq(db, { cityId: cityId, table: table }).then(seq => {
-        expect(seq).to.have.property('seq', oldSeq + 1);
-        sequences.getNextSeq(db, { cityId: cityId, table: table }).then(seq => {
-          expect(seq).to.have.property('seq', oldSeq + 2);
-          done();
-        });
-      });
+    it('should get next sequence', async () => {
+      let seq = await sequences.findOneAndUpdate(db, { cityId: cityId, table: table });
+      expect(seq.value).to.have.property('seq', oldSeq + 1);
+
+      seq = await sequences.findOneAndUpdate(db, { cityId: cityId, table: table });
+      expect(seq.value).to.have.property('seq', oldSeq + 2);
     });
-    after('restore db values', function(done) {
-      sequences.update(db, { cityId: cityId, table: table }, { $set: { seq: oldSeq } }).then(() => {
-        done();
-      });
+    after('restore db values', async () => {
+      await sequences.updateOne(db, { cityId: cityId, table: table }, { $set: { seq: oldSeq } });
     });
   });
 
-  after('close db connection', function() {
+  after('close db connection', () => {
     // do nothing.
   });
 });

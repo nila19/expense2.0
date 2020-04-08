@@ -10,7 +10,7 @@ const schema = {
   subDesc: 'string default-NA',
   icon: 'string default- ',
   active: 'boolean',
-  seq: 'int default-0'
+  seq: 'int default-0',
 };
 
 class Categories extends Model {
@@ -20,10 +20,10 @@ class Categories extends Model {
   }
 
   findForCity(db, cityId) {
-    return this.find(db, { cityId: cityId }, { fields: { _id: 0 }, sort: { active: -1, seq: 1 } });
+    return this.find(db, { cityId: cityId }, { projection: { _id: 0 }, sort: { active: -1, seq: 1 } });
   }
 }
 
-export default function() {
+export default function () {
   return new Categories();
 }

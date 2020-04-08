@@ -15,7 +15,7 @@ const schema = {
   closed: 'boolean',
   amount: 'float',
   balance: 'float',
-  payments: [{ id: 'int', transDt: 'date', amount: 'float' }]
+  payments: [{ id: 'int', transDt: 'date', amount: 'float' }],
 };
 
 class Bills extends Model {
@@ -32,7 +32,7 @@ class Bills extends Model {
     if (paid) {
       filter.balance = paid === 'Y' ? 0 : { $gt: 0 };
     }
-    return this.find(db, filter, { fields: { _id: 0 }, sort: { billDt: -1 } });
+    return this.find(db, filter, { projection: { _id: 0 }, sort: { billDt: -1 } });
   }
 
   // paid = null, get all (including 'open', for modify dropdown);
@@ -44,12 +44,12 @@ class Bills extends Model {
       filter.balance = paid === 'Y' ? 0 : { $gt: 0 };
       filter.closed = true;
     }
-    return this.find(db, filter, { fields: { _id: 0 }, sort: { billDt: -1 } });
+    return this.find(db, filter, { projection: { _id: 0 }, sort: { billDt: -1 } });
   }
 
   // used by billCloser
   findForCityOpen(db, cityId) {
-    return this.find(db, { cityId: cityId, closed: false }, { fields: { _id: 0 }, sort: { billDt: -1 } });
+    return this.find(db, { cityId: cityId, closed: false }, { projection: { _id: 0 }, sort: { billDt: -1 } });
   }
 
   findOneAndUpdate(db, filter, mod, options) {
@@ -58,8 +58,8 @@ class Bills extends Model {
     return promise;
   }
 
-  update(db, filter, mod, options) {
-    const promise = super.update(db, filter, mod, options);
+  updateOne(db, filter, mod, options) {
+    const promise = super.updateOne(db, filter, mod, options);
     this._publish(db, filter.id, promise);
     return promise;
   }
@@ -76,6 +76,6 @@ class Bills extends Model {
   }
 }
 
-export default function() {
+export default function () {
   return new Bills();
 }

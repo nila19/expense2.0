@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'lodash';
 import moment from 'moment';
 import numeral from 'numeral';
 
@@ -12,11 +13,11 @@ import format from '../config/formats';
 export const addExpense = async (parms, data) => {
   await checkCityEditable(parms.db, data.city.id);
   await loadAccountsInfo(parms, data);
-  const tran = copyTransData(data);
+  let tran = copyTransData(data);
   copyAccountsData(data, tran);
-  const seq = await sequences.getNextSeq(parms.db, { table: 'transactions', cityId: data.city.id });
-  tran = { ...tran, id: seq.seq, seq: seq.seq };
-  await transactions.insert(parms.db, tran);
+  const seq = await sequences.findOneAndUpdate(parms.db, { table: 'transactions', cityId: data.city.id });
+  tran = { ...tran, id: seq.value.seq, seq: seq.value.seq };
+  await transactions.insertOne(parms.db, tran);
   await transferCash({
     db: parms.db,
     from: data.accounts.from,
@@ -26,7 +27,7 @@ export const addExpense = async (parms, data) => {
   });
   // re-fetch from DB to get the revised balances after cash transfer
   await loadAccountsInfo(parms, data);
-  await transactions.update(
+  await transactions.updateOne(
     parms.db,
     { id: tran.id },
     {

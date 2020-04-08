@@ -7,7 +7,8 @@ services:
   #     dockerfile: app.Dockerfile
   #   image: expense_web
   #   environment:
-  #     - MONGO_URL=mongodb/expense-test
+  #     - MONGO_URL=mongodb
+  #     - DB_NAME=expense-test
   #     - LOG_PATH=/logs2.0
   #     - PORT=8000
   #   volumes:

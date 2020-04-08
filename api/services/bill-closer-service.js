@@ -7,7 +7,7 @@ import { accounts, bills, cities, sequences, transactions } from '../models';
 
 import format from '../config/formats';
 
-export const executeBillClosure = async parms => {
+export const executeBillClosure = async (parms) => {
   const stats = { closed: 0, opened: 0 };
   const city = await cities.findDefault(parms.db);
   await closeBills(parms, city, stats);
@@ -32,12 +32,16 @@ const closeEachBill = async (parms, bill) => {
   let totalAmt = 0;
   const acct = await accounts.findById(parms.db, bill.account.id);
   const trans = await transactions.findForAcct(parms.db, bill.cityId, bill.account.id, bill.id);
-  trans.forEach(tran => (totalAmt += tran.amount));
+  trans.forEach((tran) => (totalAmt += tran.amount));
   totalAmt = _.round(totalAmt, 2);
   bill.amount = acct.cash ? totalAmt * -1 : totalAmt;
 
-  await bills.update(parms.db, { id: bill.id }, { $set: { amount: bill.amount, balance: bill.amount, closed: true } });
-  await accounts.update(
+  await bills.updateOne(
+    parms.db,
+    { id: bill.id },
+    { $set: { amount: bill.amount, balance: bill.amount, closed: true } }
+  );
+  await accounts.updateOne(
     parms.db,
     { id: bill.account.id },
     { $set: { 'bills.last': { id: bill.id, name: bill.name } } }
@@ -59,10 +63,14 @@ const createEachBill = async (parms, city, ac, stats) => {
   const bill = await bills.findById(parms.db, billId);
 
   if (isNewBillNeeded(ac, bill)) {
-    const seq = await sequences.getNextSeq(parms.db, { table: 'bills', cityId: city.id });
-    const newBill = buildEmptyBill(city, ac, seq.seq);
-    await bills.insert(parms.db, newBill);
-    await accounts.update(parms.db, { id: ac.id }, { $set: { 'bills.open': { id: newBill.id, name: newBill.name } } });
+    const seq = await sequences.findOneAndUpdate(parms.db, { table: 'bills', cityId: city.id });
+    const newBill = buildEmptyBill(city, ac, seq.value.seq);
+    await bills.insertOne(parms.db, newBill);
+    await accounts.updateOne(
+      parms.db,
+      { id: ac.id },
+      { $set: { 'bills.open': { id: newBill.id, name: newBill.name } } }
+    );
     stats.opened += 1;
   }
 };
@@ -101,7 +109,7 @@ const buildEmptyBill = (city, ac, seq) => {
     dueDt: dueDt.format(format.YYYYMMDD),
     closed: false,
     amount: 0,
-    balance: 0
+    balance: 0,
   };
   bill.name = bills.buildBillName(bill.account, bill);
   return bill;
