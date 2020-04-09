@@ -1,6 +1,5 @@
 'use strict';
 
-import monk from 'monk';
 import { MongoClient } from 'mongodb';
 
 import config from './config';

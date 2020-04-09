@@ -1,11 +1,11 @@
 'use strict';
 
 import Model from './Model';
-import Bills from '../models/Bills';
+import Bill from './Bill';
 
 import { publish, PIPE } from '../bin/socket-handler';
 
-const bills = Bills();
+const bill = Bill();
 
 const schema = {
   id: 'int not-null primarykey autoincrement',
@@ -28,7 +28,7 @@ const schema = {
   },
 };
 
-class Accounts extends Model {
+class Account extends Model {
   constructor() {
     super('accounts', schema);
     this.schema = schema;
@@ -80,17 +80,17 @@ class Accounts extends Model {
 
   async _injectLastBill(db, acct) {
     if (acct.billed && acct.bills.last && acct.bills.last.id) {
-      acct.bills.last = await bills.findById(db, acct.bills.last.id);
+      acct.bills.last = await bill.findById(db, acct.bills.last.id);
     }
   }
 
   async _injectOpenBill(db, acct) {
     if (acct.billed && acct.bills.open && acct.bills.open.id) {
-      acct.bills.open = await bills.findById(db, acct.bills.open.id);
+      acct.bills.open = await bill.findById(db, acct.bills.open.id);
     }
   }
 }
 
 export default function () {
-  return new Accounts();
+  return new Account();
 }

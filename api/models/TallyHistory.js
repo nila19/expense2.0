@@ -2,12 +2,12 @@
 
 import Model from './Model';
 
-import { tallyHistory } from './schema';
+import { TallyHistoryType } from './schema';
 
-class TallyHistories extends Model {
+class TallyHistory extends Model {
   constructor() {
-    super('tallyhistories', tallyHistory);
-    this.schema = tallyHistory;
+    super('tallyhistories', TallyHistoryType);
+    this.schema = TallyHistoryType;
   }
 
   findForAcct(db, acctId) {
@@ -16,5 +16,5 @@ class TallyHistories extends Model {
 }
 
 export default function () {
-  return new TallyHistories();
+  return new TallyHistory();
 }

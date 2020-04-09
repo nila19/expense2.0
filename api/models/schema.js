@@ -1,40 +1,40 @@
 import joi from '@hapi/joi';
 
-const account_min = joi.object({
+const AccountTypeMin = joi.object({
   id: joi.number().allow(0),
   name: joi.string().allow(''),
   balanceBf: joi.number(),
   balanceAf: joi.number(),
 });
 
-const category_min = joi.object({
+const CategoryTypeMin = joi.object({
   id: joi.number().allow(0),
   name: joi.string().required(),
 });
 
-const bill_min = joi.object({
+const BillTypeMin = joi.object({
   id: joi.number().positive().required(),
   name: joi.string().required(),
   billDt: joi.string().required(),
-  account: account_min.allow(null),
+  account: AccountTypeMin.allow(null),
 });
 
-export const transaction = joi.object({
+export const TransactionType = joi.object({
   id: joi.number().positive().required(),
   cityId: joi.number().positive().required(),
   entryDt: joi.string().required(),
   entryMonth: joi.string().required(),
-  category: category_min.allow(null),
+  category: CategoryTypeMin.allow(null),
   description: joi.string().required(),
   amount: joi.number().required().allow(0),
   transDt: joi.string().required(),
   transMonth: joi.string().required(),
   seq: joi.number().positive().required(),
   accounts: joi.object({
-    from: account_min.allow(null),
-    to: account_min.allow(null),
+    from: AccountTypeMin.allow(null),
+    to: AccountTypeMin.allow(null),
   }),
-  bill: bill_min.allow(null),
+  bill: BillTypeMin.allow(null),
   adhoc: joi.boolean(),
   adjust: joi.boolean(),
   status: joi.boolean(),
@@ -42,35 +42,35 @@ export const transaction = joi.object({
   tallyDt: joi.string().allow(null),
 });
 
-const payment = joi.object({
+const PaymentType = joi.object({
   id: joi.number().positive().required(),
   transDt: joi.string().required(),
   amount: joi.number().allow(0),
 });
 
-export const bill = joi.object({
+export const BillType = joi.object({
   id: joi.number().positive().required(),
   name: joi.string().required(),
   cityId: joi.number().positive().required(),
-  account: account_min,
+  account: AccountTypeMin,
   createdDt: joi.string().required(),
   billDt: joi.string().required(),
   dueDt: joi.string().required(),
   closed: joi.boolean(),
   amount: joi.number().allow(0),
   balance: joi.number().allow(0),
-  payments: [payment.allow(null)],
+  payments: [PaymentType.allow(null)],
 });
 
-export const tallyHistory = joi.object({
+export const TallyHistoryType = joi.object({
   id: joi.number().positive().required(),
   cityId: joi.number().positive().required(),
-  account: account_min,
+  account: AccountTypeMin,
   tallyDt: joi.string().required(),
   balance: joi.number().allow(0),
 });
 
-export const category = joi.object({
+export const CategoryType = joi.object({
   id: joi.number().positive().required(),
   name: joi.string().required(),
   cityId: joi.number().positive().required(),
@@ -81,7 +81,7 @@ export const category = joi.object({
   seq: joi.number().allow(0),
 });
 
-export const city = joi.object({
+export const CityType = joi.object({
   id: joi.number().positive().required(),
   name: joi.string().required(),
   active: joi.boolean(),
@@ -91,7 +91,7 @@ export const city = joi.object({
   endDt: joi.string().allow(null),
 });
 
-export const sequence = joi.object({
+export const SequenceType = joi.object({
   table: joi.string().required(),
   cityId: joi.number().positive().required(),
   seq: joi.number().allow(0),

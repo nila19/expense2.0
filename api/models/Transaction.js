@@ -9,7 +9,7 @@ import Model from './Model';
 import config from '../config/config';
 import format from '../config/formats';
 
-import { transaction } from './schema';
+import { TransactionType } from './schema';
 
 const searchUI = {
   cityId: 'int',
@@ -27,10 +27,10 @@ const searchUI = {
   thinList: 'boolean',
 };
 
-class Transactions extends Model {
+class Transaction extends Model {
   constructor() {
-    super('transactions', transaction);
-    this.schema = transaction;
+    super('transactions', TransactionType);
+    this.schema = TransactionType;
     this.searchUI = searchUI;
   }
 
@@ -195,5 +195,5 @@ class Transactions extends Model {
 }
 
 export default function () {
-  return new Transactions();
+  return new Transaction();
 }

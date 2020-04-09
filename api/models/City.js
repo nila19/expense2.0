@@ -2,12 +2,12 @@
 
 import Model from './Model';
 
-import { city } from './schema';
+import { CityType } from './schema';
 
-class Cities extends Model {
+class City extends Model {
   constructor() {
-    super('cities', city);
-    this.schema = city;
+    super('cities', CityType);
+    this.schema = CityType;
   }
 
   findAllCities(db) {
@@ -24,5 +24,5 @@ class Cities extends Model {
 }
 
 export default function () {
-  return new Cities();
+  return new City();
 }

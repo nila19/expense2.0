@@ -3,12 +3,12 @@
 import Model from './Model';
 import { publish, PIPE } from '../bin/socket-handler';
 
-import { bill } from './schema';
+import { BillType } from './schema';
 
-class Bills extends Model {
+class Bill extends Model {
   constructor() {
-    super('bills', bill);
-    this.schema = bill;
+    super('bills', BillType);
+    this.schema = BillType;
   }
 
   // paid = null, get all;
@@ -64,5 +64,5 @@ class Bills extends Model {
 }
 
 export default function () {
-  return new Bills();
+  return new Bill();
 }

@@ -2,12 +2,12 @@
 
 import Model from './Model';
 
-import { category } from './schema';
+import { CategoryType } from './schema';
 
-class Categories extends Model {
+class Category extends Model {
   constructor() {
-    super('categories', category);
-    this.schema = category;
+    super('categories', CategoryType);
+    this.schema = CategoryType;
   }
 
   findForCity(db, cityId) {
@@ -16,5 +16,5 @@ class Categories extends Model {
 }
 
 export default function () {
-  return new Categories();
+  return new Category();
 }

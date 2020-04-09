@@ -2,12 +2,12 @@
 
 import Model from './Model';
 
-import { sequence } from './schema';
+import { SequenceType } from './schema';
 
-class Sequences extends Model {
+class Sequence extends Model {
   constructor() {
-    super('sequences', sequence);
-    this.schema = sequence;
+    super('sequences', SequenceType);
+    this.schema = SequenceType;
   }
 
   findOneAndUpdate(db, filter) {
@@ -18,5 +18,5 @@ class Sequences extends Model {
 }
 
 export default function () {
-  return new Sequences();
+  return new Sequence();
 }

@@ -23,7 +23,7 @@ import { errorHandler } from './handler';
 
 // * TODO: make it run
 // * TODO: change to async/await
-// TODO: change to mongoose
+// * TODO: change to mongoose
 // TODO: Redo front-end with React
 // TODO: Use Docker/Kube
 // TODO: Add test cases
@@ -43,7 +43,7 @@ connect(app);
 
 // serving static files
 const staticPath = join(__dirname, '../public');
-const setCacheControl = res => {
+const setCacheControl = (res) => {
   if (cache.on) {
     res.setHeader('Cache-Control', 'public, max-age=' + ONE_YEAR);
   }
