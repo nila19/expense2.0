@@ -26,7 +26,7 @@ export const ping = (log, next) => {
       if (!err) {
         log.info('Connected to :: ' + config.dburl);
       } else {
-        log.info('Error connecting to DB - ' + err);
+        log.info('Error connecting to DB - ' + config.dburl + ' ==> ' + err);
       }
     }
     const db = client.db(config.dbName);

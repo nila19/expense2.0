@@ -13,6 +13,7 @@ import compression from 'compression';
 import morgan from 'morgan';
 // blocking cross site attacks.
 import helmet from 'helmet';
+import cors from 'cors';
 import express from 'express';
 
 import { cache } from '../config/config';
@@ -58,6 +59,7 @@ app.set('view engine', 'ejs');
 
 // list of middleware in the order.
 app.use(helmet());
+app.use(cors());
 app.use(compression());
 app.use(morgan('dev', { skip: skipSuccess }));
 app.use(json());

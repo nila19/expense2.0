@@ -6,10 +6,12 @@ import minimist from 'minimist';
 import dotenv from 'dotenv';
 
 // first step to load env variables from .env
-const result = dotenv.config();
-if (result.error) {
-  throw result.error;
-}
+
+// commented out for enabling docker-compose
+// const result = dotenv.config();
+// if (result.error) {
+//   throw result.error;
+// }
 
 // load all env variables into envs
 // const { parsed: envs } = result;

@@ -1,25 +1,25 @@
 version: '3'
 
 services:
-  # web:
-  #   build:
-  #     context: .
-  #     dockerfile: app.Dockerfile
-  #   image: expense_web
-  #   environment:
-  #     - MONGO_URL=mongodb
-  #     - DB_NAME=expense-test
-  #     - LOG_PATH=/logs2.0
-  #     - PORT=8000
-  #   volumes:
-  #     - 'C:/Java/logs:/logs'
-  #   ports:
-  #     - 8000:8000
-  #   networks:
-  #     - expensetestnet
-  #   depends_on:
-  #     - mongodb
-  mongodb:
+  api:
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    image: expense_test_api
+    environment:
+      - MONGO_URL=mongodb://mongodb-test:27017
+      - DB_NAME=expense-test
+      - LOG_PATH=/logs
+      - PORT=8000
+    volumes:
+      - 'C:/Java/logs:/logs'
+    ports:
+      - 8000:8000
+    networks:
+      - expensetestnet
+    depends_on:
+      - mongodb-test
+  mongodb-test:
     build:
       context: .
       dockerfile: db.Dockerfile

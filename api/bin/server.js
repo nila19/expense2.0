@@ -22,12 +22,12 @@ app.set('port', port);
 server.listen(port);
 
 // pass-through methods since unable to pass port# from event handler.
-server.on('error', err => onError(err, app));
+server.on('error', (err) => onError(err, app));
 server.on('listening', () => onListening(app));
 io.on('connection', () => onConnect(app));
 
 const log = app.locals.log;
-const logBlocked = ms => log.warn(log.chalk.cyan(new Date() + ' :: CPU blocked - %sms', ms || 0));
+const logBlocked = (ms) => log.warn(log.chalk.cyan(new Date() + ' :: CPU blocked - %sms', ms || 0));
 
 // pings server every 100ms & look for process blockages. Logs if the wait time goes more than the threshold.
 if (_blocked && _blocked.on) {
@@ -35,4 +35,4 @@ if (_blocked && _blocked.on) {
 }
 
 // bad practice to catch the uncaught exception...
-process.on('uncaughtException', unCaught);
+process.on('uncaughtException', (err) => unCaught(err, app));

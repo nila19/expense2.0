@@ -1,5 +1,7 @@
 # expense2.0
 
+Starts both DB & API
+
 - docker-compose up -d --build
 
 - Copy the expense-data

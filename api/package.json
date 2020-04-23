@@ -6,6 +6,7 @@
   "keywords": [],
   "scripts": {
     "start": "babel-node bin/server.js --region=dev | bunyan",
+    "prod": "babel-node bin/server.js --region=prod | bunyan",
     "babel-node": "babel-node",
     "nodemon": "nodemon --exec npm run babel-node bin/server.js --region=dev | bunyan",
     "test": "mocha --require @babel/register --debug-brk",
@@ -19,6 +20,7 @@
     "bunyan": "^1.8.12",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
