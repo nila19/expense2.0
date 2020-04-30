@@ -9,6 +9,8 @@ import Model from './Model';
 import config from '../config/config';
 import format from '../config/formats';
 
+import { publish, PIPE, STATE } from '../bin/socket-handler';
+
 import { TransactionType } from './schema';
 
 const searchUI = {
@@ -93,30 +95,6 @@ class Transaction extends Model {
     return this.aggregate(db, criteria);
   }
 
-  updateTrans(db, trans) {
-    const filter = { cityId: trans.cityId, id: trans.id };
-    const mod = {
-      $set: {
-        category: trans.category,
-        description: trans.description,
-        amount: trans.amount,
-        transDt: trans.transDt,
-        transMonth: trans.transMonth,
-        adhoc: trans.adhoc,
-        adjust: trans.adjust,
-        tallied: trans.tallied,
-        tallyDt: trans.tallyDt,
-        accounts: trans.accounts,
-      },
-    };
-    if (trans.bill) {
-      mod.$set.bill = trans.bill;
-    } else {
-      mod.$unset = { bill: '' };
-    }
-    return super.updateOne(db, filter, mod);
-  }
-
   findForSearch(db, qry) {
     const options = { projection: { _id: 0 }, sort: { seq: -1 } };
     let filter = { cityId: _.toNumber(qry.cityId) };
@@ -191,6 +169,57 @@ class Transaction extends Model {
       }
     }
     return filter;
+  }
+
+  insertOne(db, data) {
+    const promise = super.insertOne(db, data);
+    this._publish(db, data.id, STATE.CREATED, promise);
+    return promise;
+  }
+
+  deleteOne(db, filter) {
+    const promise = super.deleteOne(db, filter);
+    this._publish(db, filter.id, STATE.DELETED, promise);
+    return promise;
+  }
+
+  updateOne(db, filter, mod, options) {
+    const promise = super.updateOne(db, filter, mod, options);
+    this._publish(db, filter.id, STATE.UPDATED, promise);
+    return promise;
+  }
+
+  updateTrans(db, trans) {
+    const filter = { cityId: trans.cityId, id: trans.id };
+    const mod = {
+      $set: {
+        category: trans.category,
+        description: trans.description,
+        amount: trans.amount,
+        transDt: trans.transDt,
+        transMonth: trans.transMonth,
+        adhoc: trans.adhoc,
+        adjust: trans.adjust,
+        tallied: trans.tallied,
+        tallyDt: trans.tallyDt,
+        accounts: trans.accounts,
+      },
+    };
+    if (trans.bill) {
+      mod.$set.bill = trans.bill;
+    } else {
+      mod.$unset = { bill: '' };
+    }
+    const promise = super.updateOne(db, filter, mod);
+    this._publish(db, filter.id, STATE.UPDATED, promise);
+    return promise;
+  }
+
+  // internal methods
+  async _publish(db, id, state, promise) {
+    await promise;
+    const trans = await this.findById(db, id);
+    publish(PIPE.TRANS, trans, state);
   }
 }
 

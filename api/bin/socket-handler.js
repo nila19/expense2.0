@@ -3,17 +3,23 @@
 export const PIPE = {
   ACCOUNT: 'account',
   BILL: 'bill',
-  TRANS: 'transaction'
+  TRANS: 'transaction',
+};
+
+export const STATE = {
+  CREATED: 'CREATED',
+  UPDATED: 'UPDATED',
+  DELETED: 'DELETED',
 };
 
 let app = null;
 
-export const onConnect = _app => {
+export const onConnect = (_app) => {
   app = _app;
 };
 
-export const publish = (pipe, data) => {
+export const publish = (pipe, data, state) => {
   if (app && app.locals) {
-    app.locals.io.emit(pipe, { code: 0, data: data });
+    app.locals.io.emit(pipe, { code: 0, state: state, data: data });
   }
 };

@@ -1,7 +1,7 @@
 'use strict';
 
 import Model from './Model';
-import { publish, PIPE } from '../bin/socket-handler';
+import { publish, PIPE, STATE } from '../bin/socket-handler';
 
 import { BillType } from './schema';
 
@@ -40,13 +40,19 @@ class Bill extends Model {
 
   findOneAndUpdate(db, filter, mod, options) {
     const promise = super.findOneAndUpdate(db, filter, mod, options);
-    this._publish(db, filter.id, promise);
+    this._publish(db, filter.id, STATE.UPDATED, promise);
+    return promise;
+  }
+
+  insertOne(db, data) {
+    const promise = super.insertOne(db, data);
+    this._publish(db, data.id, STATE.CREATED, promise);
     return promise;
   }
 
   updateOne(db, filter, mod, options) {
     const promise = super.updateOne(db, filter, mod, options);
-    this._publish(db, filter.id, promise);
+    this._publish(db, filter.id, STATE.UPDATED, promise);
     return promise;
   }
 
@@ -55,10 +61,10 @@ class Bill extends Model {
   }
 
   // utility method
-  async _publish(db, id, promise) {
+  async _publish(db, id, state, promise) {
     await promise;
     const bill = await this.findById(db, id);
-    publish(PIPE.BILL, bill);
+    publish(PIPE.BILL, bill, state);
   }
 }
 

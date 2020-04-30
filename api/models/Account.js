@@ -3,7 +3,7 @@
 import Model from './Model';
 import Bill from './Bill';
 
-import { publish, PIPE } from '../bin/socket-handler';
+import { publish, PIPE, STATE } from '../bin/socket-handler';
 
 const bill = Bill();
 
@@ -60,7 +60,7 @@ class Account extends Model {
 
   updateOne(db, filter, mod, options) {
     const promise = super.updateOne(db, filter, mod, options);
-    this._publish(db, filter.id, promise);
+    this._publish(db, filter.id, STATE.UPDATED, promise);
     return promise;
   }
 
@@ -72,10 +72,10 @@ class Account extends Model {
   }
 
   // internal methods
-  async _publish(db, id, promise) {
+  async _publish(db, id, state, promise) {
     await promise;
     const acct = await this.findById(db, id);
-    publish(PIPE.ACCOUNT, acct);
+    publish(PIPE.ACCOUNT, acct, state);
   }
 
   async _injectLastBill(db, acct) {
