@@ -15,7 +15,7 @@ class Bill extends Model {
   // paid = 'N', getUnpaid only,
   // paid = 'Y', getPaid only
   findForCity(db, cityId, paid) {
-    const filter = { cityId: cityId, closed: true };
+    const filter = { cityId: cityId };
     if (paid) {
       filter.balance = paid === 'Y' ? 0 : { $gt: 0 };
     }
@@ -29,7 +29,6 @@ class Bill extends Model {
     const filter = { 'account.id': acctId };
     if (paid) {
       filter.balance = paid === 'Y' ? 0 : { $gt: 0 };
-      filter.closed = true;
     }
     return this.find(db, filter, { projection: { _id: 0 }, sort: { billDt: -1 } });
   }

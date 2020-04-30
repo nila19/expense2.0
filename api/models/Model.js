@@ -54,7 +54,7 @@ export default class Model {
   }
 
   aggregate(db, criteria) {
-    return db.collection(this.collection).aggregate(criteria);
+    return db.collection(this.collection).aggregate(criteria).toArray();
   }
 
   updateOne(db, filter, mod, options) {

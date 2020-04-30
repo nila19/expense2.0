@@ -20,7 +20,8 @@ const processSwapRow = async (parms, one, two) => {
   adjustAccountsSeq(trans);
   initializeBalances(trans, balances);
   replayTransactions(trans, accts, balances);
-  await updateTransactions(parms, trans);
+  await updateTransaction(parms, trans.first);
+  await updateTransaction(parms, trans.second);
 };
 
 const loadBothTrans = async (parms, one, two, accts, balances) => {
@@ -32,8 +33,8 @@ const loadBothTrans = async (parms, one, two, accts, balances) => {
 
 const fetchTran = async (parms, accts, balances, tranId) => {
   const tran = await transactions.findById(parms.db, tranId);
-  await loadAcct(parms, accts, balances, trans.accounts.from.id);
-  await loadAcct(parms, accts, balances, trans.accounts.to.id);
+  await loadAcct(parms, accts, balances, tran.accounts.from.id);
+  await loadAcct(parms, accts, balances, tran.accounts.to.id);
   return tran;
 };
 
@@ -90,30 +91,30 @@ const replayTran = (accts, balances, tr) => {
   balances[tr.accounts.to.id] += accts[tr.accounts.to.id].cash ? tr.amount : tr.amount * -1;
 };
 
-const updateTransactions = async (parms, trans) => {
-  if (!trans.accounts.from.id) {
+const updateTransaction = async (parms, tran) => {
+  if (!tran.accounts.from.id) {
     await transactions.updateOne(
       parms.db,
-      { id: trans.id },
+      { id: tran.id },
       {
         $set: {
-          'accounts.from.balanceBf': trans.accounts.from.balanceBf,
-          'accounts.from.balanceAf': trans.accounts.from.balanceAf,
-          seq: trans.seq,
+          'accounts.from.balanceBf': tran.accounts.from.balanceBf,
+          'accounts.from.balanceAf': tran.accounts.from.balanceAf,
+          seq: tran.seq,
         },
       }
     );
   }
 
-  if (!trans.accounts.to.id) {
+  if (!tran.accounts.to.id) {
     await transactions.updateOne(
       parms.db,
-      { id: trans.id },
+      { id: tran.id },
       {
         $set: {
-          'accounts.to.balanceBf': trans.accounts.to.balanceBf,
-          'accounts.to.balanceAf': trans.accounts.to.balanceAf,
-          seq: trans.seq,
+          'accounts.to.balanceBf': tran.accounts.to.balanceBf,
+          'accounts.to.balanceAf': tran.accounts.to.balanceAf,
+          seq: tran.seq,
         },
       }
     );

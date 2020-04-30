@@ -26,17 +26,17 @@ export const modifyExpense = async (parms, data) => {
 };
 
 const loadAccountsInfo = async (parms, data) => {
-  data.accounts.from = await accounts.findById(parms.db, data.accounts.from ? data.accounts.from.id : 0);
-  data.accounts.to = await accounts.findById(parms.db, data.accounts.to ? data.accounts.to.id : 0);
+  data.accounts.from = await accounts.findById(parms.db, data.accounts.from.id ? data.accounts.from.id : 0);
+  data.accounts.to = await accounts.findById(parms.db, data.accounts.to.id ? data.accounts.to.id : 0);
 };
 
 const checkFinImpact = (data, trans) => {
   let finImpact = false;
-  if (trans.amount != data.amount) {
+  if (trans.amount !== data.amount) {
     finImpact = true;
-  } else if (trans.accounts.from.id != data.accounts.from.id) {
+  } else if (trans.accounts.from.id !== data.accounts.from.id) {
     finImpact = true;
-  } else if (trans.adjust && trans.accounts.to.id != data.accounts.to.id) {
+  } else if (trans.adjust && trans.accounts.to.id !== data.accounts.to.id) {
     finImpact = true;
   }
   return finImpact;
@@ -48,7 +48,7 @@ const checkBillChangeNeeded = (data, trans) => {
   // if no bill before & after change, then skip.
   if (!trans.bill && !data.bill) {
     billChange = false;
-  } else if ((trans.bill && !data.bill) || (!trans.bill && data.bill)) {
+  } else if ((trans.bill && !data.bill) || (!trans.bill && data.bill && data.bill.id)) {
     billChange = true;
   } else if (trans.bill.id !== data.bill.id) {
     billChange = true;
@@ -66,7 +66,7 @@ const modifyBillBalance = async (parms, data, tr, billChange) => {
   if (tr.bill) {
     await bills.findOneAndUpdate(parms.db, { id: tr.bill.id }, { $inc: { amount: -tr.amount, balance: -tr.amount } });
   }
-  if (data.bill) {
+  if (data.bill && data.bill.id) {
     await bills.findOneAndUpdate(
       parms.db,
       { id: data.bill.id },
@@ -76,7 +76,7 @@ const modifyBillBalance = async (parms, data, tr, billChange) => {
 };
 
 const adjustCash = async (parms, data, trans, finImpact) => {
-  if (finImpact) {
+  if (!finImpact) {
     return;
   }
   // reverse the from / to accounts to reverse cash first.
@@ -99,12 +99,12 @@ const adjustCash = async (parms, data, trans, finImpact) => {
 // step 2: copy transaction data from input to transaction record.
 const copyTransData = (data, trans) => {
   trans.category = { id: 0, name: ' ~ ' };
-  if (data.category) {
+  if (data.category && data.category.id) {
     trans.category.id = data.category.id;
     trans.category.name = data.category.name;
   }
   delete trans.bill;
-  if (data.bill) {
+  if (data.bill && data.bill.id) {
     trans.bill = {
       id: data.bill.id,
       name: data.bill.name,
@@ -114,8 +114,8 @@ const copyTransData = (data, trans) => {
   trans.description = _.startCase(_.lowerCase(data.description.name || data.description));
   trans.amount = _.toNumber(data.amount);
   if (trans.transDt !== data.transDt) {
-    trans.transDt = moment(data.transDt, format.DDMMMYYYY).format(format.YYYYMMDD);
-    trans.transMonth = moment(data.transDt, format.DDMMMYYYY).date(1).format(format.YYYYMMDD);
+    trans.transDt = moment(data.transDt, format.YYYYMMDD).format(format.YYYYMMDD);
+    trans.transMonth = moment(data.transDt, format.YYYYMMDD).date(1).format(format.YYYYMMDD);
   }
   trans.adhoc = data.adhoc;
   trans.adjust = data.adjust;

@@ -42,8 +42,8 @@ export const addExpense = async (parms, data) => {
 
 // step 3: fetch from & to accounts info from DB
 const loadAccountsInfo = async (parms, data) => {
-  data.accounts.from = await accounts.findById(parms.db, data.accounts.from ? data.accounts.from.id : 0);
-  data.accounts.to = await accounts.findById(parms.db, data.accounts.to ? data.accounts.to.id : 0);
+  data.accounts.from = await accounts.findById(parms.db, data.accounts.from.id ? data.accounts.from.id : 0);
+  data.accounts.to = await accounts.findById(parms.db, data.accounts.to.id ? data.accounts.to.id : 0);
 };
 
 // step 2: copy transaction data from input to transaction record.
@@ -56,8 +56,8 @@ const copyTransData = (data) => {
     category: { id: 0, name: ' ~ ' },
     description: _.startCase(_.lowerCase(data.description.name || data.description)),
     amount: numeral(data.amount).value(),
-    transDt: moment(data.transDt, format.DDMMMYYYY).format(format.YYYYMMDD),
-    transMonth: moment(data.transDt, format.DDMMMYYYY).date(1).format(format.YYYYMMDD),
+    transDt: moment(data.transDt, format.YYYYMMDD).format(format.YYYYMMDD),
+    transMonth: moment(data.transDt, format.YYYYMMDD).date(1).format(format.YYYYMMDD),
     seq: 0,
     accounts: {
       from: { id: 0, name: '', balanceBf: 0, balanceAf: 0 },
@@ -69,7 +69,7 @@ const copyTransData = (data) => {
     tallied: false,
     tallyDt: null,
   };
-  if (data.category) {
+  if (data.category && data.category.id) {
     trans.category.id = data.category.id;
     trans.category.name = data.category.name;
   }

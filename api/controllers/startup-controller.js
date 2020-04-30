@@ -38,19 +38,19 @@ export const getAccounts = async (req, resp) => {
 
 export const getAccountsThin = async (req, resp) => {
   const data = await accounts.findForCityThin(req.app.locals.db, getCityId(req));
-  data.forEach(datum => (datum.bills = null));
+  data.forEach((datum) => (datum.bills = null));
   return resp.json({ code: 0, data: data });
 };
 
 export const getCategories = async (req, resp) => {
   const data = await categories.findForCity(req.app.locals.db, getCityId(req));
-  data.forEach(datum => (datum.bills = null));
+  data.forEach((datum) => (datum.bills = null));
   return resp.json({ code: 0, data: data });
 };
 
 export const getDescriptions = async (req, resp) => {
   const data = await transactions.findAllDescriptions(req.app.locals.db, getCityId(req));
-  const descriptions = data.map(a => ({ name: a['_id'], bills: null }));
+  const descriptions = data.map((a) => a['_id']);
   return resp.json({ code: 0, data: descriptions });
 };
 
@@ -66,4 +66,4 @@ export const getTransMonths = async (req, resp) => {
   return resp.json({ code: 0, data: months });
 };
 
-const getCityId = req => _.toNumber(req.query.cityId);
+const getCityId = (req) => _.toNumber(req.query.cityId);

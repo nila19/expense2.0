@@ -123,7 +123,7 @@ class Transaction extends Model {
     filter = this.buildSearchQueryOne(qry, filter);
     filter = this.buildSearchQueryTwo(qry, filter);
     // thin list
-    if (qry.thinList == 'true') {
+    if (qry.thinList === 'true') {
       options.limit = config.thinList;
     }
     return this.find(db, filter, options);

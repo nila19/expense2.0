@@ -23,13 +23,13 @@ const root = {
   port: process.env.PORT,
   dburl: process.env.MONGO_URL,
   dbName: process.env.DB_NAME,
-  thinList: 100,
+  thinList: 200,
   pct75: 0.75,
   pct125: 1.25,
   error: 1000,
   pulse: {
     on: true,
-    interval: 30000, // milliseconds
+    interval: 120000, // milliseconds
   },
   billCloser: true,
   blocked: {
@@ -50,7 +50,7 @@ const regions = {
     env: 'PROD',
     blocked: {
       on: true,
-      threshold: 50, // milliseconds
+      threshold: 100, // milliseconds
     },
     cache: {
       on: true,
