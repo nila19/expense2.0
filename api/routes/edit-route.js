@@ -24,8 +24,8 @@ router.all('*', function (req, res, next) {
   next();
 });
 
-router.post('/tally/:acctId', function (req, res) {
-  tallyAccount(req, res, _.toNumber(req.params.acctId));
+router.post('/tally', function (req, res) {
+  tallyAccount(req, res);
 });
 
 router.post('/add', function (req, res) {
@@ -36,12 +36,12 @@ router.post('/modify', function (req, res) {
   modifyExpense(req, res);
 });
 
-router.post('/delete/:transId', function (req, res) {
-  deleteExpense(req, res, _.toNumber(req.params.transId));
+router.post('/delete', function (req, res) {
+  deleteExpense(req, res);
 });
 
-router.post('/swap/:cityId', function (req, res) {
-  swapExpenses(req, res, _.toNumber(req.params.cityId));
+router.post('/swap', function (req, res) {
+  swapExpenses(req, res);
 });
 
 router.post('/payBill', function (req, res) {

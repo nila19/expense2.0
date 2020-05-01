@@ -11,11 +11,11 @@ import { checkCityEditable } from '../utils/common-utils';
 import format from '../config/formats';
 
 export const addExpense = async (parms, data) => {
-  await checkCityEditable(parms.db, data.city.id);
+  await checkCityEditable(parms.db, data.cityId);
   await loadAccountsInfo(parms, data);
   let tran = copyTransData(data);
   copyAccountsData(data, tran);
-  const seq = await sequences.findOneAndUpdate(parms.db, { table: 'transactions', cityId: data.city.id });
+  const seq = await sequences.findOneAndUpdate(parms.db, { table: 'transactions', cityId: data.cityId });
   tran = { ...tran, id: seq.value.seq, seq: seq.value.seq };
   await transactions.insertOne(parms.db, tran);
   await transferCash({
@@ -50,7 +50,7 @@ const loadAccountsInfo = async (parms, data) => {
 const copyTransData = (data) => {
   const trans = {
     id: 0,
-    cityId: data.city.id,
+    cityId: data.cityId,
     entryDt: moment().format(format.YYYYMMDDHHmmss),
     entryMonth: moment().date(1).format(format.YYYYMMDD),
     category: { id: 0, name: ' ~ ' },

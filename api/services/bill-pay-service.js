@@ -8,7 +8,7 @@ import { addExpense } from './add-service';
 import { checkCityEditable } from '../utils/common-utils';
 
 export const payBill = async (parms, data) => {
-  await checkCityEditable(parms.db, data.city.id);
+  await checkCityEditable(parms.db, data.cityId);
   const tran = await addExpense(parms, buildInput(data));
   await updateBill(parms, data, tran);
   return tran;
@@ -17,7 +17,7 @@ export const payBill = async (parms, data) => {
 // step 1: copy transaction data from input to transaction record.
 const buildInput = (data) => {
   return {
-    city: data.city,
+    cityId: data.cityId,
     accounts: { from: data.account, to: data.bill.account },
     category: null,
     description: 'CC Bill Payment',

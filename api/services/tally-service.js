@@ -7,10 +7,10 @@ import { accounts, sequences, tallyhistories, transactions } from '../models';
 import { checkCityEditable } from '../utils/common-utils';
 import format from '../config/formats';
 
-export const tallyAccount = async (parms) => {
+export const tallyAccount = async (parms, acctId) => {
   const tallyDt = moment().format(format.YYYYMMDDHHmmss);
 
-  const account = await accounts.findById(parms.db, parms.acctId);
+  const account = await accounts.findById(parms.db, acctId);
   await checkCityEditable(parms.db, account.cityId);
   await accounts.updateOne(parms.db, { id: account.id }, { $set: { tallyBalance: account.balance, tallyDt: tallyDt } });
   const seq = await sequences.findOneAndUpdate(parms.db, { table: 'tallyhistories', cityId: account.cityId });

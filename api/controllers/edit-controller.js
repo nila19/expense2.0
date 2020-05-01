@@ -1,5 +1,7 @@
 'use strict';
 
+import _ from 'lodash';
+
 import { tallyAccount as _tallyAccount } from '../services/tally-service';
 import { addExpense as _addExpense } from '../services/add-service';
 import { deleteExpense as _deleteExpense } from '../services/delete-service';
@@ -7,9 +9,10 @@ import { modifyExpense as _modifyExpense } from '../services/modify-service';
 import { payBill as _payBill } from '../services/bill-pay-service';
 import { swapExpenses as _swapExpenses } from '../services/swap-service';
 
-export const tallyAccount = async (req, resp, acctId) => {
+export const tallyAccount = async (req, resp) => {
   const parms = buildParm(req);
-  await _tallyAccount({ ...parms, acctId: acctId });
+  const acctId = _.toNumber(req.body.id);
+  await _tallyAccount(parms, acctId);
   return resp.json({ code: 0 });
 };
 
@@ -25,8 +28,9 @@ export const modifyExpense = async (req, resp) => {
   return resp.json({ code: 0 });
 };
 
-export const deleteExpense = async (req, resp, transId) => {
+export const deleteExpense = async (req, resp) => {
   const parms = buildParm(req);
+  const transId = _.toNumber(req.body.id);
   await _deleteExpense({ ...parms, transId: transId });
   return resp.json({ code: 0 });
 };
@@ -44,9 +48,9 @@ export const payBill = async (req, resp) => {
 };
 
 // utility method
-const buildParm = req => {
+const buildParm = (req) => {
   return {
     db: req.app.locals.db,
-    log: req.app.locals.log
+    log: req.app.locals.log,
   };
 };

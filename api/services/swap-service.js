@@ -5,17 +5,17 @@ import { accounts, transactions } from '../models';
 import { checkCityEditable } from '../utils/common-utils';
 
 export const swapExpenses = async (parms, data) => {
-  for (const item of data) {
-    await processSwapRow(parms, item.fromTrans, item.toTrans);
-  }
+  const cityId = _.toNumber(data.cityId);
+  await processSwapRow(parms, cityId, data.first, data.second);
 };
 
 // step 3: processes each swap row.
-const processSwapRow = async (parms, one, two) => {
+const processSwapRow = async (parms, cityId, first, second) => {
+  const trans = {};
   const accts = {};
   const balances = {};
-  const trans = await loadBothTrans(parms, one, two, accts, balances);
-  await checkCityEditable(parms.db, trans.first.cityId);
+  await checkCityEditable(parms.db, cityId);
+  await loadBothTrans(parms, first, second, trans, accts, balances);
 
   adjustAccountsSeq(trans);
   initializeBalances(trans, balances);
@@ -24,11 +24,9 @@ const processSwapRow = async (parms, one, two) => {
   await updateTransaction(parms, trans.second);
 };
 
-const loadBothTrans = async (parms, one, two, accts, balances) => {
-  const trans = { first: { id: 0 }, second: { id: 0 } };
-  trans.first = await fetchTran(parms, accts, balances, one);
-  trans.second = await fetchTran(parms, accts, balances, two);
-  return trans;
+const loadBothTrans = async (parms, first, second, trans, accts, balances) => {
+  trans.first = await fetchTran(parms, accts, balances, first.id);
+  trans.second = await fetchTran(parms, accts, balances, second.id);
 };
 
 const fetchTran = async (parms, accts, balances, tranId) => {

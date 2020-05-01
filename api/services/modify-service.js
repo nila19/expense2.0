@@ -30,41 +30,47 @@ const loadAccountsInfo = async (parms, data) => {
   data.accounts.to = await accounts.findById(parms.db, data.accounts.to.id ? data.accounts.to.id : 0);
 };
 
-const checkFinImpact = (data, trans) => {
+const checkFinImpact = (data, tran) => {
   let finImpact = false;
-  if (trans.amount !== data.amount) {
+  if (tran.amount !== data.amount) {
     finImpact = true;
-  } else if (trans.accounts.from.id !== data.accounts.from.id) {
+  } else if (tran.accounts.from.id !== data.accounts.from.id) {
     finImpact = true;
-  } else if (trans.adjust && trans.accounts.to.id !== data.accounts.to.id) {
+  } else if (tran.adjust && tran.accounts.to.id !== data.accounts.to.id) {
     finImpact = true;
   }
   return finImpact;
 };
 
 // step 4: check if there is any change in bill & if a modification to bill is needed.
-const checkBillChangeNeeded = (data, trans) => {
+const checkBillChangeNeeded = (data, tran) => {
   let billChange = false;
   // if no bill before & after change, then skip.
-  if (!trans.bill && !data.bill) {
+  const transBillId = tran.bill && tran.bill.id;
+  const dataBillId = data.bill && data.bill.id;
+  if (!transBillId && !dataBillId) {
     billChange = false;
-  } else if ((trans.bill && !data.bill) || (!trans.bill && data.bill && data.bill.id)) {
+  } else if ((transBillId && !dataBillId) || (!transBillId && dataBillId)) {
     billChange = true;
-  } else if (trans.bill.id !== data.bill.id) {
+  } else if (transBillId !== dataBillId) {
     billChange = true;
-  } else if (trans.amount !== data.amount) {
+  } else if (tran.amount !== data.amount) {
     billChange = true;
   }
   return billChange;
 };
 
-const modifyBillBalance = async (parms, data, tr, billChange) => {
+const modifyBillBalance = async (parms, data, tran, billChange) => {
   if (!billChange) {
     return;
   }
   // reverse the trans balance & add the 'data' balance.
-  if (tr.bill) {
-    await bills.findOneAndUpdate(parms.db, { id: tr.bill.id }, { $inc: { amount: -tr.amount, balance: -tr.amount } });
+  if (tran.bill) {
+    await bills.findOneAndUpdate(
+      parms.db,
+      { id: tran.bill.id },
+      { $inc: { amount: -tran.amount, balance: -tran.amount } }
+    );
   }
   if (data.bill && data.bill.id) {
     await bills.findOneAndUpdate(
@@ -75,17 +81,17 @@ const modifyBillBalance = async (parms, data, tr, billChange) => {
   }
 };
 
-const adjustCash = async (parms, data, trans, finImpact) => {
+const adjustCash = async (parms, data, tran, finImpact) => {
   if (!finImpact) {
     return;
   }
   // reverse the from / to accounts to reverse cash first.
   await transferCash({
     db: parms.db,
-    from: trans.accounts.to,
-    to: trans.accounts.from,
-    amount: trans.amount,
-    seq: trans.seq,
+    from: tran.accounts.to,
+    to: tran.accounts.from,
+    amount: tran.amount,
+    seq: tran.seq,
   });
   await transferCash({
     db: parms.db,
@@ -97,72 +103,72 @@ const adjustCash = async (parms, data, trans, finImpact) => {
 };
 
 // step 2: copy transaction data from input to transaction record.
-const copyTransData = (data, trans) => {
-  trans.category = { id: 0, name: ' ~ ' };
+const copyTransData = (data, tran) => {
+  tran.category = { id: 0, name: ' ~ ' };
   if (data.category && data.category.id) {
-    trans.category.id = data.category.id;
-    trans.category.name = data.category.name;
+    tran.category.id = data.category.id;
+    tran.category.name = data.category.name;
   }
-  delete trans.bill;
+  delete tran.bill;
   if (data.bill && data.bill.id) {
-    trans.bill = {
+    tran.bill = {
       id: data.bill.id,
       name: data.bill.name,
       account: { id: data.accounts.from.id, name: data.accounts.from.name },
     };
   }
-  trans.description = _.startCase(_.lowerCase(data.description.name || data.description));
-  trans.amount = _.toNumber(data.amount);
-  if (trans.transDt !== data.transDt) {
-    trans.transDt = moment(data.transDt, format.YYYYMMDD).format(format.YYYYMMDD);
-    trans.transMonth = moment(data.transDt, format.YYYYMMDD).date(1).format(format.YYYYMMDD);
+  tran.description = _.startCase(_.lowerCase(data.description.name || data.description));
+  tran.amount = _.toNumber(data.amount);
+  if (tran.transDt !== data.transDt) {
+    tran.transDt = moment(data.transDt, format.YYYYMMDD).format(format.YYYYMMDD);
+    tran.transMonth = moment(data.transDt, format.YYYYMMDD).date(1).format(format.YYYYMMDD);
   }
-  trans.adhoc = data.adhoc;
-  trans.adjust = data.adjust;
-  trans.tallied = false;
-  trans.tallyDt = null;
+  tran.adhoc = data.adhoc;
+  tran.adjust = data.adjust;
+  tran.tallied = false;
+  tran.tallyDt = null;
   // retain the old balanceBf/balanceAf amounts hoping no finImpact..
   // if finImpact, these will be revised by the next method...
   if (data.accounts.from.id) {
-    trans.accounts.from = {
+    tran.accounts.from = {
       id: data.accounts.from.id,
       name: data.accounts.from.name,
-      balanceBf: trans.accounts.from.balanceBf,
-      balanceAf: trans.accounts.from.balanceAf,
+      balanceBf: tran.accounts.from.balanceBf,
+      balanceAf: tran.accounts.from.balanceAf,
     };
   } else {
-    trans.accounts.from = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
+    tran.accounts.from = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
   }
   if (data.accounts.to.id) {
-    trans.accounts.to = {
+    tran.accounts.to = {
       id: data.accounts.to.id,
       name: data.accounts.to.name,
-      balanceBf: trans.accounts.to.balanceBf,
-      balanceAf: trans.accounts.to.balanceAf,
+      balanceBf: tran.accounts.to.balanceBf,
+      balanceAf: tran.accounts.to.balanceAf,
     };
   } else {
-    trans.accounts.to = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
+    tran.accounts.to = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
   }
 };
 
-const calcTransAcctBalances = async (parms, data, trans, finImpact) => {
+const calcTransAcctBalances = async (parms, data, tran, finImpact) => {
   if (!finImpact) {
     return resolve();
   }
-  await calcTransAcctBalance(parms, trans, trans.accounts.from, data.accounts.from.cash);
-  await calcTransAcctBalance(parms, trans, trans.accounts.to, data.accounts.to.cash);
+  await calcTransAcctBalance(parms, tran, tran.accounts.from, data.accounts.from.cash);
+  await calcTransAcctBalance(parms, tran, tran.accounts.to, data.accounts.to.cash);
 };
 
-const calcTransAcctBalance = async (parms, trans, acct, cash) => {
+const calcTransAcctBalance = async (parms, tran, acct, cash) => {
   if (!acct.id) {
     return;
   }
-  const prev = await transactions.findPrevious(parms.db, trans.cityId, acct.id, trans.seq);
+  const prev = await transactions.findPrevious(parms.db, tran.cityId, acct.id, tran.seq);
   if (acct.id === prev.accounts.from.id) {
     acct.balanceBf = prev.accounts.from.balanceAf;
   } else if (acct.id === prev.accounts.to.id) {
     acct.balanceBf = prev.accounts.to.balanceAf;
   }
-  const amt = cash ? trans.amount : trans.amount * -1;
+  const amt = cash ? tran.amount : tran.amount * -1;
   acct.balanceAf = acct.balanceBf - amt;
 };

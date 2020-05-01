@@ -16,7 +16,7 @@ router.all('*', (req, res, next) => {
   next();
 });
 
-router.get('/go', (req, res) => {
+router.post('/go', (req, res) => {
   doSearch(req, res);
 });
 
