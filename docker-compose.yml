@@ -1,13 +1,28 @@
 version: '3'
 
 services:
+  ui:
+    build:
+      context: .
+      # dockerfile: app-ui.Dockerfile
+      dockerfile: app-ui-prod.Dockerfile
+    image: expense-ui-dev-nginx
+    # environment:
+    #   - PORT=3000
+    # ports:
+    #   - 3000:3000
+    ports:
+      - 80:80
+    stdin_open: true
+    depends_on:
+      - mongodb-app
   api:
     build:
       context: .
-      dockerfile: app.Dockerfile
-    image: expense_test_api
+      dockerfile: app-api.Dockerfile
+    image: expense-api-dev
     environment:
-      - MONGO_URL=mongodb://mongodb-test:27017
+      - MONGO_URL=mongodb://mongodb-app:27017
       - DB_NAME=expense-test
       - LOG_PATH=/logs
       - PORT=8000
@@ -18,15 +33,14 @@ services:
     networks:
       - expensetestnet
     depends_on:
-      - mongodb-test
-  mongodb-test:
+      - mongodb-app
+  mongodb-app:
     build:
       context: .
-      dockerfile: db.Dockerfile
-    image: expense_test_db
+      dockerfile: app-db.Dockerfile
+    image: expense-db-dev
     volumes:
       - 'mongotestdata:/data/db'
-      # - '/mnt/c/Java/mongodb/data:/data/db'
     ports:
       - 27017:27017
     expose:

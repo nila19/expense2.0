@@ -1,8 +1,9 @@
 FROM node:lts
 WORKDIR /app
-COPY api/package.json /app
+COPY ui/package.json /app
+COPY ui/package-lock.json /app
 RUN npm install
-COPY api /app
+COPY ui /app
 # the following env variables need to be set if running directly as docker, instead of docker-compose
 # ENV MONGO_URL=host.docker.internal:27017/expense
 # ENV LOG_PATH=/logs
@@ -12,7 +13,7 @@ RUN echo ${TIME_ZONE} >/etc/timezone && \
     ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 RUN echo "Timezone: $TIME_ZONE  => Current Time: `date`"
-CMD npm run prod
+CMD npm start
 
 ###--------------------------------------------------------------------------------------------------###
 ###------------------------------------- DOCKER-COMPOSE ---------------------------------------------###
