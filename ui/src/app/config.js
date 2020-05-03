@@ -21,9 +21,9 @@ export const SOCKETS = {
 };
 
 export const COUNTS = {
-  DASHBOARD_ACCOUNTS: 4, //keep it a factor of 12.
+  DASHBOARD_ACCOUNTS: 6, //keep it a factor of 12.
   DASHBOARD_BILLS: 4,
-  DASHBOARD_EXPENSES: 9,
+  DASHBOARD_EXPENSES: 10,
   SEARCH_EXPENSES: 20,
   MESSAGES: 3,
 };

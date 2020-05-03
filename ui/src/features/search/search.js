@@ -7,7 +7,7 @@ import { COUNTS } from 'app/config';
 import { ExpenseSection } from 'features/search/expenses/expenseSection';
 import { SearchForm } from 'features/search/form/searchForm';
 
-export const Search = () => {
+const Search = () => {
   const [rowsPerPage, setRowsPerPage] = useState(COUNTS.SEARCH_EXPENSES);
 
   return (
@@ -21,3 +21,6 @@ export const Search = () => {
     </>
   );
 };
+
+// default export to facilitate lazy loading
+export default Search;

@@ -67,7 +67,7 @@ export const AccountCard = ({ account }) => {
         <p className={classes.cardCategory}>
           <small>{account.name}</small>
         </p>
-        <h3 className={classes.cardTitle}>{numeral(account.balance).format(format.AMOUNT)}</h3>
+        <h2 className={classes.cardTitle}>{numeral(account.balance).format(format.AMOUNT)}</h2>
       </CardHeader>
       <CardFooter stats style={{ textAlign: 'center' }}>
         <Grid container spacing={1} alignItems='center'>

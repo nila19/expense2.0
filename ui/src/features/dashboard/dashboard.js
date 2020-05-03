@@ -11,7 +11,7 @@ import { ExpenseSection } from 'features/search/expenses/expenseSection';
 
 import { loadExpenses } from 'features/search/expenses/expensesSlice';
 
-export const Dashboard = () => {
+const Dashboard = () => {
   const dispatch = useDispatch();
 
   const [rowsPerPage, setRowsPerPage] = useState(COUNTS.DASHBOARD_EXPENSES);
@@ -39,3 +39,6 @@ export const Dashboard = () => {
     </>
   );
 };
+
+// default export to facilitate lazy loading
+export default Dashboard;

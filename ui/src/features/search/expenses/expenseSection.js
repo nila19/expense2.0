@@ -148,7 +148,7 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
             </TableHead>
             <TableBody>
               {expensesForPage.map((exp) => {
-                const cellStyle = exp.tallied ? cellStyleDefault : { ...cellStyleDefault, color: '#14b9ce' };
+                const cellStyle = exp.tallied ? cellStyleDefault : { ...cellStyleDefault, color: '#00abee' };
                 return (
                   <TableRow key={exp.id} className={classes.tableRow} hover={true}>
                     <TableCell className={tableCellClasses} style={cellStyle} width='10%'>

@@ -56,17 +56,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Loading = ({ connection, failed }) => {
+export const Loading = ({ connected, inprogress }) => {
   const classes = useStyles();
-  const text = failed ? 'Failed...' : connection ? 'Loading data...' : 'Connecting...';
-  const item = failed ? (
+  const text = inprogress ? (connected ? 'Loading data...' : 'Connecting...') : 'Failed...';
+  const item = inprogress ? (
+    <BorderLinearProgress className={classes.margin} color='secondary' />
+  ) : (
     <SnackbarContent
-      message={connection ? 'Trouble Loading data...' : 'Trouble connecting to backend...'}
+      message={connected ? 'Trouble Loading data...' : 'Trouble connecting to backend...'}
       color='danger'
       icon={ErrorIcon}
     />
-  ) : (
-    <BorderLinearProgress className={classes.margin} color='secondary' />
   );
   return (
     <div style={{ textAlign: 'center', width: '100%', height: '100%', marginTop: 300 }}>
