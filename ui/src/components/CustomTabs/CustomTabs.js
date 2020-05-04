@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Badge from '@material-ui/core/Badge';
+
 // core components
 import Card from 'components/Card/Card.js';
 import CardBody from 'components/Card/CardBody.js';
@@ -30,7 +32,7 @@ export default function CustomTabs(props) {
     [classes.cardTitleRTL]: rtlActive,
   });
   return (
-    <Card plain={plainTabs} style={{ marginBottom: '10px' }}>
+    <Card plain={plainTabs} style={{ marginBottom: '5px' }}>
       <CardHeader color={headerColor} plain={plainTabs} style={{ padding: '8px' }}>
         {title !== undefined ? (
           <div
@@ -56,7 +58,11 @@ export default function CustomTabs(props) {
             var icon = {};
             if (prop.tabIcon) {
               icon = {
-                icon: <prop.tabIcon />,
+                icon: (
+                  <Badge variant='dot' invisible={!prop.badge} color='error'>
+                    <prop.tabIcon />
+                  </Badge>
+                ),
               };
             }
             return (

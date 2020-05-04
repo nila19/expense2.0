@@ -14,7 +14,7 @@ export const addExpense = async (parms, data) => {
   await checkCityEditable(parms.db, data.cityId);
   await loadAccountsInfo(parms, data);
   let tran = copyTransData(data);
-  copyAccountsData(data, tran);
+  await copyAccountsData(parms, data, tran);
   const seq = await sequences.findOneAndUpdate(parms.db, { table: 'transactions', cityId: data.cityId });
   tran = { ...tran, id: seq.value.seq, seq: seq.value.seq };
   await transactions.insertOne(parms.db, tran);
@@ -77,7 +77,7 @@ const copyTransData = (data) => {
 };
 
 // step 3: copy accounts data from input to transaction record.
-const copyAccountsData = (data, trans) => {
+const copyAccountsData = async (parms, data, trans) => {
   const from = data.accounts.from;
   const to = data.accounts.to;
   if (from.id) {
@@ -94,6 +94,7 @@ const copyAccountsData = (data, trans) => {
         billDt: from.bills.open.billDt,
       };
       trans.bill.name = bills.buildBillName(from, trans.bill);
+      await bills.updateOne(parms.db, { id: from.bills.open.id }, { $inc: { draft: numeral(data.amount).value() } });
     }
   }
   if (to.id) {

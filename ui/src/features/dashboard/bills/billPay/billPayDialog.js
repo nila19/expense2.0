@@ -38,8 +38,8 @@ export const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
       initialValues={{
         bill: bill,
         account: { id: null },
-        paidAmt: null,
-        paidDt: null,
+        paidAmt: bill.balance,
+        paidDt: moment().format(format.YYYYMMDD),
       }}
       validationSchema={Yup.object({
         paidDt: Yup.string().required('Required'),

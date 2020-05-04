@@ -59,7 +59,8 @@ export const BillType = joi.object({
   closed: joi.boolean(),
   amount: joi.number().allow(0),
   balance: joi.number().allow(0),
-  payments: [PaymentType.allow(null)],
+  draft: joi.number().allow(0),
+  payments: joi.array().items(PaymentType).optional(),
 });
 
 export const TallyHistoryType = joi.object({

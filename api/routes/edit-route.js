@@ -10,6 +10,7 @@ import {
   modifyExpense,
   deleteExpense,
   swapExpenses,
+  closeBill,
   payBill,
 } from '../controllers/edit-controller';
 
@@ -42,6 +43,10 @@ router.post('/delete', function (req, res) {
 
 router.post('/swap', function (req, res) {
   swapExpenses(req, res);
+});
+
+router.post('/closeBill', function (req, res) {
+  closeBill(req, res);
 });
 
 router.post('/payBill', function (req, res) {

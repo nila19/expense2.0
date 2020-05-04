@@ -10,6 +10,10 @@ export const loadBills = createAsyncThunk('billTab/loadBills', async (cityId) =>
   return data.data;
 });
 
+export const closeBill = createAsyncThunk('billTab/closeBill', async (billId) => {
+  await axios().post(API.BILL.CLOSE, { id: billId }, { snackbar: 'Bill close' });
+});
+
 const billTabSlice = createSlice({
   name: 'billTab',
   initialState: [],

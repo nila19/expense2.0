@@ -23,12 +23,6 @@ export const filterExpenses = (expenses, account, bill) => {
   return filtered;
 };
 
-export const filterBills = (bills, paid, account) => {
-  let filtered = bills.filter((e) => e.closed).filter((e) => (paid ? e.balance <= 0 : e.balance > 0));
-  filtered = account ? filtered.filter((e) => e.account.id === account) : filtered;
-  return filtered;
-};
-
 export const getTotalAmount = (list) => {
   return _.reduce(list, (sum, e) => sum + e.amount, 0);
 };

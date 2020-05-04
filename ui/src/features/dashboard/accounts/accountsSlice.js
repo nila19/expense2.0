@@ -14,10 +14,6 @@ export const tallyAccount = createAsyncThunk('accounts/tallyAccount', async (acc
   await axios().post(API.ACCOUNT.TALLY, { id: acctId }, { snackbar: 'Account tally' });
 });
 
-export const billAccount = createAsyncThunk('accounts/billAccount', async (acctId) => {
-  await axios().post(API.ACCOUNT.BILL, { id: acctId }, { snackbar: 'Account bill generation' });
-});
-
 const accountsSlice = createSlice({
   name: 'accounts',
   initialState: [],

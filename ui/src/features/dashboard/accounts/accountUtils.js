@@ -46,17 +46,17 @@ export const buildTallyInfo = (account) => {
   return tallyAmt + ' @ ' + tallyDate;
 };
 
-export const buildBillInfo = (account) => {
+export const buildBillInfo = (account, lastBill, openBill) => {
   if (!account.billed) {
     return 'No bills.';
   }
-  if (account.bills.last && account.bills.last.balance > 0) {
-    const dueAmt = numeral(account.bills.last.balance).format(format.AMOUNT_SYMBOL);
-    const dueDate = moment(account.bills.last.dueDt, format.YYYYMMDD).format(format.DDMMM);
-    return dueAmt + ' ( Due on ' + dueDate + ')';
+  if (lastBill && lastBill.balance > 0) {
+    const dueAmt = numeral(lastBill.balance).format(format.AMOUNT_SYMBOL);
+    const dueDate = moment(lastBill.dueDt, format.YYYYMMDD).format(format.DDMMM);
+    return dueAmt + ' (Due on ' + dueDate + ')';
   }
-  if (account.bills.open) {
-    const billDate = moment(account.bills.open.billDt, format.YYYYMMDD).format(format.DDMMM);
+  if (openBill) {
+    const billDate = moment(openBill.billDt, format.YYYYMMDD).format(format.DDMMM);
     return 'Next bill on ' + billDate;
   }
 };
@@ -66,14 +66,14 @@ export const buildAccountTallyInfoColor = (account) => {
   return sameDay ? 'success' : 'warning';
 };
 
-export const buildAccountBillInfoColor = (account) => {
+export const buildAccountBillInfoColor = (account, lastBill, openBill) => {
   if (!account.billed) {
     return 'warning';
   }
-  if (account.bills.last && account.bills.last.balance > 0) {
+  if (lastBill && lastBill.balance > 0) {
     return 'rose';
   }
-  if (account.bills.open) {
+  if (openBill) {
     return 'info';
   }
 };

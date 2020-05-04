@@ -43,6 +43,7 @@ import { editExpense, resetForm, saveEditExpense } from 'features/search/expense
 
 const headers = [
   '',
+  'ID',
   'ENTRY DATE',
   'TRANS',
   'CATEGORY',
@@ -173,7 +174,10 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
                         icon={<ArrowDownwardIcon fontSize='small' />}
                       />
                     </TableCell>
-                    <TableCell className={tableCellClasses} style={cellStyle} width='10%'>
+                    <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
+                      {exp.id}
+                    </TableCell>
+                    <TableCell className={tableCellClasses} style={cellStyle}>
                       {moment(exp.entryDt, format.YYYYMMDDHHmmss).format(format.DDMMMYYYYHHMM)}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={cellStyle}>

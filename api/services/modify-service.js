@@ -153,7 +153,7 @@ const copyTransData = (data, tran) => {
 
 const calcTransAcctBalances = async (parms, data, tran, finImpact) => {
   if (!finImpact) {
-    return resolve();
+    return;
   }
   await calcTransAcctBalance(parms, tran, tran.accounts.from, data.accounts.from.cash);
   await calcTransAcctBalance(parms, tran, tran.accounts.to, data.accounts.to.cash);

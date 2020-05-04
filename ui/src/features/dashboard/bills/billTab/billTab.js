@@ -17,24 +17,26 @@ import TableCell from '@material-ui/core/TableCell';
 // @material-ui/icons
 import PaymentIcon from '@material-ui/icons/Payment';
 import DehazeIcon from '@material-ui/icons/Dehaze';
+import FilterTiltShiftIcon from '@material-ui/icons/FilterTiltShift';
 
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
 import { COUNTS } from 'app/config';
 import { ActionButton } from 'features/inputs/formFields';
 import { CustomPagination, PaginationActions } from 'features/inputs/customPagination';
-import { filterBills, format, getSliceForPage, getTotalAmount } from 'features/utils';
+import { format, getSliceForPage, getTotalAmount } from 'features/utils';
 import { BillPayDialog } from 'features/dashboard/bills/billPay/billPayDialog';
+import { filterAndSortBills } from 'features/dashboard/bills/billUtils';
 
 import { selectDashboardGlobal, setBillFilter } from 'features/dashboard/dashboardGlobalSlice';
-import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
+import { selectBills, closeBill } from 'features/dashboard/bills/billTab/billTabSlice';
 import { payBill, resetBillPay, savePayBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
-const headers = ['', 'ACCOUNT', 'BILL DATE', 'BILL AMT', 'BALANCE', 'DUE DATE', 'PAYMENT'];
+const headers = ['', 'ID', 'ACCOUNT', 'BILL DATE', 'BILL AMT', 'BALANCE', 'DUE DATE', 'ACTION'];
 const cellStyle = { textAlign: 'center', padding: '5px 8px', fontSize: 12 };
 const useStyles = makeStyles(styles);
 
-export const BillTab = ({ paid }) => {
+export const BillTab = ({ paid, closed }) => {
   const classes = useStyles();
   const tableCellClasses = classnames(classes.tableCell);
 
@@ -50,7 +52,7 @@ export const BillTab = ({ paid }) => {
     setPage(0);
   }, [accountFilter]);
 
-  const filteredBills = _.reverse(_.sortBy(filterBills(bills, paid, accountFilter), 'dueDt'));
+  const filteredBills = filterAndSortBills(bills, closed, paid, accountFilter);
   const billsForPage = getSliceForPage(filteredBills, page, rowsPerPage);
   const total = getTotalAmount(billsForPage);
 
@@ -79,6 +81,34 @@ export const BillTab = ({ paid }) => {
     setOpenEdit(false);
   };
 
+  const handleBillClose = (id) => {
+    dispatch(closeBill(id));
+  };
+
+  const buildBillAction = (bill) => {
+    let billAction = '';
+    if (bill.closed === false) {
+      billAction = moment().isAfter(bill.billDt, 'day') ? (
+        <ActionButton
+          color='primary'
+          onClick={() => handleBillClose(bill.id)}
+          icon={<FilterTiltShiftIcon fontSize='small' />}
+        />
+      ) : (
+        ''
+      );
+    } else {
+      billAction = bill.balance ? (
+        <ActionButton color='primary' onClick={() => handleBillPay(bill.id)} icon={<PaymentIcon fontSize='small' />} />
+      ) : bill.payments && bill.payments.length > 0 ? (
+        moment(bill.payments[0].transDt, format.YYYYMMDD).format(format.DDMMMYYYY)
+      ) : (
+        ''
+      );
+    }
+    return billAction;
+  };
+
   return (
     <>
       <Table className={classes.table}>
@@ -103,13 +133,16 @@ export const BillTab = ({ paid }) => {
                 />
               </TableCell>
               <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
+                {bill.id}
+              </TableCell>
+              <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
                 {bill.account.name}
               </TableCell>
               <TableCell className={tableCellClasses} style={cellStyle}>
                 {moment(bill.billDt, format.YYYYMMDD).format(format.DDMMMYYYY)}
               </TableCell>
               <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                {numeral(bill.amount).format(format.AMOUNT_SYMBOL)}
+                {numeral(closed ? bill.amount : bill.draft).format(format.AMOUNT_SYMBOL)}
               </TableCell>
               <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
                 {numeral(bill.balance).format(format.AMOUNT_SYMBOL)}
@@ -118,17 +151,7 @@ export const BillTab = ({ paid }) => {
                 {moment(bill.dueDt, format.YYYYMMDD).format(format.DDMMMYYYY)}
               </TableCell>
               <TableCell className={tableCellClasses} style={cellStyle}>
-                {bill.balance ? (
-                  <ActionButton
-                    color='primary'
-                    onClick={() => handleBillPay(bill.id)}
-                    icon={<PaymentIcon fontSize='small' />}
-                  />
-                ) : bill.payments && bill.payments.length > 0 ? (
-                  moment(bill.payments[0].transDt, format.YYYYMMDD).format(format.DDMMMYYYY)
-                ) : (
-                  ''
-                )}
+                {buildBillAction(bill)}
               </TableCell>
             </TableRow>
           ))}

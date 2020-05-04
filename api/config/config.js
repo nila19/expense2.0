@@ -8,10 +8,10 @@ import dotenv from 'dotenv';
 // first step to load env variables from .env
 
 // commented out for enabling docker-compose
-// const result = dotenv.config();
-// if (result.error) {
-//   throw result.error;
-// }
+const result = dotenv.config();
+if (result.error) {
+  throw result.error;
+}
 
 // load all env variables into envs
 // const { parsed: envs } = result;
@@ -31,7 +31,7 @@ const root = {
     on: true,
     interval: 120000, // milliseconds
   },
-  billCloser: true,
+  billCloser: false, // flag to run it as a startup process.
   blocked: {
     on: false,
   },

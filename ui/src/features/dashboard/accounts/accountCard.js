@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import _ from 'lodash';
 import numeral from 'numeral';
 
 // @material-ui/core components
@@ -22,7 +23,8 @@ import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js'
 import { ActionButton } from 'features/inputs/formFields';
 
 import { selectDashboardGlobal, setAccountFilter } from 'features/dashboard/dashboardGlobalSlice';
-import { tallyAccount, billAccount } from 'features/dashboard/accounts/accountsSlice';
+import { tallyAccount } from 'features/dashboard/accounts/accountsSlice';
+import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 
 import { format } from 'features/utils';
 import {
@@ -41,6 +43,9 @@ export const AccountCard = ({ account }) => {
 
   const dispatch = useDispatch();
   const { accountFilter } = useSelector(selectDashboardGlobal);
+  const bills = useSelector(selectBills);
+  const lastBill = account.billed && account.bills.last ? _.find(bills, (e) => e.id === account.bills.last.id) : null;
+  const openBill = account.billed && account.bills.open ? _.find(bills, (e) => e.id === account.bills.open.id) : null;
 
   const handleAccountFilter = (id) => {
     dispatch(setAccountFilter(accountFilter === id ? null : id));
@@ -48,10 +53,6 @@ export const AccountCard = ({ account }) => {
 
   const handleTallyClick = (id) => {
     dispatch(tallyAccount(id));
-  };
-
-  const handleBillClick = (id) => {
-    dispatch(billAccount(id));
   };
 
   return (
@@ -65,7 +66,9 @@ export const AccountCard = ({ account }) => {
           {buildAccountIcon(account.icon)}
         </CardIcon>
         <p className={classes.cardCategory}>
-          <small>{account.name}</small>
+          <small>
+            {account.name} [{account.id}]
+          </small>
         </p>
         <h2 className={classes.cardTitle}>{numeral(account.balance).format(format.AMOUNT)}</h2>
       </CardHeader>
@@ -88,9 +91,8 @@ export const AccountCard = ({ account }) => {
           <Grid container item lg={12} spacing={1} alignItems='center'>
             <Grid item lg={2}>
               <ActionButton
-                color={buildAccountBillInfoColor(account)}
-                {...(account.billed && account.bills.last.balance <= 0 ? {} : { disabled: true })}
-                onClick={() => handleBillClick(account.id)}
+                color={buildAccountBillInfoColor(account, lastBill, openBill)}
+                disabled={true}
                 icon={
                   account.billed ? (
                     <AccessTimeIcon fontSize='small' style={{ top: '1px' }} />
@@ -102,7 +104,7 @@ export const AccountCard = ({ account }) => {
             </Grid>
             <Grid item lg={10}>
               <Box fontWeight='fontWeightRegular' fontSize={12} style={{ color: '#999', textAlign: 'left' }}>
-                {buildBillInfo(account)}
+                {buildBillInfo(account, lastBill, openBill)}
               </Box>
             </Grid>
           </Grid>

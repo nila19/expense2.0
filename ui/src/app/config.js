@@ -5,8 +5,8 @@ export const BACKEND = {
 
 export const API = {
   STARTUP: { ACCOUNTS: '/app/startup/accounts?cityId=', BILLS: '/app/dashboard/bills?cityId=' },
-  ACCOUNT: { TALLY: '/app/edit/tally', BILL: '/app/edit/bill' },
-  BILL: { PAY: '/app/edit/payBill' },
+  ACCOUNT: { TALLY: '/app/edit/tally' },
+  BILL: { CLOSE: '/app/edit/closeBill', PAY: '/app/edit/payBill' },
   EXPENSE: {
     ADD: '/app/edit/add',
     MODIFY: '/app/edit/modify',

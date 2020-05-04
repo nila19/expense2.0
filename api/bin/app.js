@@ -25,8 +25,8 @@ import { errorHandler } from './handler';
 // * TODO: make it run
 // * TODO: change to async/await
 // * TODO: change to mongoose
-// TODO: Redo front-end with React
-// TODO: Use Docker/Kube
+// * TODO: Redo front-end with React
+// * TODO: Use Docker/Kube
 // TODO: Add test cases
 // TODO: Add CI/CD
 
