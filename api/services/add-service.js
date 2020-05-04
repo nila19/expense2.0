@@ -94,7 +94,8 @@ const copyAccountsData = async (parms, data, trans) => {
         billDt: from.bills.open.billDt,
       };
       trans.bill.name = bills.buildBillName(from, trans.bill);
-      await bills.updateOne(parms.db, { id: from.bills.open.id }, { $inc: { draft: numeral(data.amount).value() } });
+      const amount = numeral(data.amount).value();
+      await bills.updateOne(parms.db, { id: from.bills.open.id }, { $inc: { amount: amount, balance: amount } });
     }
   }
   if (to.id) {

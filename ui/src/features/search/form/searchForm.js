@@ -58,7 +58,7 @@ export const SearchForm = () => {
       {({ isSubmitting }) => (
         <Form>
           <Card style={{ marginBottom: '10px' }}>
-            <CardBody style={{ padding: '5px 20px' }}>
+            <CardBody style={{ padding: '10px 20px' }}>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={2}>
                   <Field
@@ -79,7 +79,7 @@ export const SearchForm = () => {
                     options={descriptions}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
+                <GridItem xs={12} sm={12} md={2}>
                   <Field
                     name='account.id'
                     id='accountId'
@@ -109,23 +109,33 @@ export const SearchForm = () => {
                 <GridItem xs={12} sm={12} md={1}>
                   <Field name='amount' id='amount' label='Amount' labelWidth={60} component={FormikAmount} />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
-                  <Field name='adjust' id='adjust' label='Adjust' component={FormikComboBox} options={adhocOptions} />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
-                  <Field name='adhoc' id='adhoc' label='Adhoc' component={FormikComboBox} options={adhocOptions} />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
-                  <div style={{ marginTop: '28px' }}>
-                    <Field name='allRecords' id='allRecords' title='Fetch all records' component={FormikSwitch} />
-                  </div>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
-                  <div style={{ marginTop: '23px' }}>
-                    <Button color='rose' type='submit' disabled={isSubmitting}>
-                      <SearchIcon />
-                    </Button>
-                  </div>
+                <GridItem xs={12} sm={12} md={3}>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={3}>
+                      <Field
+                        name='adjust'
+                        id='adjust'
+                        label='Adjust'
+                        component={FormikComboBox}
+                        options={adhocOptions}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={3}>
+                      <Field name='adhoc' id='adhoc' label='Adhoc' component={FormikComboBox} options={adhocOptions} />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={3}>
+                      <div style={{ marginTop: '28px' }}>
+                        <Field name='allRecords' id='allRecords' title='Fetch all records' component={FormikSwitch} />
+                      </div>
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={3}>
+                      <div style={{ marginTop: '23px' }}>
+                        <Button color='rose' type='submit' disabled={isSubmitting}>
+                          <SearchIcon />
+                        </Button>
+                      </div>
+                    </GridItem>
+                  </GridContainer>
                 </GridItem>
               </GridContainer>
             </CardBody>

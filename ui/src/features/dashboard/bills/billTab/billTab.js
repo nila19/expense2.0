@@ -142,7 +142,7 @@ export const BillTab = ({ paid, closed }) => {
                 {moment(bill.billDt, format.YYYYMMDD).format(format.DDMMMYYYY)}
               </TableCell>
               <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                {numeral(closed ? bill.amount : bill.draft).format(format.AMOUNT_SYMBOL)}
+                {numeral(bill.amount).format(format.AMOUNT_SYMBOL)}
               </TableCell>
               <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
                 {numeral(bill.balance).format(format.AMOUNT_SYMBOL)}

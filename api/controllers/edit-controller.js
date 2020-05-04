@@ -17,7 +17,7 @@ export const tallyAccount = async (req, resp) => {
     await _tallyAccount(parms, acctId);
     return resp.json({ code: 0 });
   } catch (error) {
-    console.log(error);
+    parms.log.error(error);
     return resp.status(500).send(error.message);
   }
 };
@@ -28,7 +28,7 @@ export const addExpense = async (req, resp) => {
     const trans = await _addExpense(parms, req.body);
     return resp.json({ code: 0, data: trans });
   } catch (error) {
-    console.log(error);
+    parms.log.error(error);
     return resp.status(500).send(error.message);
   }
 };
@@ -39,7 +39,7 @@ export const modifyExpense = async (req, resp) => {
     await _modifyExpense(parms, req.body);
     return resp.json({ code: 0 });
   } catch (error) {
-    console.log(error);
+    parms.log.error(error);
     return resp.status(500).send(error.message);
   }
 };
@@ -51,7 +51,7 @@ export const deleteExpense = async (req, resp) => {
     await _deleteExpense({ ...parms, transId: transId });
     return resp.json({ code: 0 });
   } catch (error) {
-    console.log(error);
+    parms.log.error(error);
     return resp.status(500).send(error.message);
   }
 };
@@ -62,7 +62,7 @@ export const swapExpenses = async (req, resp) => {
     await _swapExpenses(parms, req.body);
     return resp.json({ code: 0 });
   } catch (error) {
-    console.log(error);
+    parms.log.error(error);
     return resp.status(500).send(error.message);
   }
 };
@@ -73,7 +73,7 @@ export const payBill = async (req, resp) => {
     const trans = await _payBill(parms, req.body);
     return resp.json({ code: 0, data: trans });
   } catch (error) {
-    console.log(error);
+    parms.log.error(error);
     return resp.status(500).send(error.message);
   }
 };
@@ -84,7 +84,7 @@ export const closeBill = async (req, resp) => {
     await _closeBill(parms, req.body);
     return resp.json({ code: 0 });
   } catch (error) {
-    console.log(error);
+    parms.log.error(error);
     return resp.status(500).send(error.message);
   }
 };
