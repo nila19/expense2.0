@@ -1,11 +1,12 @@
 /* eslint no-magic-numbers: "off", no-console: "off" */
 
 'use strict';
+
 import { should, use } from 'chai';
+import 'regenerator-runtime/runtime.js';
 
-import { tallyhistories } from '../../models/index';
-
-import { ping } from '../../config/mongodb-config.js';
+import { ping } from 'config/mongodb-config';
+import { tallyHistoryModel } from 'models';
 
 should();
 use(require('chai-things'));
@@ -22,7 +23,7 @@ describe('models.tallyhistories', () => {
   });
   describe('findForAcct', () => {
     it('should fetch all tallyhistories for account', async () => {
-      const tls = await tallyhistories.findForAcct(db, acctId);
+      const tls = await tallyHistoryModel.findForAcct(db, acctId);
       tls.map((t) => t.account).should.all.have.property('id', acctId);
     });
   });

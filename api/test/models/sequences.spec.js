@@ -1,10 +1,12 @@
 /* eslint no-magic-numbers: "off", no-console: "off" */
 
 'use strict';
-import { should, use, expect } from 'chai';
 
-import { sequences } from '../../models/index';
-import { ping } from '../../config/mongodb-config.js';
+import { should, use, expect } from 'chai';
+import 'regenerator-runtime/runtime.js';
+
+import { ping } from 'config/mongodb-config';
+import { sequenceModel } from 'models';
 
 should();
 use(require('chai-things'));
@@ -24,18 +26,18 @@ describe('models.sequences', () => {
     let oldSeq = 0;
 
     before('backup db values', async () => {
-      const seqs = await sequences.find(db, { cityId: cityId, table: table });
-      oldSeq = seqs[0].seq;
+      const sequences = await sequenceModel.find(db, { cityId: cityId, table: table });
+      oldSeq = sequences[0].seq;
     });
     it('should get next sequence', async () => {
-      let seq = await sequences.findOneAndUpdate(db, { cityId: cityId, table: table });
-      expect(seq.value).to.have.property('seq', oldSeq + 1);
+      let sequence = await sequenceModel.findOneAndUpdate(db, { cityId: cityId, table: table });
+      expect(sequence.value).to.have.property('seq', oldSeq + 1);
 
-      seq = await sequences.findOneAndUpdate(db, { cityId: cityId, table: table });
-      expect(seq.value).to.have.property('seq', oldSeq + 2);
+      sequence = await sequenceModel.findOneAndUpdate(db, { cityId: cityId, table: table });
+      expect(sequence.value).to.have.property('seq', oldSeq + 2);
     });
     after('restore db values', async () => {
-      await sequences.updateOne(db, { cityId: cityId, table: table }, { $set: { seq: oldSeq } });
+      await sequenceModel.updateOne(db, { cityId: cityId, table: table }, { $set: { seq: oldSeq } });
     });
   });
 

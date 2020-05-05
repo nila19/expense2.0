@@ -1,36 +1,40 @@
 /* eslint no-magic-numbers: "off" */
 
 'use strict';
+
+import _ from 'lodash';
 import moment from 'moment';
 import { should, use, expect } from 'chai';
+import 'regenerator-runtime/runtime.js';
 
-import { accounts, transactions } from '../../models/index';
-
-import { addExpense } from '../../services/add-service';
-import { deleteExpense } from '../../services/delete-service';
-import { ping } from '../../config/mongodb-config.js';
+import { ping } from 'config/mongodb-config';
+import { accountModel, transactionModel } from 'models';
+import { addExpense } from 'services/add-service';
+import { deleteExpense } from 'services/delete-service';
 
 should();
 use(require('chai-things'));
 
+const round = (amt) => _.round(amt, 2);
+
 const checkBalances = async (db, amt, fromAcctId, fromAcBalance, toAcctId, toAcBalance) => {
-  const fromAc = await accounts.findById(db, fromAcctId);
-  expect(fromAc).to.have.property('balance', fromAcBalance + amt);
+  const fromAc = await accountModel.findById(db, fromAcctId);
+  expect(round(fromAc.balance)).to.be.equal(round(fromAcBalance + amt));
 
   if (toAcctId) {
-    const toAc = await accounts.findById(db, toAcctId);
-    expect(toAc).to.have.property('balance', toAcBalance + amt);
+    const toAc = await accountModel.findById(db, toAcctId);
+    expect(round(toAc.balance)).to.be.equal(round(toAcBalance + amt));
   }
 };
 
 const dropExpense = async (db, transId, fromAcctId, fromAcBalance, toAcctId, toAcBalance) => {
   await deleteExpense({ db: db, log: console, transId: transId });
-  const fromAc = await accounts.findById(db, fromAcctId);
-  expect(fromAc).to.have.property('balance', fromAcBalance);
+  const fromAc = await accountModel.findById(db, fromAcctId);
+  expect(round(fromAc.balance)).to.be.equal(round(fromAcBalance));
 
   if (toAcctId) {
-    const toAc = await accounts.findById(db, toAcctId);
-    expect(toAc).to.have.property('balance', toAcBalance);
+    const toAc = await accountModel.findById(db, toAcctId);
+    expect(round(toAc.balance)).to.be.equal(round(toAcBalance));
   }
 };
 
@@ -49,20 +53,20 @@ describe('services.addService', () => {
       const acctId = 68;
       const amt = 100.25;
       const formData = {
-        city: { id: 20090201 },
+        cityId: 20090201,
         adjust: false,
         adhoc: false,
         category: { id: 188 },
         description: { name: 'Mocha testing' },
         amount: amt,
-        transDt: '15-May-2017',
+        transDt: '2017-05-15',
         accounts: { from: { id: acctId }, to: null },
       };
       let transId = 0;
       let acBalance = 0;
 
       before('fetch account balance', async () => {
-        const ac = await accounts.findById(db, acctId);
+        const ac = await accountModel.findById(db, acctId);
         acBalance = ac.balance;
       });
       it('should throw an error', async () => {
@@ -79,13 +83,13 @@ describe('services.addService', () => {
       const acctId = 68;
       const amt = 100.25;
       const formData = {
-        city: { id: 20140301 },
+        cityId: 20140301,
         adjust: false,
         adhoc: false,
         category: { id: 188, name: 'House ~ School' },
         description: { name: 'Mocha testing' },
         amount: amt,
-        transDt: '15-May-2017',
+        transDt: '2017-05-15',
         accounts: { from: { id: acctId }, to: null },
       };
       let transId = 0;
@@ -93,14 +97,14 @@ describe('services.addService', () => {
       const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
       before('fetch account balance', async () => {
-        const ac = await accounts.findById(db, acctId);
+        const ac = await accountModel.findById(db, acctId);
         acBalance = ac.balance;
       });
       it('should add a regular expense', async () => {
         const t = await addExpense({ db: db, log: console }, formData);
         transId = t.id;
 
-        const tr = await transactions.findById(db, transId);
+        const tr = await transactionModel.findById(db, transId);
         expect(tr).to.have.property('id', transId);
         expect(tr).to.have.property('cityId', 20140301);
         expect(tr).to.have.property('entryMonth', entryMth);
@@ -130,13 +134,13 @@ describe('services.addService', () => {
       const acctId = 68;
       const amt = -100.25;
       const formData = {
-        city: { id: 20140301 },
+        cityId: 20140301,
         adjust: false,
         adhoc: false,
         category: { id: 188, name: 'House ~ School' },
         description: { name: 'Mocha testing' },
         amount: amt,
-        transDt: '15-May-2017',
+        transDt: '2017-05-15',
         accounts: { from: { id: acctId }, to: null },
       };
       let transId = 0;
@@ -144,14 +148,14 @@ describe('services.addService', () => {
       const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
       before('fetch account balance', async () => {
-        const ac = await accounts.findById(db, acctId);
+        const ac = await accountModel.findById(db, acctId);
         acBalance = ac.balance;
       });
       it('should add a regular expense - negative amount', async () => {
         const t = await addExpense({ db: db, log: console }, formData);
         transId = t.id;
 
-        const tr = await transactions.findById(db, transId);
+        const tr = await transactionModel.findById(db, transId);
         expect(tr).to.have.property('id', transId);
         expect(tr).to.have.property('cityId', 20140301);
         expect(tr).to.have.property('entryMonth', entryMth);
@@ -183,13 +187,13 @@ describe('services.addService', () => {
     const toAcctId = 68;
     const amt = 100.25;
     const formData = {
-      city: { id: 20140301 },
+      cityId: 20140301,
       adjust: true,
       adhoc: false,
       category: null,
       description: 'Mocha testing 3',
       amount: amt,
-      transDt: '20-May-2017',
+      transDt: '2017-05-20',
       accounts: { from: { id: fromAcctId }, to: { id: toAcctId } },
     };
     let transId = 0;
@@ -198,17 +202,17 @@ describe('services.addService', () => {
     const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
     before('fetch account balance', async () => {
-      const fromAc = await accounts.findById(db, fromAcctId);
+      const fromAc = await accountModel.findById(db, fromAcctId);
       frAcBalance = fromAc.balance;
 
-      const toAc = await accounts.findById(db, toAcctId);
+      const toAc = await accountModel.findById(db, toAcctId);
       toAcBalance = toAc.balance;
     });
     it('should add an adjustment', async () => {
       const t = await addExpense({ db: db, log: console }, formData);
       transId = t.id;
 
-      const tr = await transactions.findById(db, transId);
+      const tr = await transactionModel.findById(db, transId);
       expect(tr).to.have.property('id', transId);
       expect(tr).to.have.property('cityId', 20140301);
       expect(tr).to.have.property('entryMonth', entryMth);
@@ -240,13 +244,13 @@ describe('services.addService', () => {
     const toAcctId = 68;
     const amt = -100.25;
     const formData = {
-      city: { id: 20140301 },
+      cityId: 20140301,
       adjust: true,
       adhoc: false,
       category: null,
       description: 'Mocha testing 3',
       amount: amt,
-      transDt: '20-May-2017',
+      transDt: '2017-05-20',
       accounts: { from: { id: fromAcctId }, to: { id: toAcctId } },
     };
     let transId = 0;
@@ -255,17 +259,17 @@ describe('services.addService', () => {
     const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
     before('fetch account balance', async () => {
-      const fromAc = await accounts.findById(db, fromAcctId);
+      const fromAc = await accountModel.findById(db, fromAcctId);
       frAcBalance = fromAc.balance;
 
-      const toAc = await accounts.findById(db, toAcctId);
+      const toAc = await accountModel.findById(db, toAcctId);
       toAcBalance = toAc.balance;
     });
     it('should add an adjustment - negative amount', async () => {
       const t = await addExpense({ db: db, log: console }, formData);
       transId = t.id;
 
-      const tr = await transactions.findById(db, transId);
+      const tr = await transactionModel.findById(db, transId);
       expect(tr).to.have.property('id', transId);
       expect(tr).to.have.property('cityId', 20140301);
       expect(tr).to.have.property('entryMonth', entryMth);
@@ -296,13 +300,13 @@ describe('services.addService', () => {
     const toAcctId = 68;
     const amt = 100.25;
     const formData = {
-      city: { id: 20140301 },
+      cityId: 20140301,
       adjust: true,
       adhoc: false,
       category: null,
       description: 'Mocha testing 3',
       amount: amt,
-      transDt: '20-May-2017',
+      transDt: '2017-05-20',
       accounts: { from: null, to: { id: toAcctId } },
     };
     let transId = 0;
@@ -310,14 +314,14 @@ describe('services.addService', () => {
     const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
     before('fetch account balance', async () => {
-      const ac = await accounts.findById(db, toAcctId);
+      const ac = await accountModel.findById(db, toAcctId);
       toAcBalance = ac.balance;
     });
     it('should add an adjustment - fromAccount blank', async () => {
       const t = await addExpense({ db: db, log: console }, formData);
       transId = t.id;
 
-      const tr = await transactions.findById(db, transId);
+      const tr = await transactionModel.findById(db, transId);
       expect(tr).to.have.property('id', transId);
       expect(tr).to.have.property('cityId', 20140301);
       expect(tr).to.have.property('entryMonth', entryMth);
@@ -346,13 +350,13 @@ describe('services.addService', () => {
     const fromAcctId = 62;
     const amt = 100.25;
     const formData = {
-      city: { id: 20140301 },
+      cityId: 20140301,
       adjust: true,
       adhoc: false,
       category: null,
       description: 'Mocha testing 3',
       amount: amt,
-      transDt: '20-May-2017',
+      transDt: '2017-05-20',
       accounts: { from: { id: fromAcctId }, to: null },
     };
     let transId = 0;
@@ -360,14 +364,14 @@ describe('services.addService', () => {
     const entryMth = moment().startOf('month').format('YYYY-MM-DD');
 
     before('fetch account balance', async () => {
-      const ac = await accounts.findById(db, fromAcctId);
+      const ac = await accountModel.findById(db, fromAcctId);
       frAcBalance = ac.balance;
     });
     it('should add an adjustment - toAccount blank', async () => {
       const t = await addExpense({ db: db, log: console }, formData);
       transId = t.id;
 
-      const tr = await transactions.findById(db, transId);
+      const tr = await transactionModel.findById(db, transId);
       expect(tr).to.have.property('id', transId);
       expect(tr).to.have.property('cityId', 20140301);
       expect(tr).to.have.property('entryMonth', entryMth);

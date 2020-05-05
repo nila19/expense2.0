@@ -36,13 +36,15 @@ export const addExpense = async (parms, data) => {
       },
     }
   );
-  return tran;
+  return await transactionModel.findById(parms.db, tran.id);
 };
 
 // step 3: fetch from & to accounts info from DB
 const loadAccountsInfo = async (parms, data) => {
-  data.accounts.from = await accountModel.findById(parms.db, data.accounts.from.id ? data.accounts.from.id : 0);
-  data.accounts.to = await accountModel.findById(parms.db, data.accounts.to.id ? data.accounts.to.id : 0);
+  const fromId = data.accounts.from && data.accounts.from.id ? data.accounts.from.id : 0;
+  const toId = data.accounts.to && data.accounts.to.id ? data.accounts.to.id : 0;
+  data.accounts.from = await accountModel.findById(parms.db, fromId);
+  data.accounts.to = await accountModel.findById(parms.db, toId);
 };
 
 // step 2: copy transaction data from input to transaction record.

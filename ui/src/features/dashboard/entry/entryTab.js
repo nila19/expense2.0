@@ -55,7 +55,7 @@ export const EntryTab = ({ adjust }) => {
           }),
           description: Yup.string().required('Required').trim().min(2, 'Min length'),
           transDt: Yup.string().required('Required'),
-          amount: Yup.number().required('Required').moreThan(0, 'Must be > 0'),
+          amount: Yup.number().required('Required').notOneOf([0]),
           accounts: Yup.object({
             from: Yup.object({
               id: Yup.number().required('Required'),

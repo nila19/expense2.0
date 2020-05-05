@@ -1,8 +1,11 @@
 /* eslint no-magic-numbers: "off" */
 
 'use strict';
+
 import { should, use, expect } from 'chai';
-import { buildMonth, buildMonthsList } from '../../utils/month-utils';
+import 'regenerator-runtime/runtime.js';
+
+import { buildMonth, buildMonthsList } from 'utils/month-utils';
 
 should();
 use(require('chai-things'));
@@ -24,7 +27,7 @@ describe('utils.month-utils', () => {
       // note: the first 2 dates should be based on current month when the test is run.
       const output = [
         { id: '2020-12-31', bills: null, aggregate: true, name: '2020', seq: 202013, year: 2020 },
-        { id: '2020-04-01', bills: null, aggregate: false, name: 'Apr-20', seq: 202004, year: 2020 },
+        { id: '2020-05-01', bills: null, aggregate: false, name: 'May-20', seq: 202005, year: 2020 },
         { id: '2016-12-31', bills: null, aggregate: true, name: '2016', seq: 201613, year: 2016 },
         { id: '2016-04-01', bills: null, aggregate: false, name: 'Apr-16', seq: 201604, year: 2016 },
         { id: '2015-12-31', bills: null, aggregate: true, name: '2015', seq: 201513, year: 2015 },

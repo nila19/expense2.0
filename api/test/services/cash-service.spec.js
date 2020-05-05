@@ -1,31 +1,32 @@
 /* eslint no-magic-numbers: "off" */
 
 'use strict';
+
 import _ from 'lodash';
 import { should, use, expect } from 'chai';
+import 'regenerator-runtime/runtime.js';
 
-import { accounts, transactions } from '../../models/index';
-
-import { transferCash } from '../../services/cash-service';
-import { ping } from '../../config/mongodb-config.js';
+import { ping } from 'config/mongodb-config';
+import { accountModel, transactionModel } from 'models';
+import { transferCash } from 'services/cash-service';
 
 should();
 use(require('chai-things'));
 
 const loadInitialBalances = async (db, form) => {
   if (form.from.id) {
-    const fromAc = await accounts.findById(db, form.from.id);
+    const fromAc = await accountModel.findById(db, form.from.id);
     form.from.balance = fromAc.balance;
   }
   if (form.to.id) {
-    const toAc = await accounts.findById(db, form.to.id);
+    const toAc = await accountModel.findById(db, form.to.id);
     form.to.balance = toAc.balance;
   }
 };
 
 const checkBalances = async (db, form, original) => {
   if (form.from.id) {
-    const fromAc = await accounts.findById(db, form.from.id);
+    const fromAc = await accountModel.findById(db, form.from.id);
     const fromBalance = original
       ? form.from.balance
       : form.from.cash
@@ -36,7 +37,7 @@ const checkBalances = async (db, form, original) => {
   }
 
   if (form.to.id) {
-    const toAc = await accounts.findById(db, form.to.id);
+    const toAc = await accountModel.findById(db, form.to.id);
     const toBalance = original
       ? form.to.balance
       : form.to.cash
@@ -199,7 +200,7 @@ describe('services.cashService', () => {
         await loadInitialBalances(db, form);
       });
       before('fetch transaction item balances', async () => {
-        const fromTrans = await transactions.findForAcct(db, form.from.cityId, form.from.id);
+        const fromTrans = await transactionModel.findForAcct(db, form.from.cityId, form.from.id);
         balances.from = fromTrans.map((tr) => {
           // build the expected balances for 'from' account.
           tr.accounts.from.balanceBfExp = tr.accounts.from.balanceBf;
@@ -219,7 +220,7 @@ describe('services.cashService', () => {
           return { id: tr.id, seq: tr.seq, accounts: tr.accounts };
         });
 
-        const toTrans = await transactions.findForAcct(db, form.to.cityId, form.to.id);
+        const toTrans = await transactionModel.findForAcct(db, form.to.cityId, form.to.id);
         balances.to = toTrans.map((tr) => {
           // build the expected balances for 'to' account.
           tr.accounts.from.balanceBfExp = tr.accounts.from.balanceBf;
@@ -245,7 +246,7 @@ describe('services.cashService', () => {
         await checkBalances(db, form);
 
         // check from account - post checking.
-        const fromTrans = await transactions.findForAcct(db, form.from.cityId, form.from.id);
+        const fromTrans = await transactionModel.findForAcct(db, form.from.cityId, form.from.id);
         fromTrans.forEach((tr) => {
           const beforeTr = _.find(balances.from, ['id', tr.id]);
           expect(tr.accounts.from).to.have.property('balanceBf', beforeTr.accounts.from.balanceBfExp);
@@ -255,7 +256,7 @@ describe('services.cashService', () => {
         });
 
         // check to account - post checking.
-        const toTrans = await transactions.findForAcct(db, form.to.cityId, form.to.id);
+        const toTrans = await transactionModel.findForAcct(db, form.to.cityId, form.to.id);
         toTrans.forEach((tr) => {
           const beforeTr = _.find(balances.to, ['id', tr.id]);
           expect(tr.accounts.from).to.have.property('balanceBf', beforeTr.accounts.from.balanceBfExp);

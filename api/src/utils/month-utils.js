@@ -16,7 +16,7 @@ export const buildMonthsList = (dates) => {
 // step 2.1 - build the initial months list.
 const buildMonths = (dates) => {
   return dates.map((date) => {
-    const month = moment(date).startOf('month').format(format.YYYYMMDD);
+    const month = moment(date, format.YYYYMMDD).startOf('month').format(format.YYYYMMDD);
     return buildMonth(month);
   });
 };
@@ -49,9 +49,9 @@ export const buildMonth = (date, year = false) => {
     id: date,
     bills: null,
     aggregate: year,
-    name: moment(date).format(year ? format.YYYY : format.MMMYY),
-    seq: _.toNumber(moment(date).format(format.YYYYMM)) + (year ? 1 : 0),
-    year: _.toNumber(moment(date).format(format.YYYY)),
+    name: moment(date, format.YYYYMMDD).format(year ? format.YYYY : format.MMMYY),
+    seq: _.toNumber(moment(date, format.YYYYMMDD).format(format.YYYYMM)) + (year ? 1 : 0),
+    year: _.toNumber(moment(date, format.YYYYMMDD).format(format.YYYY)),
   };
 };
 

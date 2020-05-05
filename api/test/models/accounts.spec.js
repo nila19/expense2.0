@@ -1,11 +1,12 @@
 /* eslint no-magic-numbers: "off", no-console: "off" */
 
 'use strict';
+
 import { should, use, expect } from 'chai';
+import 'regenerator-runtime/runtime.js';
 
-import { accounts } from '../../models/index';
-
-import { ping } from '../../config/mongodb-config.js';
+import { ping } from 'config/mongodb-config';
+import { accountModel } from 'models';
 
 should();
 use(require('chai-things'));
@@ -23,13 +24,13 @@ describe('models.accounts', () => {
   });
   describe('findForCity', () => {
     it('should fetch all active accounts = 9', async () => {
-      const accts = await accounts.findForCity(db, cityId);
+      const accts = await accountModel.findForCity(db, cityId);
       accts.should.all.have.property('active', true);
     });
   });
   describe('findBillable', () => {
     it('should fetch all active, billable accounts = 4', async () => {
-      const accts = await accounts.findBillable(db, cityId);
+      const accts = await accountModel.findBillable(db, cityId);
       accts.should.all.have.property('active', true);
       accts.should.all.have.property('billed', true);
     });
@@ -39,16 +40,16 @@ describe('models.accounts', () => {
     let balance = 0;
 
     before('backup db values', async () => {
-      const acct = await accounts.findById(db, acctId);
+      const acct = await accountModel.findById(db, acctId);
       balance = acct.balance;
     });
     it('should update account', async () => {
-      await accounts.updateOne(db, { id: acctId }, { $set: { balance: newBal } });
-      const acct = await accounts.findById(db, acctId);
+      await accountModel.updateOne(db, { id: acctId }, { $set: { balance: newBal } });
+      const acct = await accountModel.findById(db, acctId);
       expect(acct).to.have.property('balance', newBal);
     });
     after('restore db values', async () => {
-      await accounts.updateOne(db, { id: acctId }, { $set: { balance: balance } });
+      await accountModel.updateOne(db, { id: acctId }, { $set: { balance: balance } });
     });
   });
 

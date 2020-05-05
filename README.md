@@ -1,8 +1,17 @@
-# expense2.0
+# Available Scripts
 
-Starts both DB & API
+In the project directory, you can run:
 
-- docker-compose up -d --build --remove-orphans
+## Run
 
-- Copy the expense-data
-  - mongorestore -d expense-test dump-20.03.15/expense
+- `docker-compose up -d`
+- `docker-compose down`
+
+## Build & Run (during development)
+
+- Comment `ui-prod` service & uncomment `ui-dev` service in `docker-compose.yml`
+- `docker-compose up --build --remove-orphans`
+
+## Restore the DB
+
+- `mongorestore -d expense-test dump-20.03.15/expense`

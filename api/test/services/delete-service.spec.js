@@ -1,39 +1,40 @@
 /* eslint no-magic-numbers: "off", no-console: "off" */
 
 'use strict';
+
 import _ from 'lodash';
 import moment from 'moment';
 import { should, use, expect } from 'chai';
+import 'regenerator-runtime/runtime.js';
 
-import { accounts, bills, transactions } from '../../models/index';
-
-import { addExpense } from '../../services/add-service';
-import { deleteExpense } from '../../services/delete-service';
-import { ping } from '../../config/mongodb-config.js';
-import format from '../../config/formats';
+import { format } from 'config/formats';
+import { ping } from 'config/mongodb-config';
+import { accountModel, billModel, transactionModel } from 'models';
+import { addExpense } from 'services/add-service';
+import { deleteExpense } from 'services/delete-service';
 
 should();
 use(require('chai-things'));
 
 // ====================== Reusable Functions ======================//
 const fetchData = async (db, transId, data) => {
-  data.trans = await transactions.findById(db, transId);
-  data.accounts.from = await accounts.findById(db, data.trans.accounts.from.id);
-  data.accounts.to = await accounts.findById(db, data.trans.accounts.to.id);
+  data.trans = await transactionModel.findById(db, transId);
+  data.accounts.from = await accountModel.findById(db, data.trans.accounts.from.id);
+  data.accounts.to = await accountModel.findById(db, data.trans.accounts.to.id);
   if (!data.trans.adjust && data.trans.bill) {
-    data.bill = await bills.findById(db, data.trans.bill.id);
+    data.bill = await billModel.findById(db, data.trans.bill.id);
   }
 };
 
 const reInsertTrans = async (db, data) => {
   const form = {
-    city: { id: data.trans.cityId },
+    cityId: data.trans.cityId,
     adjust: data.trans.adjust,
     adhoc: data.trans.adhoc,
     category: { id: data.trans.category.id, name: data.trans.category.name },
-    description: { name: data.trans.description },
+    description: data.trans.description,
     amount: data.trans.amount,
-    transDt: moment(data.trans.transDt, format.YYYYMMDD).format(format.DDMMMYYYY),
+    transDt: data.trans.transDt,
     accounts: {
       from: { id: data.accounts.from ? data.accounts.from.id : 0 },
       to: { id: data.accounts.to ? data.accounts.to.id : 0 },
@@ -52,26 +53,38 @@ const reInsertTrans = async (db, data) => {
     tallied: data.trans.tallied,
     tallyDt: data.trans.tallyDt,
   };
-  await transactions.findOneAndUpdate(db, { id: tran.id }, { $set: mod1 });
+  await transactionModel.findOneAndUpdate(db, { id: tran.id }, { $set: mod1 });
 
-  const fromAc = await accounts.findById(db, data.accounts.from.id);
+  const fromAc = await accountModel.findById(db, data.accounts.from.id);
   const fromBalance = range(data.accounts.from.balance);
   expect(fromAc.balance).to.be.within(fromBalance.low, fromBalance.high);
 
-  const toAc = await accounts.findById(db, data.accounts.to.id);
+  const toAc = await accountModel.findById(db, data.accounts.to.id);
   if (data.accounts.to.id) {
     const toBalance = range(data.accounts.to.balance);
     expect(toAc.balance).to.be.within(toBalance.low, toBalance.high);
   }
 
   if (data.bill) {
-    const mod2 = { 'bill.id': data.bill.id, 'bill.billDt': data.bill.billDt, 'bill.name': data.bill.name };
-    await transactions.findOneAndUpdate(db, { id: data.trans.id }, { $set: mod2 });
+    const amount = data.trans.amount;
 
-    const mod3 = { amount: data.trans.amount, balance: data.trans.amount };
-    await bills.findOneAndUpdate(db, { id: data.bill.id }, { $inc: mod3 });
+    // remove balance from the default open bill.
+    const mod4 = { amount: -amount, balance: -amount };
+    await billModel.findOneAndUpdate(db, { id: tran.bill.id }, { $inc: mod4 });
 
-    const bill = await bills.findById(db, data.bill.id);
+    // set the target bill id.
+    const mod2 = {
+      'bill.id': data.bill.id,
+      'bill.billDt': data.bill.billDt,
+      'bill.name': data.bill.name,
+    };
+    await transactionModel.findOneAndUpdate(db, { id: data.trans.id }, { $set: mod2 });
+
+    // add balance to the target bill.
+    const mod3 = { amount: amount, balance: amount };
+    await billModel.findOneAndUpdate(db, { id: data.bill.id }, { $inc: mod3 });
+
+    const bill = await billModel.findById(db, data.bill.id);
     const billAmount = range(data.bill.amount);
     const billBalance = range(data.bill.balance);
     expect(bill.amount).to.be.within(billAmount.low, billAmount.high);
@@ -88,14 +101,14 @@ const range = (value) => {
 };
 
 const checkBalances = async (db, transId, data) => {
-  const tr = await transactions.findById(db, transId);
+  const tr = await transactionModel.findById(db, transId);
   expect(tr).to.be.null;
 
-  const ac = await accounts.findById(db, data.accounts.from.id);
+  const ac = await accountModel.findById(db, data.accounts.from.id);
   expect(ac).to.have.property('balance', data.accounts.from.balance - data.trans.amount);
 
   if (!data.trans.adjust && data.trans.bill) {
-    const bill = await bills.findById(db, data.bill.id);
+    const bill = await billModel.findById(db, data.bill.id);
     expect(bill).to.have.property('amount', data.bill.amount - data.trans.amount);
     expect(bill).to.have.property('balance', data.bill.balance - data.trans.amount);
   }
@@ -177,7 +190,7 @@ describe('services.deleteService', () => {
     });
     // case #3
     describe('delete expense - positive amount', () => {
-      const transId = 10816;
+      const transId = 10875;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
@@ -195,7 +208,7 @@ describe('services.deleteService', () => {
     });
     // case #4
     describe('delete expense - negative amount', () => {
-      const transId = 10935;
+      const transId = 10943;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
@@ -213,7 +226,7 @@ describe('services.deleteService', () => {
     });
     // case #6
     describe('delete expense - open bill', () => {
-      const transId = 10935;
+      const transId = 10944;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
@@ -231,7 +244,7 @@ describe('services.deleteService', () => {
     });
     // case #7
     describe('delete expense - adjustment', () => {
-      const transId = 11017;
+      const transId = 10887;
       const data = {
         trans: null,
         accounts: { from: null, to: null },
@@ -244,17 +257,17 @@ describe('services.deleteService', () => {
       it('should delete adjustment expense', async () => {
         await deleteExpense({ db: db, transId: transId, log: { error: () => {} } });
 
-        const tr = await transactions.findById(db, transId);
+        const tr = await transactionModel.findById(db, transId);
         expect(tr).to.be.null;
 
-        const fromAc = await accounts.findById(db, data.accounts.from.id);
+        const fromAc = await accountModel.findById(db, data.accounts.from.id);
         expect(fromAc).to.have.property('balance', data.accounts.from.balance + data.trans.amount);
 
-        const toAc = await accounts.findById(db, data.accounts.to.id);
+        const toAc = await accountModel.findById(db, data.accounts.to.id);
         expect(toAc).to.have.property('balance', data.accounts.to.balance + data.trans.amount);
 
         if (!data.trans.adjust && data.trans.bill) {
-          const bill = await bills.findById(db, data.bill.id);
+          const bill = await billModel.findById(db, data.bill.id);
           expect(bill).to.have.property('amount', data.bill.amount - data.trans.amount);
           expect(bill).to.have.property('balance', data.bill.balance - data.trans.amount);
         }

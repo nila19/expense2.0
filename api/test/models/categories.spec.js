@@ -1,11 +1,12 @@
 /* eslint no-magic-numbers: "off", no-console: "off" */
 
 'use strict';
+
 import { should, use } from 'chai';
+import 'regenerator-runtime/runtime.js';
 
-import { categories } from '../../models/index';
-
-import { ping } from '../../config/mongodb-config.js';
+import { ping } from 'config/mongodb-config';
+import { categoryModel } from 'models';
 
 should();
 use(require('chai-things'));
@@ -22,7 +23,7 @@ describe('models.categories', () => {
   });
   describe('findForCity', () => {
     it('should fetch all categories', async () => {
-      const cats = await categories.findForCity(db, cityId);
+      const cats = await categoryModel.findForCity(db, cityId);
       cats.should.all.have.property('cityId', cityId);
     });
   });
