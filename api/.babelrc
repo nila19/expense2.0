@@ -1,6 +1,19 @@
 {
   "sourceMaps": "inline",
   "retainLines": true,
-  "plugins": ["@babel/plugin-transform-classes", "@babel/plugin-transform-object-super"],
+  "plugins": [
+    "@babel/plugin-transform-classes",
+    "@babel/plugin-transform-object-super",
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+        "alias": {
+          "test": "./test",
+          "underscore": "lodash"
+        }
+      }
+    ]
+  ],
   "presets": ["@babel/preset-env"]
 }

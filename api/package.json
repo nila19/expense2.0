@@ -5,12 +5,12 @@
   "description": "Node application",
   "keywords": [],
   "scripts": {
-    "start": "babel-node bin/server.js --region=dev | bunyan",
-    "prod": "babel-node bin/server.js --region=prod | bunyan",
+    "start": "babel-node src/bin/server.js --region=dev | bunyan",
+    "prod": "babel-node src/bin/server.js --region=prod | bunyan",
     "babel-node": "babel-node",
-    "nodemon": "nodemon --exec npm run babel-node bin/server.js --region=dev | bunyan",
+    "nodemon": "nodemon --exec npm run babel-node src/bin/server.js --region=dev | bunyan",
     "test": "mocha --require @babel/register --debug-brk",
-    "debug": "babel-node --inspect-brk bin/server.js --region=dev | bunyan",
+    "debug": "babel-node --inspect-brk src/bin/server.js --region=dev | bunyan",
     "istanbul": "nyc mocha"
   },
   "dependencies": {
@@ -49,6 +49,7 @@
     "@types/sugar": "^2.0.2",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
     "@typescript-eslint/parser": "^2.20.0",
+    "babel-plugin-module-resolver": "^4.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-things": "^0.2.0",
