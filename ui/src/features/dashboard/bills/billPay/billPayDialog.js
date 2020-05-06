@@ -4,7 +4,6 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 
 import moment from 'moment';
-import numeral from 'numeral';
 
 // @material-ui/core
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,7 +24,7 @@ import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js'
 
 import { FormikComboBox } from 'features/inputs/comboBox';
 import { CustomTextField, FormikDatePicker, FormikAmount } from 'features/inputs/formFields';
-import { format, buildAccountOptions } from 'features/utils';
+import { format, formatAmt, formatDate, buildAccountOptions } from 'features/utils';
 
 import { selectAccounts } from 'features/dashboard/accounts/accountsSlice';
 import { selectBillPay } from 'features/dashboard/bills/billPay/billPaySlice';
@@ -39,7 +38,7 @@ export const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
         bill: bill,
         account: { id: null },
         paidAmt: bill.balance,
-        paidDt: moment().format(format.YYYYMMDD),
+        paidDt: formatDate(moment(), format.YYYYMMDD),
       }}
       validationSchema={Yup.object({
         paidDt: Yup.string().required('Required'),
@@ -61,28 +60,13 @@ export const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
               <CustomTextField disabled id='bill' label='Bill' value={bill.name} />
             </GridItem>
             <GridItem xs={12} sm={4}>
-              <CustomTextField
-                disabled
-                id='billAmount'
-                label='Bill Amount'
-                value={numeral(bill.amount).format(format.AMOUNT_SYMBOL)}
-              />
+              <CustomTextField disabled id='billAmount' label='Bill Amount' value={formatAmt(bill.amount, true)} />
             </GridItem>
             <GridItem xs={12} sm={4}>
-              <CustomTextField
-                disabled
-                id='billBalance'
-                label='Bill Balance'
-                value={numeral(bill.balance).format(format.AMOUNT_SYMBOL)}
-              />
+              <CustomTextField disabled id='billBalance' label='Bill Balance' value={formatAmt(bill.balance, true)} />
             </GridItem>
             <GridItem xs={12} sm={4}>
-              <CustomTextField
-                disabled
-                id='dueDate'
-                label='Due Date'
-                value={moment(bill.dueDt, format.YYYYMMDD).format(format.DDMMMYYYY)}
-              />
+              <CustomTextField disabled id='dueDate' label='Due Date' value={formatDate(bill.dueDt)} />
             </GridItem>
             <GridItem xs={12} sm={12}>
               <Field

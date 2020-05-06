@@ -1,5 +1,10 @@
 import joi from '@hapi/joi';
 
+const BillTypeMin2 = joi.object({
+  id: joi.number().positive().required(),
+  name: joi.string().required(),
+});
+
 export const AccountType = joi.object({
   id: joi.number().positive().required(),
   name: joi.string().required(),
@@ -19,11 +24,6 @@ export const AccountType = joi.object({
     last: BillTypeMin2.allow(null),
     open: BillTypeMin2.allow(null),
   }),
-});
-
-const BillTypeMin2 = joi.object({
-  id: joi.number().positive().required(),
-  name: joi.string().required(),
 });
 
 const AccountTypeMin = joi.object({

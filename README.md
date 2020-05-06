@@ -6,12 +6,17 @@ In the project directory, you can run:
 
 - `docker-compose up -d`
 - `docker-compose down`
+- `docker-compose -f docker-compose-prod.yml up`
 
 ## Build & Run (during development)
 
 - Comment `ui-prod` service & uncomment `ui-dev` service in `docker-compose.yml`
-- `docker-compose up --build --remove-orphans`
+- `docker-compose up --build` or `docker-compose up --build --remove-orphans`
 
-## Restore the DB
+## Dump data from DB
 
-- `mongorestore -d expense-test dump-20.03.15/expense`
+- `mongodump --out=2020-05-05 --db=expense --host=localhost --port=27017`
+
+## Restore the DB from data snapshot
+
+- `mongorestore --db=expense 2020-05-05/expense`

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import classnames from 'classnames';
 import moment from 'moment';
-import numeral from 'numeral';
 
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,7 +23,7 @@ import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js
 import { COUNTS } from 'app/config';
 import { ActionButton } from 'features/inputs/formFields';
 import { CustomPagination, PaginationActions } from 'features/inputs/customPagination';
-import { format, getSliceForPage, getTotalAmount } from 'features/utils';
+import { formatAmt, formatDate, getSliceForPage, getTotalAmount } from 'features/utils';
 import { BillPayDialog } from 'features/dashboard/bills/billPay/billPayDialog';
 import { filterAndSortBills } from 'features/dashboard/bills/billUtils';
 
@@ -101,7 +100,7 @@ export const BillTab = ({ paid, closed }) => {
       billAction = bill.balance ? (
         <ActionButton color='primary' onClick={() => handleBillPay(bill.id)} icon={<PaymentIcon fontSize='small' />} />
       ) : bill.payments && bill.payments.length > 0 ? (
-        moment(bill.payments[0].transDt, format.YYYYMMDD).format(format.DDMMMYYYY)
+        formatDate(bill.payments[0].transDt)
       ) : (
         ''
       );
@@ -139,16 +138,16 @@ export const BillTab = ({ paid, closed }) => {
                 {bill.account.name}
               </TableCell>
               <TableCell className={tableCellClasses} style={cellStyle}>
-                {moment(bill.billDt, format.YYYYMMDD).format(format.DDMMMYYYY)}
+                {formatDate(bill.billDt)}
               </TableCell>
               <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                {numeral(bill.amount).format(format.AMOUNT_SYMBOL)}
+                {formatAmt(bill.amount, true)}
               </TableCell>
               <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                {numeral(bill.balance).format(format.AMOUNT_SYMBOL)}
+                {formatAmt(bill.balance, true)}
               </TableCell>
               <TableCell className={tableCellClasses} style={cellStyle}>
-                {moment(bill.dueDt, format.YYYYMMDD).format(format.DDMMMYYYY)}
+                {formatDate(bill.dueDt)}
               </TableCell>
               <TableCell className={tableCellClasses} style={cellStyle}>
                 {buildBillAction(bill)}

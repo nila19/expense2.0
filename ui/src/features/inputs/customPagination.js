@@ -1,8 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import numeral from 'numeral';
-
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -14,7 +12,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 import { ActionButton } from 'features/inputs/formFields';
-import { format } from 'features/utils';
+import { formatAmt } from 'features/utils';
 
 import { selectDashboardGlobal, resetFilters } from 'features/dashboard/dashboardGlobalSlice';
 
@@ -54,7 +52,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, total, on
   return (
     <div className={classes.root}>
       <span style={{ color: '#e91e63', fontSize: 12, paddingLeft: 20, paddingRight: 20 }}>
-        {numeral(total).format(format.AMOUNT_SYMBOL)}
+        {formatAmt(total, true)}
       </span>
       <ActionButton
         color='rose'

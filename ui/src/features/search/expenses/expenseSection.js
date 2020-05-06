@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import classnames from 'classnames';
 import moment from 'moment';
-import numeral from 'numeral';
 
 // @material-ui/core
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,7 +32,7 @@ import taskStyles from 'assets/jss/material-dashboard-react/components/tasksStyl
 
 import { ActionButton } from 'features/inputs/formFields';
 import { CustomPagination, PaginationActions } from 'features/inputs/customPagination';
-import { format, getSliceForPage, filterExpenses, getTotalAmount } from 'features/utils';
+import { format, formatAmt, formatDate, getSliceForPage, filterExpenses, getTotalAmount } from 'features/utils';
 import { findTargetTransId } from 'features/search/expenses/expensesUtils';
 import { ExpenseEditDialog } from 'features/search/expenseEdit/expenseEditDialog';
 
@@ -181,7 +180,7 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
                       {moment(exp.entryDt, format.YYYYMMDDHHmmss).format(format.DDMMMYYYYHHMM)}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={cellStyle}>
-                      {moment(exp.transDt, format.YYYYMMDD).format(format.DDMMM)}
+                      {formatDate(exp.transDt, format.DDMMM)}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
                       {exp.category ? exp.category.name : '-'}
@@ -190,25 +189,25 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
                       {exp.description}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                      {numeral(exp.amount).format(format.AMOUNT)}
+                      {formatAmt(exp.amount, false)}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
                       {exp.accounts.from ? exp.accounts.from.name : '-'}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                      {exp.accounts.from ? numeral(exp.accounts.from.balanceBf).format(format.AMOUNT) : '-'}
+                      {exp.accounts.from ? formatAmt(exp.accounts.from.balanceBf, false) : '-'}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                      {exp.accounts.from ? numeral(exp.accounts.from.balanceAf).format(format.AMOUNT) : '-'}
+                      {exp.accounts.from ? formatAmt(exp.accounts.from.balanceAf, false) : '-'}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
                       {exp.accounts.to ? exp.accounts.to.name : '-'}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                      {exp.accounts.to ? numeral(exp.accounts.to.balanceBf).format(format.AMOUNT) : '-'}
+                      {exp.accounts.to ? formatAmt(exp.accounts.to.balanceBf, false) : '-'}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                      {exp.accounts.to ? numeral(exp.accounts.to.balanceAf).format(format.AMOUNT) : '-'}
+                      {exp.accounts.to ? formatAmt(exp.accounts.to.balanceAf, false) : '-'}
                     </TableCell>
                     <TableCell className={tableCellClasses} style={cellStyle}>
                       <ActionButton

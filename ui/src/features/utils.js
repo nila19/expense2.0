@@ -1,6 +1,9 @@
 import React from 'react';
 
 import _ from 'lodash';
+import moment from 'moment';
+import numeral from 'numeral';
+import BigNumber from 'bignumber.js';
 
 // @material-ui/icons
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -57,6 +60,15 @@ export const buildMonthOptions = (months) => {
 
 export const buildAdhocOptions = () => {
   return ['Y', 'N'].map((e) => ({ key: e, label: e }));
+};
+
+export const formatAmt = (amount, symbol) => {
+  const amt = new BigNumber(amount).toFixed(2);
+  return numeral(amt).format(symbol ? format.AMOUNT_SYMBOL : format.AMOUNT);
+};
+
+export const formatDate = (date, fmt) => {
+  return moment(date, format.YYYYMMDD).format(fmt || format.DDMMMYYYY);
 };
 
 export const format = {

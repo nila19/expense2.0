@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  # ui-dev:
+  #   build:
+  #     context: .
+  #     dockerfile: app-ui.Dockerfile
+  #   image: expense-ui-dev
+  #   environment:
+  #     - PORT=3000
+  #   ports:
+  #     - 3000:3000
+  #   stdin_open: true
+  #   depends_on:
+  #     - mongodb-app
+  ui-prod:
+    build:
+      context: .
+      dockerfile: app-ui-prod.Dockerfile
+    image: expense-ui-nginx
+    ports:
+      - 80:80
+    stdin_open: true
+    depends_on:
+      - mongodb-app
+  api:
+    build:
+      context: .
+      dockerfile: app-api.Dockerfile
+    image: expense-api
+    environment:
+      - MONGO_URL=mongodb://mongodb-app:27017
+      - DB_NAME=expense
+      - LOG_PATH=/logs
+      - PORT=8000
+    volumes:
+      - 'C:/Java/logs:/logs'
+    ports:
+      - 8000:8000
+    networks:
+      - expensenet
+    depends_on:
+      - mongodb-app
+  mongodb-app:
+    build:
+      context: .
+      dockerfile: app-db.Dockerfile
+    image: expense-db-2
+    volumes:
+      - 'mongodata:/data/db'
+    ports:
+      - 27017:27017
+    expose:
+      - '27017'
+    networks:
+      - expensenet
+  # this is commented out, just to disable.
+  # mongo-express:
+  #   image: mongo-express
+  #   links:
+  #     - mongodb:mongo
+  #   ports:
+  #     - 8081:8081
+  #   networks:
+  #     - expensenet
+
+networks:
+  expensenet:
+
+volumes:
+  mongodata:

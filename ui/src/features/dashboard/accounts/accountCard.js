@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import _ from 'lodash';
-import numeral from 'numeral';
 
 // @material-ui/core components
 import { Grid, Box } from '@material-ui/core';
@@ -26,7 +25,7 @@ import { selectDashboardGlobal, setAccountFilter } from 'features/dashboard/dash
 import { tallyAccount } from 'features/dashboard/accounts/accountsSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 
-import { format } from 'features/utils';
+import { formatAmt } from 'features/utils';
 import {
   buildAccountIcon,
   buildAccountColor,
@@ -70,7 +69,7 @@ export const AccountCard = ({ account }) => {
             {account.name} [{account.id}]
           </small>
         </p>
-        <h2 className={classes.cardTitle}>{numeral(account.balance).format(format.AMOUNT)}</h2>
+        <h2 className={classes.cardTitle}>{formatAmt(account.balance, false)}</h2>
       </CardHeader>
       <CardFooter stats style={{ textAlign: 'center' }}>
         <Grid container spacing={1} alignItems='center'>

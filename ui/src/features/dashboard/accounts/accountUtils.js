@@ -1,7 +1,6 @@
 import React from 'react';
 
 import moment from 'moment';
-import numeral from 'numeral';
 
 // @material-ui/icons
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
@@ -10,7 +9,7 @@ import MuseumIcon from '@material-ui/icons/Museum';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import SubtitlesIcon from '@material-ui/icons/Subtitles';
 
-import { format } from 'features/utils';
+import { format, formatAmt, formatDate } from 'features/utils';
 
 export const buildAccountIcon = (icon) => {
   switch (icon) {
@@ -41,7 +40,7 @@ export const buildAccountColor = (color) => {
 };
 
 export const buildTallyInfo = (account) => {
-  const tallyAmt = numeral(account.balance).format(format.AMOUNT_SYMBOL);
+  const tallyAmt = formatAmt(account.tallyBalance, true);
   const tallyDate = moment(account.tallyDt, format.YYYYMMDDHHmmss).format(format.DDMMMYYYYHHMM);
   return tallyAmt + ' @ ' + tallyDate;
 };
@@ -51,12 +50,12 @@ export const buildBillInfo = (account, lastBill, openBill) => {
     return 'No bills.';
   }
   if (lastBill && lastBill.balance > 0) {
-    const dueAmt = numeral(lastBill.balance).format(format.AMOUNT_SYMBOL);
-    const dueDate = moment(lastBill.dueDt, format.YYYYMMDD).format(format.DDMMM);
+    const dueAmt = formatAmt(lastBill.balance, true);
+    const dueDate = formatDate(lastBill.dueDt, format.DDMMM);
     return dueAmt + ' (Due on ' + dueDate + ')';
   }
   if (openBill) {
-    const billDate = moment(openBill.billDt, format.YYYYMMDD).format(format.DDMMM);
+    const billDate = formatDate(lastBill.dueDt, format.DDMMM);
     return 'Next bill on ' + billDate;
   }
 };
