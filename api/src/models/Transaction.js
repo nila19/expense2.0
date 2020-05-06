@@ -11,27 +11,25 @@ import { format } from 'config/formats';
 import { Model } from 'models/Model';
 import { TransactionType } from 'models/schema';
 
-const searchUI = {
+const searchForm = {
   cityId: 'int',
-  acctId: 'int',
-  billId: 'int',
-  catId: 'int',
+  account: { id: 'int' },
+  bill: { id: 'int' },
+  category: { id: 'int' },
   description: 'string',
   amount: 'float',
   adhoc: 'string default-N',
   adjust: 'string default-N',
-  entryMonth: 'date',
-  entryYear: 'boolean',
-  transMonth: 'date',
-  transYear: 'boolean',
-  thinList: 'boolean',
+  entryMonth: { id: 'date', year: 'boolean' },
+  transMonth: { id: 'date', year: 'boolean' },
+  allRecords: 'boolean',
 };
 
 class TransactionModel extends Model {
   constructor() {
     super('transactions', TransactionType);
     this.schema = TransactionType;
-    this.searchUI = searchUI;
+    this.searchForm = searchForm;
   }
 
   findForCity(db, cityId) {
@@ -138,7 +136,7 @@ class TransactionModel extends Model {
   buildSearchQueryTwo(data, filter) {
     if (data.entryMonth && data.entryMonth.id) {
       const entry = moment(data.entryMonth.id);
-      if (data.entryMonth.year === 'true') {
+      if (data.entryMonth.year === true) {
         // set startDt as 31-Dec of previous year, since that it is > than.
         // set endDt as 1-Jan of next year, since that it is > than.
         const yearBegin = entry.clone().month(0).date(0).format(format.YYYYMMDD);
@@ -150,7 +148,7 @@ class TransactionModel extends Model {
     }
     if (data.transMonth && data.transMonth.id) {
       const trans = moment(data.transMonth.id);
-      if (data.transMonth.year === 'true') {
+      if (data.transMonth.year === true) {
         // set startDt as 31-Dec of previous year, since that it is > than.
         const yearBegin = trans.clone().month(0).date(0).format(format.YYYYMMDD);
         const yearEnd = trans.clone().month(11).date(31).format(format.YYYYMMDD);
@@ -174,8 +172,8 @@ class TransactionModel extends Model {
     return promise;
   }
 
-  updateOne(db, filter, mod, options) {
-    const promise = super.updateOne(db, filter, mod, options);
+  findOneAndUpdate(db, filter, mod, options) {
+    const promise = super.findOneAndUpdate(db, filter, mod, options);
     this._publish(db, filter.id, STATE.UPDATED, promise);
     return promise;
   }
@@ -201,7 +199,7 @@ class TransactionModel extends Model {
     } else {
       mod.$unset = { bill: '' };
     }
-    const promise = super.updateOne(db, filter, mod);
+    const promise = super.findOneAndUpdate(db, filter, mod);
     this._publish(db, filter.id, STATE.UPDATED, promise);
     return promise;
   }
@@ -209,7 +207,7 @@ class TransactionModel extends Model {
   // internal methods
   async _publish(db, id, state, promise) {
     await promise;
-    const trans = await this.findById(db, id);
+    const trans = state === STATE.DELETED ? { id: id } : await this.findById(db, id);
     publish(PIPE.TRANS, trans, state);
   }
 }

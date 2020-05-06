@@ -9,10 +9,8 @@ class SequenceModel extends Model {
     this.schema = SequenceType;
   }
 
-  findOneAndUpdate(db, filter) {
-    // return db.get(this.collection).findAndModify({query: filter, update: {$inc: {seq: 1}}, new: true});
-    // return db.get(this.collection).findOneAndUpdate(filter, {$inc: {seq: 1}}, {returnOriginal: false});
-    return super.findOneAndUpdate(db, filter, { $inc: { seq: 1 } }, { returnOriginal: false });
+  findOneAndUpdate(db, filter, mod) {
+    return super.findOneAndUpdate(db, filter, mod || { $inc: { seq: 1 } }, { returnOriginal: false });
   }
 }
 

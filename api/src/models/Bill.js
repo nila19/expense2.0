@@ -49,20 +49,13 @@ class BillModel extends Model {
     return promise;
   }
 
-  updateOne(db, filter, mod, options) {
-    const promise = super.updateOne(db, filter, mod, options);
-    this._publish(db, filter.id, STATE.UPDATED, promise);
-    return promise;
-  }
-
   buildBillName(acct, bill) {
     return bill.id ? acct.name + ' : ' + bill.billDt + ' #' + bill.id : acct.name + ' #0';
   }
 
-  // utility method
   async _publish(db, id, state, promise) {
     await promise;
-    const bill = await this.findById(db, id);
+    const bill = state === STATE.DELETED ? { id: id } : await this.findById(db, id);
     publish(PIPE.BILL, bill, state);
   }
 }

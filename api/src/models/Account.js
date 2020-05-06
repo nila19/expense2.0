@@ -3,42 +3,16 @@
 import { PIPE, STATE, publish } from 'bin/socket-handler';
 import { Model } from 'models/Model';
 import { billModel } from 'models/Bill';
-
-// TODO: remove this schema.
-const schema = {
-  id: 'int not-null primarykey autoincrement',
-  cityId: 'int not-null',
-  name: 'string not-null',
-  balance: 'float default-0',
-  cash: 'boolean',
-  active: 'boolean',
-  billed: 'boolean',
-  icon: 'string default-home',
-  color: 'string default-blue',
-  seq: 'int',
-  tallyBalance: 'float',
-  tallyDt: 'timestamp',
-  closingDay: 'int',
-  dueDay: 'int',
-  bills: {
-    last: { id: 'int', name: 'string' },
-    open: { id: 'int', name: 'string' },
-  },
-};
+import { AccountType } from 'models/schema';
 
 class AccountModel extends Model {
   constructor() {
-    super('accounts', schema);
-    this.schema = schema;
+    super('accounts', AccountType);
+    this.schema = AccountType;
   }
 
-  async findForCity(db, cityId) {
-    const accts = await this.find(db, { cityId: cityId, active: true }, { projection: { _id: 0 }, sort: { seq: 1 } });
-    for (const acct of accts) {
-      await this._injectLastBill(db, acct);
-      await this._injectOpenBill(db, acct);
-    }
-    return accts;
+  findForCity(db, cityId) {
+    return this.find(db, { cityId: cityId, active: true }, { projection: { _id: 0 }, sort: { seq: 1 } });
   }
 
   findForCityThin(db, cityId) {
@@ -56,8 +30,8 @@ class AccountModel extends Model {
     return this.find(db, { cityId: cityId, active: true, billed: true }, { projection: { _id: 0 }, sort: { seq: 1 } });
   }
 
-  updateOne(db, filter, mod, options) {
-    const promise = super.updateOne(db, filter, mod, options);
+  findOneAndUpdate(db, filter, mod, options) {
+    const promise = super.findOneAndUpdate(db, filter, mod, options);
     this._publish(db, filter.id, STATE.UPDATED, promise);
     return promise;
   }
@@ -67,13 +41,6 @@ class AccountModel extends Model {
     await this._injectLastBill(db, acct);
     await this._injectOpenBill(db, acct);
     return acct;
-  }
-
-  // internal methods
-  async _publish(db, id, state, promise) {
-    await promise;
-    const acct = await this.findById(db, id);
-    publish(PIPE.ACCOUNT, acct, state);
   }
 
   async _injectLastBill(db, acct) {
@@ -86,6 +53,12 @@ class AccountModel extends Model {
     if (acct.billed && acct.bills.open && acct.bills.open.id) {
       acct.bills.open = await billModel.findById(db, acct.bills.open.id);
     }
+  }
+
+  async _publish(db, id, state, promise) {
+    await promise;
+    const acct = state === STATE.DELETED ? { id: id } : await this.findById(db, id);
+    publish(PIPE.ACCOUNT, acct, state);
   }
 }
 

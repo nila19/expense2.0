@@ -47,7 +47,9 @@ export class Model {
   insertOne(db, data) {
     const { error, value } = this.schema.validate(data);
     if (error) {
-      console.log('==> Schema validation failed:' + this.collection + ' => ' + error);
+      console.log(
+        '==> Schema validation failed: ' + this.collection + ' => ' + error + '; Data => ' + JSON.stringify(data)
+      );
       throw error;
     }
     return db.collection(this.collection).insertOne(data);
@@ -57,10 +59,10 @@ export class Model {
     return db.collection(this.collection).aggregate(criteria).toArray();
   }
 
-  updateOne(db, filter, mod, options) {
-    let opt = { multi: true, upsert: true };
-    // embed the multi/upsert options based on input options.
-    opt = options ? _.assign({}, opt, options) : opt;
-    return db.collection(this.collection).updateOne(filter, mod, opt);
-  }
+  // updateOne(db, filter, mod, options) {
+  //   let opt = { multi: true, upsert: true };
+  //   // embed the multi/upsert options based on input options.
+  //   opt = options ? _.assign({}, opt, options) : opt;
+  //   return db.collection(this.collection).updateOne(filter, mod, opt);
+  // }
 }

@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 
+import _ from 'lodash';
+
 // @material-ui/icons
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -30,6 +32,13 @@ export const SearchForm = () => {
   const entryMonthOptions = buildMonthOptions(entryMonths);
   const adhocOptions = buildAdhocOptions();
 
+  const populateYearFlag = (month, months) => {
+    if (month && month.id) {
+      const selectedMonth = _.find(months, { id: month.id });
+      month.year = selectedMonth.aggregate;
+    }
+  };
+
   useEffect(() => {
     // TODO: handle retain from summary page.
     dispatch(loadExpenses());
@@ -51,7 +60,8 @@ export const SearchForm = () => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
-        // TODO: populate year.
+        populateYearFlag(values.transMonth, transMonths);
+        populateYearFlag(values.entryMonth, entryMonths);
         dispatch(loadExpenses(values));
       }}
     >

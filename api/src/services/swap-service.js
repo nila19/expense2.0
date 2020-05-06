@@ -90,7 +90,7 @@ const replayTran = (accts, balances, tr) => {
 
 const updateTransaction = async (parms, tran) => {
   if (!tran.accounts.from.id) {
-    await transactionModel.updateOne(
+    await transactionModel.findOneAndUpdate(
       parms.db,
       { id: tran.id },
       {
@@ -104,7 +104,7 @@ const updateTransaction = async (parms, tran) => {
   }
 
   if (!tran.accounts.to.id) {
-    await transactionModel.updateOne(
+    await transactionModel.findOneAndUpdate(
       parms.db,
       { id: tran.id },
       {

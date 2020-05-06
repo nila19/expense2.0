@@ -105,12 +105,12 @@ describe('models.transactions', () => {
       oldAmt = tran.amount;
     });
     it('should update transaction', async () => {
-      await transactionModel.updateOne(db, { id: transId }, { $set: { amount: newAmt } });
+      await transactionModel.findOneAndUpdate(db, { id: transId }, { $set: { amount: newAmt } });
       const tran = await transactionModel.findById(db, transId);
       expect(tran).to.have.property('amount', newAmt);
     });
     after('restore db values', async () => {
-      await transactionModel.updateOne(db, { id: transId }, { $set: { amount: oldAmt } });
+      await transactionModel.findOneAndUpdate(db, { id: transId }, { $set: { amount: oldAmt } });
     });
   });
   describe('findForSearch', () => {

@@ -1,5 +1,31 @@
 import joi from '@hapi/joi';
 
+export const AccountType = joi.object({
+  id: joi.number().positive().required(),
+  name: joi.string().required(),
+  cityId: joi.number().positive().required(),
+  balance: joi.number().allow(0),
+  active: joi.boolean(),
+  cash: joi.boolean(),
+  billed: joi.boolean(),
+  icon: joi.string().required(),
+  color: joi.string().required(),
+  seq: joi.number().positive().required(),
+  tallyBalance: joi.number().allow(0),
+  tallyDt: joi.string(),
+  closingDay: joi.number().positive().required(),
+  dueDay: joi.number().positive().required(),
+  bills: joi.object({
+    last: BillTypeMin2.allow(null),
+    open: BillTypeMin2.allow(null),
+  }),
+});
+
+const BillTypeMin2 = joi.object({
+  id: joi.number().positive().required(),
+  name: joi.string().required(),
+});
+
 const AccountTypeMin = joi.object({
   id: joi.number().allow(0),
   name: joi.string().allow(''),

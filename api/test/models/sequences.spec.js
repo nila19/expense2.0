@@ -37,7 +37,7 @@ describe('models.sequences', () => {
       expect(sequence.value).to.have.property('seq', oldSeq + 2);
     });
     after('restore db values', async () => {
-      await sequenceModel.updateOne(db, { cityId: cityId, table: table }, { $set: { seq: oldSeq } });
+      await sequenceModel.findOneAndUpdate(db, { cityId: cityId, table: table }, { $set: { seq: oldSeq } });
     });
   });
 

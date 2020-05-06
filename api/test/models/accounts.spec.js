@@ -44,12 +44,12 @@ describe('models.accounts', () => {
       balance = acct.balance;
     });
     it('should update account', async () => {
-      await accountModel.updateOne(db, { id: acctId }, { $set: { balance: newBal } });
+      await accountModel.findOneAndUpdate(db, { id: acctId }, { $set: { balance: newBal } });
       const acct = await accountModel.findById(db, acctId);
       expect(acct).to.have.property('balance', newBal);
     });
     after('restore db values', async () => {
-      await accountModel.updateOne(db, { id: acctId }, { $set: { balance: balance } });
+      await accountModel.findOneAndUpdate(db, { id: acctId }, { $set: { balance: balance } });
     });
   });
 

@@ -18,7 +18,7 @@ const updateAccount = async (parms, acct, amount, seq) => {
     return;
   }
   const amt = acct.cash ? amount : amount * -1;
-  await accountModel.updateOne(parms.db, { id: acct.id }, { $inc: { balance: amt } });
+  await accountModel.findOneAndUpdate(parms.db, { id: acct.id }, { $inc: { balance: amt } });
   // if seq = 0, it is an 'add'. ignore the updateTransItemBalances step. that's used only for modify.
   if (seq) {
     await updateTransItemBalances(parms, acct, amt, seq);
@@ -45,7 +45,7 @@ const updateTransItemBalances = async (parms, acct, amount, seq) => {
 
 // step 2.1.1.1 : save the ac balances changes to DB.
 const updateTrans = async (parms, tran) => {
-  await transactionModel.updateOne(
+  await transactionModel.findOneAndUpdate(
     parms.db,
     { id: tran.id },
     {

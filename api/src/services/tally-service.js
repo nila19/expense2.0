@@ -11,7 +11,7 @@ export const tallyAccount = async (parms, acctId) => {
 
   const account = await accountModel.findById(parms.db, acctId);
   await checkCityEditable(parms.db, account.cityId);
-  await accountModel.updateOne(
+  await accountModel.findOneAndUpdate(
     parms.db,
     { id: account.id },
     { $set: { tallyBalance: account.balance, tallyDt: tallyDt } }
@@ -22,7 +22,7 @@ export const tallyAccount = async (parms, acctId) => {
 
   for (const tran of trans) {
     if (!tran.tallied) {
-      await transactionModel.updateOne(parms.db, { id: tran.id }, { $set: { tallied: true, tallyDt: tallyDt } });
+      await transactionModel.findOneAndUpdate(parms.db, { id: tran.id }, { $set: { tallied: true, tallyDt: tallyDt } });
     }
   }
 };

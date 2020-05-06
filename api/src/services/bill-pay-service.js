@@ -32,7 +32,7 @@ const updateBill = async (parms, data, tran) => {
   const payment = { id: tran.id, transDt: tran.transDt, amount: tran.amount };
   let balance = data.bill.balance - tran.amount;
   balance = balance > -0.01 && balance < 0.01 ? 0 : balance;
-  await billModel.updateOne(
+  await billModel.findOneAndUpdate(
     parms.db,
     { id: data.bill.id },
     { $set: { balance: balance }, $push: { payments: payment } }

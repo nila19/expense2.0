@@ -77,7 +77,7 @@ describe('models.bills', () => {
       expect(bill).to.have.property('balance', newBal);
     });
     after('restore db values', async () => {
-      await billModel.updateOne(db, { id: billId }, { $set: { balance: balance } });
+      await billModel.findOneAndUpdate(db, { id: billId }, { $set: { balance: balance } });
     });
   });
   describe('update', () => {
@@ -89,12 +89,12 @@ describe('models.bills', () => {
       balance = bill.balance;
     });
     it('should update bill', async () => {
-      await billModel.updateOne(db, { id: billId }, { $set: { balance: newBal } });
+      await billModel.findOneAndUpdate(db, { id: billId }, { $set: { balance: newBal } });
       const bill = await billModel.findById(db, billId);
       expect(bill).to.have.property('balance', newBal);
     });
     after('restore db values', async () => {
-      await billModel.updateOne(db, { id: billId }, { $set: { balance: balance } });
+      await billModel.findOneAndUpdate(db, { id: billId }, { $set: { balance: balance } });
     });
   });
 

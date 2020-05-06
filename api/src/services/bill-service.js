@@ -31,12 +31,12 @@ const closeOldBill = async (parms, bill) => {
   bill.amount = acct.cash ? totalAmt * -1 : totalAmt;
 
   console.log(bill.amount);
-  await billModel.updateOne(
+  await billModel.findOneAndUpdate(
     parms.db,
     { id: bill.id },
     { $set: { amount: bill.amount, balance: bill.amount, closed: true } }
   );
-  await accountModel.updateOne(
+  await accountModel.findOneAndUpdate(
     parms.db,
     { id: bill.account.id },
     { $set: { 'bills.last': { id: bill.id, name: bill.name } } }
@@ -54,7 +54,7 @@ const createNewBill = async (parms, city, ac) => {
     const seq = await sequenceModel.findOneAndUpdate(parms.db, { table: 'bills', cityId: city.id });
     const newBill = buildEmptyBill(city, ac, seq.value.seq);
     await billModel.insertOne(parms.db, newBill);
-    await accountModel.updateOne(
+    await accountModel.findOneAndUpdate(
       parms.db,
       { id: ac.id },
       { $set: { 'bills.open': { id: newBill.id, name: newBill.name } } }

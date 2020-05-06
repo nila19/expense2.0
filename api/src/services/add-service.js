@@ -26,7 +26,7 @@ export const addExpense = async (parms, data) => {
   });
   // re-fetch from DB to get the revised balances after cash transfer
   await loadAccountsInfo(parms, data);
-  await transactionModel.updateOne(
+  await transactionModel.findOneAndUpdate(
     parms.db,
     { id: tran.id },
     {
@@ -96,7 +96,11 @@ const copyAccountsData = async (parms, data, trans) => {
       };
       trans.bill.name = billModel.buildBillName(from, trans.bill);
       const amount = numeral(data.amount).value();
-      await billModel.updateOne(parms.db, { id: from.bills.open.id }, { $inc: { amount: amount, balance: amount } });
+      await billModel.findOneAndUpdate(
+        parms.db,
+        { id: from.bills.open.id },
+        { $inc: { amount: amount, balance: amount } }
+      );
     }
   }
   if (to.id) {

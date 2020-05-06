@@ -36,7 +36,7 @@ const undoPayBill = async (db, form, transId) => {
   expect(billAc).to.have.property('balance', form.bill.account.balance);
 
   const mod = { $inc: { balance: form.paidAmt }, $pull: { payments: { id: transId } } };
-  await billModel.updateOne(db, { id: form.bill.id }, mod);
+  await billModel.findOneAndUpdate(db, { id: form.bill.id }, mod);
 
   const bill = await billModel.findById(db, form.bill.id);
   expect(bill).to.have.property('balance', form.bill.balance);

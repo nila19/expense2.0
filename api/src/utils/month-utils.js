@@ -47,7 +47,6 @@ const sortMonths = (months) => {
 export const buildMonth = (date, year = false) => {
   return {
     id: date,
-    bills: null,
     aggregate: year,
     name: moment(date, format.YYYYMMDD).format(year ? format.YYYY : format.MMMYY),
     seq: _.toNumber(moment(date, format.YYYYMMDD).format(format.YYYYMM)) + (year ? 1 : 0),
