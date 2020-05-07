@@ -7,6 +7,7 @@ In the project directory, you can run:
 - `docker-compose up -d`
 - `docker-compose down`
 - `docker-compose -f docker-compose-prod.yml up`
+- `docker-compose -f docker-compose-prod.yml down`
 
 ## Build & Run (during development)
 
