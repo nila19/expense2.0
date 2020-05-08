@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -169,10 +169,12 @@ export const ExpenseEditDialog = ({ openEdit, onEditSave, onEditCancel }) => {
   const bills = useSelector(selectBills);
   const expense = useSelector(selectExpenseEdit);
 
-  const categoriesOptions = buildCategoriesOptions(categories);
-  const accountOptions = buildAccountOptions(accounts);
-  const acctId = _.get(expense, 'bill.account.id');
-  const billOptions = acctId ? buildBillOptions(bills, acctId) : [];
+  const categoriesOptions = useMemo(() => buildCategoriesOptions(categories), [categories]);
+  const accountOptions = useMemo(() => buildAccountOptions(accounts), [accounts]);
+  const billOptions = useMemo(() => {
+    const acctId = _.get(expense, 'bill.account.id');
+    return acctId ? buildBillOptions(bills, acctId) : [];
+  }, [expense, bills]);
 
   return (
     <>

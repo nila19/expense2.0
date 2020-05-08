@@ -10,6 +10,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
+import { PAGINATION_BLOCK } from 'app/constants';
 import { ActionButton } from 'features/inputs';
 import { formatAmt } from 'features/utils';
 
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const PaginationActions = ({ section, count, page, rowsPerPage, total, onChangePage }) => {
+export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt, onChangePage }) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, total, on
 
   // for bills list, only consider accountFilter
   // for expenses list, consider both accountFilter & billFilter
-  const filterEnabled = section === 'bills' ? accountFilter : accountFilter || billFilter;
+  const filterEnabled = section === PAGINATION_BLOCK.BILLS ? accountFilter : accountFilter || billFilter;
 
   const handleFirstPageButtonClick = (event) => {
     onChangePage(event, 0);
@@ -51,7 +52,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, total, on
   return (
     <div className={classes.root}>
       <span style={{ color: '#e91e63', fontSize: 12, paddingLeft: 20, paddingRight: 20 }}>
-        {formatAmt(total, true)}
+        {formatAmt(totalAmt, true)}
       </span>
       <ActionButton
         color='rose'

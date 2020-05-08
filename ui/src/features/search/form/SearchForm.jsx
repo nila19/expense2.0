@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 
@@ -18,18 +18,18 @@ import { buildCategoriesOptions, buildAccountOptions, buildMonthOptions, buildAd
 
 import { selectStartupData } from 'features/startup/startupSlice';
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
-import { loadExpenses } from 'features/search/expenses/expenseSlice';
+import { searchExpenses } from 'features/search/expenses/expenseSlice';
 
 export const SearchForm = () => {
   const dispatch = useDispatch();
   const { categories, descriptions, transMonths, entryMonths } = useSelector(selectStartupData);
   const accounts = useSelector(selectAccounts);
 
-  const categoriesOptions = buildCategoriesOptions(categories);
-  const accountOptions = buildAccountOptions(accounts);
-  const transMonthOptions = buildMonthOptions(transMonths);
-  const entryMonthOptions = buildMonthOptions(entryMonths);
-  const adhocOptions = buildAdhocOptions();
+  const categoriesOptions = useMemo(() => buildCategoriesOptions(categories), [categories]);
+  const accountOptions = useMemo(() => buildAccountOptions(accounts), [accounts]);
+  const transMonthOptions = useMemo(() => buildMonthOptions(transMonths), [transMonths]);
+  const entryMonthOptions = useMemo(() => buildMonthOptions(entryMonths), [entryMonths]);
+  const adhocOptions = useMemo(() => buildAdhocOptions(), []);
 
   const populateYearFlag = (month, months) => {
     if (month && month.id) {
@@ -38,9 +38,9 @@ export const SearchForm = () => {
     }
   };
 
+  console.log('Rendering Search Form.. ');
   useEffect(() => {
     // TODO: handle retain from summary page.
-    dispatch(loadExpenses());
   }, [dispatch]);
 
   return (
@@ -61,7 +61,7 @@ export const SearchForm = () => {
         setSubmitting(false);
         populateYearFlag(values.transMonth, transMonths);
         populateYearFlag(values.entryMonth, entryMonths);
-        dispatch(loadExpenses(values));
+        dispatch(searchExpenses(values));
       }}
     >
       {({ isSubmitting }) => (

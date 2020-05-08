@@ -4,12 +4,13 @@ import { useDispatch } from 'react-redux';
 import { Grid } from '@material-ui/core';
 
 import { COUNTS } from 'app/config';
+import { EXPENSE_BLOCK } from 'app/constants';
 import { AccountSection } from 'features/dashboard/accounts/AccountSection';
 import { BillSection } from 'features/dashboard/bills/BillSection';
 import { EntrySection } from 'features/dashboard/entry/EntrySection';
 import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
 
-import { loadExpenses } from 'features/search/expenses/expenseSlice';
+import { clearSearchResults } from 'features/search/expenses/expenseSlice';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const Dashboard = () => {
   const [rowsPerPage, setRowsPerPage] = useState(COUNTS.DASHBOARD_EXPENSES);
 
   useEffect(() => {
-    dispatch(loadExpenses());
+    dispatch(clearSearchResults());
   }, [dispatch]);
 
   return (
@@ -33,7 +34,7 @@ const Dashboard = () => {
       </Grid>
       <Grid container spacing={2} alignItems='flex-start' style={{ marginTop: -20 }}>
         <Grid item lg={12}>
-          <ExpenseSection rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
+          <ExpenseSection section={EXPENSE_BLOCK.DASHBOARD} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
         </Grid>
       </Grid>
     </>

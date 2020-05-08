@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import _ from 'lodash';
@@ -30,11 +30,12 @@ import CardBody from 'components/Card/CardBody.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 import taskStyles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
+import { EXPENSE_BLOCK, PAGINATION_BLOCK } from 'app/constants';
 import { ActionButton } from 'features/inputs';
 import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
 import { ExpenseEditDialog } from 'features/search/expenseEdit/ExpenseEditDialog';
-import { format, formatAmt, formatDate, getSliceForPage, filterExpenses, getTotalAmount } from 'features/utils';
-import { findTargetTransId } from 'features/search/expenses/expenseUtils';
+import { format, formatAmt, formatDate, getSliceForPage, getTotalAmount } from 'features/utils';
+import { filterAndSortExpenses, findTargetTransId } from 'features/search/expenses/expenseUtils';
 
 import { selectDashboardGlobal } from 'features/dashboard/dashboardGlobalSlice';
 import { selectExpenses, deleteExpense, swapExpenses } from 'features/search/expenses/expenseSlice';
@@ -60,14 +61,19 @@ const cellStyleDefault = { textAlign: 'center', padding: '5px 8px', fontSize: 12
 const useStyles = makeStyles(styles);
 const useTaskStyles = makeStyles(taskStyles);
 
-export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
+export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
   const classes = useStyles();
   const taskClasses = useTaskStyles();
   const tableCellClasses = classnames(taskClasses.tableCell);
 
   const dispatch = useDispatch();
-  const { data: expenses, loading } = useSelector(selectExpenses);
+  const { data, loading, searchResults } = useSelector(selectExpenses);
   const { accountFilter, billFilter } = useSelector(selectDashboardGlobal);
+
+  let expenses = data;
+  if (section === EXPENSE_BLOCK.SEARCH && searchResults) {
+    expenses = searchResults;
+  }
 
   const [page, setPage] = useState(0);
   const [openEdit, setOpenEdit] = useState(false);
@@ -76,23 +82,25 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
     setPage(0);
   }, [accountFilter, billFilter]);
 
-  const filteredExpenses = _.reverse(_.sortBy(filterExpenses(expenses, accountFilter, billFilter), 'seq'));
-  const expensesForPage = getSliceForPage(filteredExpenses, page, rowsPerPage);
-  const total = getTotalAmount(filteredExpenses);
+  console.log('Rendering Expense..');
+  const filteredExpenses = useMemo(() => filterAndSortExpenses(expenses, accountFilter, billFilter), [
+    expenses,
+    accountFilter,
+    billFilter,
+  ]);
+  const totalAmt = useMemo(() => getTotalAmount(filteredExpenses), [filteredExpenses]);
+  const expensesForPage = useMemo(() => getSliceForPage(filteredExpenses, page, rowsPerPage), [
+    filteredExpenses,
+    page,
+    rowsPerPage,
+  ]);
 
   const handleDelete = (id) => {
     dispatch(deleteExpense(id));
   };
 
-  const handleMoveUp = (id) => {
-    const toId = findTargetTransId(filteredExpenses, id, true);
-    if (toId != null) {
-      dispatch(swapExpenses({ first: { id: id }, second: { id: toId } }));
-    }
-  };
-
-  const handleMoveDown = (id) => {
-    const toId = findTargetTransId(filteredExpenses, id, false);
+  const handleMove = (id, up) => {
+    const toId = findTargetTransId(filteredExpenses, id, up);
     if (toId != null) {
       dispatch(swapExpenses({ first: { id: id }, second: { id: toId } }));
     }
@@ -164,12 +172,12 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
                       />
                       <ActionButton
                         color='primary'
-                        onClick={() => handleMoveUp(exp.id)}
+                        onClick={() => handleMove(exp.id, true)}
                         icon={<ArrowUpwardIcon fontSize='small' />}
                       />
                       <ActionButton
                         color='primary'
-                        onClick={() => handleMoveDown(exp.id)}
+                        onClick={() => handleMove(exp.id, false)}
                         icon={<ArrowDownwardIcon fontSize='small' />}
                       />
                     </TableCell>
@@ -237,7 +245,9 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
             page={rowsPerPage >= filteredExpenses.length ? 0 : page}
             onChangePage={(e, newPage) => setPage(newPage)}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            ActionsComponent={(props) => <PaginationActions {...props} section='expenses' total={total} />}
+            ActionsComponent={(props) => (
+              <PaginationActions {...props} section={PAGINATION_BLOCK.EXPENSES} totalAmt={totalAmt} />
+            )}
           />
         </CardBody>
       </Card>

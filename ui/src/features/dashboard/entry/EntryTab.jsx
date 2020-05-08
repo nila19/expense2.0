@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 
@@ -13,19 +13,11 @@ import GridContainer from 'components/Grid/GridContainer.js';
 import Button from 'components/CustomButtons/Button.js';
 
 import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from 'features/inputs';
-import { buildCategoriesOptions, buildAccountOptions } from 'features/utils';
 
-import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 import { addExpense } from 'features/dashboard/entry/entrySlice';
 
-export const EntryTab = ({ adjust }) => {
+export const EntryTab = ({ adjust, descriptions, categories, accountOptions, categoriesOptions }) => {
   const dispatch = useDispatch();
-  const { categories, descriptions } = useSelector(selectStartupData);
-  const accounts = useSelector(selectAccounts);
-
-  const accountOptions = buildAccountOptions(accounts);
-  const categoriesOptions = buildCategoriesOptions(categories);
 
   return (
     <div style={{ paddingBottom: '30px' }}>

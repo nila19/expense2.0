@@ -2,48 +2,46 @@ import _ from 'lodash';
 import moment from 'moment';
 import numeral from 'numeral';
 import BigNumber from 'bignumber.js';
+import memoize from 'memoize-one';
 
-export const getSliceForPage = (data, page, rowsPerPage) => {
+export const getSliceForPage = memoize((data, page, rowsPerPage) => {
+  console.log('Getting slice.. ' + data.length + ' : ' + page + ' : ' + rowsPerPage);
   const start = page * rowsPerPage;
   let end = (page + 1) * rowsPerPage;
   end = Math.min(end, data.length);
   return _.slice(data, start, end);
-};
+});
 
-export const filterExpenses = (expenses, account, bill) => {
-  let filtered = account
-    ? expenses.filter(
-        (e) => (e.accounts.from && e.accounts.from.id === account) || (e.accounts.to && e.accounts.to.id === account)
-      )
-    : expenses;
-  filtered = bill ? filtered.filter((e) => e.bill && e.bill.id === bill) : filtered;
-  return filtered;
-};
-
-export const getTotalAmount = (list) => {
+export const getTotalAmount = memoize((list) => {
+  console.log('Calculating total.. ' + list.length);
   return _.reduce(list, (sum, e) => sum + e.amount, 0);
-};
+});
 
-export const buildCategoriesOptions = (categories) => {
+export const buildCategoriesOptions = memoize((categories) => {
+  console.log('Building categories options');
   return categories.map((e) => ({ key: e.id, label: e.name }));
-};
+});
 
-export const buildAccountOptions = (accounts) => {
+export const buildAccountOptions = memoize((accounts) => {
+  console.log('Building accounts options');
   return accounts.map((e) => ({ key: e.id, label: e.name }));
-};
+});
 
-export const buildBillOptions = (bills, accountId) => {
+export const buildBillOptions = memoize((bills, accountId) => {
+  console.log('Building bills options');
   const filteredBills = _.filter(bills, (e) => e.account.id === accountId);
   return filteredBills.map((e) => ({ key: e.id, label: e.account.name + ' : ' + e.billDt + ' #' + e.id }));
-};
+});
 
-export const buildMonthOptions = (months) => {
+export const buildMonthOptions = memoize((months) => {
+  console.log('Building months options');
   return months.map((e) => ({ key: e.id, label: e.name }));
-};
+});
 
-export const buildAdhocOptions = () => {
+export const buildAdhocOptions = memoize(() => {
+  console.log('Building adhoc options');
   return ['Y', 'N'].map((e) => ({ key: e, label: e }));
-};
+});
 
 export const formatAmt = (amount, symbol) => {
   const amt = new BigNumber(amount).toFixed(2);

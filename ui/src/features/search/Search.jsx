@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 
 import { COUNTS } from 'app/config';
-
+import { EXPENSE_BLOCK } from 'app/constants';
 import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
 import { SearchForm } from 'features/search/form/SearchForm';
 
@@ -15,7 +15,7 @@ const Search = () => {
       <SearchForm />
       <Grid container spacing={2} alignItems='flex-start' style={{ marginTop: -20 }}>
         <Grid item lg={12}>
-          <ExpenseSection rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
+          <ExpenseSection section={EXPENSE_BLOCK.SEARCH} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
         </Grid>
       </Grid>
     </>

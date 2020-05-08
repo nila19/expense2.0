@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import _ from 'lodash';
@@ -21,6 +21,7 @@ import FilterTiltShiftIcon from '@material-ui/icons/FilterTiltShift';
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
 import { COUNTS } from 'app/config';
+import { PAGINATION_BLOCK } from 'app/constants';
 import { ActionButton } from 'features/inputs';
 import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
 import { BillPayDialog } from 'features/dashboard/bills/billPay/BillPayDialog';
@@ -51,9 +52,19 @@ export const BillTab = ({ paid, closed }) => {
     setPage(0);
   }, [accountFilter]);
 
-  const filteredBills = filterAndSortBills(bills, closed, paid, accountFilter);
-  const billsForPage = getSliceForPage(filteredBills, page, rowsPerPage);
-  const total = getTotalAmount(billsForPage);
+  console.log('Rendering Bills.. ' + paid + ' : ' + closed);
+  const filteredBills = useMemo(() => filterAndSortBills(bills, closed, paid, accountFilter), [
+    bills,
+    closed,
+    paid,
+    accountFilter,
+  ]);
+  const totalAmt = useMemo(() => getTotalAmount(filteredBills), [filteredBills]);
+  const billsForPage = useMemo(() => getSliceForPage(filteredBills, page, rowsPerPage), [
+    filteredBills,
+    page,
+    rowsPerPage,
+  ]);
 
   const handleBillFilter = (id) => {
     dispatch(setBillFilter(billFilter === id ? null : id));
@@ -164,7 +175,9 @@ export const BillTab = ({ paid, closed }) => {
         page={rowsPerPage >= filteredBills.length ? 0 : page}
         onChangePage={(e, newPage) => setPage(newPage)}
         onChangeRowsPerPage={handleChangeRowsPerPage}
-        ActionsComponent={(props) => <PaginationActions {...props} section='bills' total={total} />}
+        ActionsComponent={(props) => (
+          <PaginationActions {...props} section={PAGINATION_BLOCK.BILLS} totalAmt={totalAmt} />
+        )}
       />
       <BillPayDialog openEdit={openEdit} onEditSave={handleEditSave} onEditCancel={handleEditCancel} />
     </>

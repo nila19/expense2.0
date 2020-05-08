@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -104,7 +104,7 @@ export const BillPayDialog = ({ openEdit, onEditSave, onEditCancel }) => {
   const bill = useSelector(selectBillPay);
   const accounts = useSelector(selectAccounts);
   // only cash accounts can be used for bill pay.
-  const accountOptions = buildAccountOptions(accounts.filter((e) => e.cash === true));
+  const accountOptions = useMemo(() => buildAccountOptions(accounts.filter((e) => e.cash === true)), [accounts]);
 
   return (
     <>
