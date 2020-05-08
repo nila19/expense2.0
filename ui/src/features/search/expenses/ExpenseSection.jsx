@@ -30,14 +30,14 @@ import CardBody from 'components/Card/CardBody.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 import taskStyles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
-import { ActionButton } from 'features/inputs/formFields';
-import { CustomPagination, PaginationActions } from 'features/inputs/customPagination';
+import { ActionButton } from 'features/inputs';
+import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
+import { ExpenseEditDialog } from 'features/search/expenseEdit/ExpenseEditDialog';
 import { format, formatAmt, formatDate, getSliceForPage, filterExpenses, getTotalAmount } from 'features/utils';
-import { findTargetTransId } from 'features/search/expenses/expensesUtils';
-import { ExpenseEditDialog } from 'features/search/expenseEdit/expenseEditDialog';
+import { findTargetTransId } from 'features/search/expenses/expenseUtils';
 
 import { selectDashboardGlobal } from 'features/dashboard/dashboardGlobalSlice';
-import { selectExpenses, deleteExpense, swapExpenses } from 'features/search/expenses/expensesSlice';
+import { selectExpenses, deleteExpense, swapExpenses } from 'features/search/expenses/expenseSlice';
 import { editExpense, resetForm, saveEditExpense } from 'features/search/expenseEdit/expenseEditSlice';
 
 const headers = [
@@ -150,7 +150,7 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
               {expensesForPage.map((exp) => {
                 const cellStyle = exp.tallied ? cellStyleDefault : { ...cellStyleDefault, color: '#00abee' };
                 return (
-                  <TableRow key={exp.id} className={classes.tableRow} hover={true}>
+                  <TableRow key={exp.id} className={classes.tableRow} hover>
                     <TableCell className={tableCellClasses} style={cellStyle} width='10%'>
                       <ActionButton
                         color='warning'
@@ -211,7 +211,7 @@ export const ExpenseSection = ({ rowsPerPage, setRowsPerPage }) => {
                     </TableCell>
                     <TableCell className={tableCellClasses} style={cellStyle}>
                       <ActionButton
-                        disabled={true}
+                        disabled
                         color='primary'
                         icon={
                           exp.adjust ? (

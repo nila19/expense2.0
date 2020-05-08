@@ -1,13 +1,7 @@
-import React from 'react';
-
 import _ from 'lodash';
 import moment from 'moment';
 import numeral from 'numeral';
 import BigNumber from 'bignumber.js';
-
-// @material-ui/icons
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import EuroIcon from '@material-ui/icons/Euro';
 
 export const getSliceForPage = (data, page, rowsPerPage) => {
   const start = page * rowsPerPage;
@@ -28,17 +22,6 @@ export const filterExpenses = (expenses, account, bill) => {
 
 export const getTotalAmount = (list) => {
   return _.reduce(list, (sum, e) => sum + e.amount, 0);
-};
-
-export const buildCityIcon = (currency) => {
-  switch (currency) {
-    case 'USD':
-      return <AttachMoneyIcon />;
-    case 'INR':
-      return <EuroIcon />;
-    default:
-      return '';
-  }
 };
 
 export const buildCategoriesOptions = (categories) => {

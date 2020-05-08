@@ -13,7 +13,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import SnackbarContent from 'components/Snackbar/SnackbarContent.js';
 
 import { SOCKETS } from 'app/config';
-import axios from 'app/axios';
+import { axios } from 'app/axios';
 import { startListening } from 'app/sockets';
 
 import { connectToBackend } from 'features/startup/startupSlice';
@@ -23,6 +23,7 @@ export const Startup = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
+    // initialize axios passing the snackbar.
     axios(enqueueSnackbar);
     setTimeout(() => {
       dispatch(connectToBackend());

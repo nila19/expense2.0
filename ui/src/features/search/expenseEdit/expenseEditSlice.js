@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import _ from 'lodash';
 
-import axios from 'app/axios';
+import { axios } from 'app/axios';
 import { API } from 'app/config';
 
 export const saveEditExpense = createAsyncThunk('expenseEdit/saveEditExpense', async (payload, thunkApi) => {

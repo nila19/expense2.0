@@ -23,12 +23,11 @@ import GridContainer from 'components/Grid/GridContainer.js';
 import Button from 'components/CustomButtons/Button.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
-import { FormikComboBox } from 'features/inputs/comboBox';
-import { FormikDatePicker, FormikAmount, FormikCheckBox } from 'features/inputs/formFields';
+import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from 'features/inputs';
 import { buildCategoriesOptions, buildAccountOptions, buildBillOptions } from 'features/utils';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountsSlice';
+import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 import { selectExpenseEdit } from 'features/search/expenseEdit/expenseEditSlice';
 
@@ -178,7 +177,7 @@ export const ExpenseEditDialog = ({ openEdit, onEditSave, onEditCancel }) => {
   return (
     <>
       {expense && (
-        <Dialog open={openEdit} onClose={onEditCancel} fullWidth={true} width={'180px'}>
+        <Dialog open={openEdit} onClose={onEditCancel} fullWidth width={'180px'}>
           <DialogContent style={{ padding: '0px' }}>
             <Card style={{ marginBottom: '0px' }}>
               <CardHeader color='success'>

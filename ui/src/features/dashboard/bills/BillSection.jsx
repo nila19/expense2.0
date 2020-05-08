@@ -8,7 +8,7 @@ import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 
 import Tabs from 'components/CustomTabs/CustomTabs.js';
 
-import { BillTab } from 'features/dashboard/bills/billTab/billTab';
+import { BillTab } from 'features/dashboard/bills/billTab/BillTab';
 import { hasBillsToClose, hasBillsToPay } from 'features/dashboard/bills/billUtils';
 
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
@@ -24,13 +24,13 @@ export const BillSection = () => {
         {
           tabName: 'UNPAID',
           tabIcon: NotificationsActiveIcon,
-          tabContent: <BillTab closed={true} paid={false} />,
+          tabContent: <BillTab closed paid={false} />,
           badge: hasBillsToPay(bills),
         },
         {
           tabName: 'PAID',
           tabIcon: HistoryIcon,
-          tabContent: <BillTab closed={true} paid={true} />,
+          tabContent: <BillTab closed paid />,
           badge: false,
         },
         {

@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
 import searchGlobalReducer from 'features/search/searchGlobalSlice';
-import expensesReducer from 'features/search/expenses/expensesSlice';
+import expensesReducer from 'features/search/expenses/expenseSlice';
 import expenseEditReducer from 'features/search/expenseEdit/expenseEditSlice';
 
 export default combineReducers({

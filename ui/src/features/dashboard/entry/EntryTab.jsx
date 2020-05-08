@@ -12,12 +12,11 @@ import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';
 import Button from 'components/CustomButtons/Button.js';
 
-import { FormikComboBox } from 'features/inputs/comboBox';
-import { FormikDatePicker, FormikAmount, FormikCheckBox } from 'features/inputs/formFields';
+import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from 'features/inputs';
 import { buildCategoriesOptions, buildAccountOptions } from 'features/utils';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountsSlice';
+import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 import { addExpense } from 'features/dashboard/entry/entrySlice';
 
 export const EntryTab = ({ adjust }) => {

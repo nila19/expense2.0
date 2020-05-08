@@ -4,12 +4,12 @@ import { useDispatch } from 'react-redux';
 import { Grid } from '@material-ui/core';
 
 import { COUNTS } from 'app/config';
-import { AccountSection } from 'features/dashboard/accounts/accountSection';
-import { BillSection } from 'features/dashboard/bills/billSection';
-import { EntrySection } from 'features/dashboard/entry/entrySection';
-import { ExpenseSection } from 'features/search/expenses/expenseSection';
+import { AccountSection } from 'features/dashboard/accounts/AccountSection';
+import { BillSection } from 'features/dashboard/bills/BillSection';
+import { EntrySection } from 'features/dashboard/entry/EntrySection';
+import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
 
-import { loadExpenses } from 'features/search/expenses/expensesSlice';
+import { loadExpenses } from 'features/search/expenses/expenseSlice';
 
 const Dashboard = () => {
   const dispatch = useDispatch();

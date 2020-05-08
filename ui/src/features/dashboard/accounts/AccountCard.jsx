@@ -19,10 +19,10 @@ import CardIcon from 'components/Card/CardIcon.js';
 import CardFooter from 'components/Card/CardFooter.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
-import { ActionButton } from 'features/inputs/formFields';
+import { ActionButton } from 'features/inputs';
 
 import { selectDashboardGlobal, setAccountFilter } from 'features/dashboard/dashboardGlobalSlice';
-import { tallyAccount } from 'features/dashboard/accounts/accountsSlice';
+import { tallyAccount } from 'features/dashboard/accounts/accountSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 
 import { formatAmt } from 'features/utils';
@@ -90,8 +90,8 @@ export const AccountCard = ({ account }) => {
           <Grid container item lg={12} spacing={1} alignItems='center'>
             <Grid item lg={2}>
               <ActionButton
+                disabled
                 color={buildAccountBillInfoColor(account, lastBill, openBill)}
-                disabled={true}
                 icon={
                   account.billed ? (
                     <AccessTimeIcon fontSize='small' style={{ top: '1px' }} />

@@ -4,8 +4,8 @@ import { Grid } from '@material-ui/core';
 
 import { COUNTS } from 'app/config';
 
-import { ExpenseSection } from 'features/search/expenses/expenseSection';
-import { SearchForm } from 'features/search/form/searchForm';
+import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
+import { SearchForm } from 'features/search/form/SearchForm';
 
 const Search = () => {
   const [rowsPerPage, setRowsPerPage] = useState(COUNTS.SEARCH_EXPENSES);

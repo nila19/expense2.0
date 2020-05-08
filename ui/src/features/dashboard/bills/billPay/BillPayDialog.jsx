@@ -22,16 +22,15 @@ import GridContainer from 'components/Grid/GridContainer.js';
 import Button from 'components/CustomButtons/Button.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
-import { FormikComboBox } from 'features/inputs/comboBox';
-import { CustomTextField, FormikDatePicker, FormikAmount } from 'features/inputs/formFields';
+import { CustomTextField, FormikAmount, FormikComboBox, FormikDatePicker } from 'features/inputs';
 import { format, formatAmt, formatDate, buildAccountOptions } from 'features/utils';
 
-import { selectAccounts } from 'features/dashboard/accounts/accountsSlice';
+import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 import { selectBillPay } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const useStyles = makeStyles(styles);
 
-export const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
+const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
   return (
     <Formik
       initialValues={{
@@ -110,7 +109,7 @@ export const BillPayDialog = ({ openEdit, onEditSave, onEditCancel }) => {
   return (
     <>
       {bill && (
-        <Dialog open={openEdit} onClose={onEditCancel} fullWidth={true} width={'180px'}>
+        <Dialog open={openEdit} onClose={onEditCancel} fullWidth width={'180px'}>
           <DialogContent style={{ padding: '0px' }}>
             <Card style={{ marginBottom: '0px' }}>
               <CardHeader color='primary'>

@@ -21,10 +21,10 @@ import FilterTiltShiftIcon from '@material-ui/icons/FilterTiltShift';
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
 import { COUNTS } from 'app/config';
-import { ActionButton } from 'features/inputs/formFields';
-import { CustomPagination, PaginationActions } from 'features/inputs/customPagination';
+import { ActionButton } from 'features/inputs';
+import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
+import { BillPayDialog } from 'features/dashboard/bills/billPay/BillPayDialog';
 import { formatAmt, formatDate, getSliceForPage, getTotalAmount } from 'features/utils';
-import { BillPayDialog } from 'features/dashboard/bills/billPay/billPayDialog';
 import { filterAndSortBills } from 'features/dashboard/bills/billUtils';
 
 import { selectDashboardGlobal, setBillFilter } from 'features/dashboard/dashboardGlobalSlice';
@@ -123,7 +123,7 @@ export const BillTab = ({ paid, closed }) => {
         </TableHead>
         <TableBody>
           {billsForPage.map((bill) => (
-            <TableRow key={bill.id} className={classes.tableRow} hover={true}>
+            <TableRow key={bill.id} className={classes.tableRow} hover>
               <TableCell className={tableCellClasses} style={cellStyle}>
                 <ActionButton
                   color={bill.id === billFilter ? 'warning' : 'primary'}

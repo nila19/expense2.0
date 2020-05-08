@@ -1,16 +1,19 @@
-import axios from 'axios';
+import _axios from 'axios';
 
 import { BACKEND } from 'app/config';
 
 let axiosInstance = null;
 
-export default (enqueueSnackbar) => {
+// first invocation will initialize axios passing the snackbar.
+// subsequent invocations will return the same instance of axios.
+
+export const axios = (enqueueSnackbar) => {
   if (axiosInstance) {
     return axiosInstance;
   }
 
   // Set config defaults when creating the instance
-  axiosInstance = axios.create({
+  axiosInstance = _axios.create({
     baseURL: BACKEND.BASE_URL,
     timeout: BACKEND.TIME_OUT,
   });

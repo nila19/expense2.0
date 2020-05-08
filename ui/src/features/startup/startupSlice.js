@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import axios from 'app/axios';
+import { axios } from 'app/axios';
 
 import { setSelectedCity } from 'features/appGlobalSlice';
-import { loadAccounts } from 'features/dashboard/accounts/accountsSlice';
+import { loadAccounts } from 'features/dashboard/accounts/accountSlice';
 import { loadBills } from 'features/dashboard/bills/billTab/billTabSlice';
-import { loadExpenses } from 'features/search/expenses/expensesSlice';
+import { loadExpenses } from 'features/search/expenses/expenseSlice';
 
 export const connectToBackend = createAsyncThunk('startup/connect', async (payload, thunkApi) => {
   const { data } = await axios().get('/app/startup/connect');

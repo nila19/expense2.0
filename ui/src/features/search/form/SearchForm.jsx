@@ -13,13 +13,12 @@ import Button from 'components/CustomButtons/Button.js';
 import Card from 'components/Card/Card.js';
 import CardBody from 'components/Card/CardBody.js';
 
-import { FormikComboBox } from 'features/inputs/comboBox';
-import { FormikAmount, FormikSwitch } from 'features/inputs/formFields';
+import { FormikAmount, FormikComboBox, FormikSwitch } from 'features/inputs';
 import { buildCategoriesOptions, buildAccountOptions, buildMonthOptions, buildAdhocOptions } from 'features/utils';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountsSlice';
-import { loadExpenses } from 'features/search/expenses/expensesSlice';
+import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
+import { loadExpenses } from 'features/search/expenses/expenseSlice';
 
 export const SearchForm = () => {
   const dispatch = useDispatch();

@@ -1,9 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import TablePagination from '@material-ui/core/TablePagination';
 
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -11,7 +10,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-import { ActionButton } from 'features/inputs/formFields';
+import { ActionButton } from 'features/inputs';
 import { formatAmt } from 'features/utils';
 
 import { selectDashboardGlobal, resetFilters } from 'features/dashboard/dashboardGlobalSlice';
@@ -95,6 +94,3 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, total, on
     </div>
   );
 };
-
-const paginationStyle = { toolbar: { minHeight: '30px', paddingTop: '5px' }, caption: { fontSize: 12 } };
-export const CustomPagination = withStyles(paginationStyle)(TablePagination);

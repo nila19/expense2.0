@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import _ from 'lodash';
 
-import axios from 'app/axios';
+import { axios } from 'app/axios';
 import { API } from 'app/config';
 import { selectAppGlobal } from 'features/appGlobalSlice';
 
@@ -22,7 +22,7 @@ export const swapExpenses = createAsyncThunk('expenses/swapExpenses', async (pay
   await axios().post(API.EXPENSE.SWAP, { cityId: selectedCity, ...payload }, { snackbar: 'Expense move' });
 });
 
-const expensesSlice = createSlice({
+const expenseSlice = createSlice({
   name: 'expenses',
   initialState: {
     loading: false,
@@ -59,5 +59,5 @@ const expensesSlice = createSlice({
 
 export const selectExpenses = (state) => state.search.expenses;
 
-export const { createExpense, updateExpense, dropExpense } = expensesSlice.actions;
-export default expensesSlice.reducer;
+export const { createExpense, updateExpense, dropExpense } = expenseSlice.actions;
+export default expenseSlice.reducer;

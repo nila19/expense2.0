@@ -7,10 +7,10 @@ import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
 
 import { COUNTS } from 'app/config';
-import { AccountCard } from 'features/dashboard/accounts/accountCard';
+import { AccountCard } from 'features/dashboard/accounts/AccountCard';
 
 import { selectAppGlobal } from 'features/appGlobalSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountsSlice';
+import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 
 export const AccountSection = () => {
   const { accountsExpanded } = useSelector(selectAppGlobal);

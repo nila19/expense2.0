@@ -16,13 +16,24 @@ import SearchIcon from '@material-ui/icons/Search';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import BarChartIcon from '@material-ui/icons/BarChart';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import EuroIcon from '@material-ui/icons/Euro';
 
 import Button from 'components/CustomButtons/Button.js';
 
-import { buildCityIcon } from 'features/utils';
-
 import { selectStartupData } from 'features/startup/startupSlice';
 import { selectAppGlobal, setSelectedCity, setAccountsExpanded } from 'features/appGlobalSlice';
+
+const buildCityIcon = (currency) => {
+  switch (currency) {
+    case 'USD':
+      return <AttachMoneyIcon />;
+    case 'INR':
+      return <EuroIcon />;
+    default:
+      return '';
+  }
+};
 
 export const MenuBar = () => {
   const dispatch = useDispatch();
@@ -89,7 +100,7 @@ export const MenuBar = () => {
             </Menu>
           )}
           {city && (
-            <Button justIcon simple disabled={true} color='success' size='sm'>
+            <Button justIcon simple disabled color='success' size='sm'>
               {buildCityIcon(city.currency)}
             </Button>
           )}

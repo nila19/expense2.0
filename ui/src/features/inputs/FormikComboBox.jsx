@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { labelColor } from 'features/inputs/formFields';
+import { labelColor } from 'features/inputs/inputUtils';
 
 const useStyles = makeStyles(() => ({
   inputText: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const ComboBox = (props) => {
+const ComboBox = (props) => {
   const classes = useStyles();
   const { id, label, error, options, value, onChange, freeSolo } = props;
 

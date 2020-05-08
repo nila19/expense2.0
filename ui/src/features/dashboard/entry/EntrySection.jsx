@@ -6,7 +6,7 @@ import TransformIcon from '@material-ui/icons/Transform';
 
 import Tabs from 'components/CustomTabs/CustomTabs.js';
 
-import { EntryTab } from 'features/dashboard/entry/entryTab';
+import { EntryTab } from 'features/dashboard/entry/EntryTab';
 
 export const EntrySection = () => {
   return (
@@ -22,7 +22,7 @@ export const EntrySection = () => {
         {
           tabName: 'ADJUSTMENT',
           tabIcon: TransformIcon,
-          tabContent: <EntryTab adjust={true} />,
+          tabContent: <EntryTab adjust />,
         },
       ]}
     />

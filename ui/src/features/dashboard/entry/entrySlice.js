@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import axios from 'app/axios';
+import { axios } from 'app/axios';
 import { API } from 'app/config';
 import { selectAppGlobal } from 'features/appGlobalSlice';
 

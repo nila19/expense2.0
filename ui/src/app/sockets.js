@@ -1,9 +1,10 @@
 import io from 'socket.io-client';
 
 import { BACKEND } from 'app/config';
-import { updateAccount } from 'features/dashboard/accounts/accountsSlice';
+
+import { updateAccount } from 'features/dashboard/accounts/accountSlice';
 import { createBill, updateBill } from 'features/dashboard/bills/billTab/billTabSlice';
-import { createExpense, updateExpense, dropExpense } from 'features/search/expenses/expensesSlice';
+import { createExpense, updateExpense, dropExpense } from 'features/search/expenses/expenseSlice';
 
 const socket = io(BACKEND.BASE_URL);
 

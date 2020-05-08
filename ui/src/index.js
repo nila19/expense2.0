@@ -9,7 +9,7 @@ import 'index.css';
 
 import * as serviceWorker from 'serviceWorker';
 import { store } from 'app/store';
-import { App } from 'app/app';
+import { App } from 'app/App';
 import { COUNTS } from 'app/config';
 
 ReactDOM.render(

@@ -7,17 +7,17 @@ import _ from 'lodash';
 
 import 'app/app.css';
 
-import { Startup, Loading } from 'features/startup/startup';
-import { MenuBar } from 'features/menu/menuBar';
+import { Startup, Loading } from 'features/startup/Startup';
+import { MenuBar } from 'features/menu/MenuBar';
 
 import { selectStartup, STATE } from 'features/startup/startupSlice';
 
 // lazy loaded modules.
-const Dashboard = React.lazy(() => import('features/dashboard/dashboard'));
-const Search = React.lazy(() => import('features/search/search'));
+const Dashboard = React.lazy(() => import('features/dashboard/Dashboard'));
+const Search = React.lazy(() => import('features/search/Search'));
 
 const WithSuspense = (props) => {
-  const loading = <Loading connected={true} inprogress={true} />;
+  const loading = <Loading connected inprogress />;
   return (
     <DocumentTitle title={props.title}>
       <Suspense fallback={loading}>{props.render()}</Suspense>
@@ -62,7 +62,7 @@ export const App = () => {
   } else if (connectionFailed || anyFailed) {
     display = <Loading connected={connected} inprogress={false} />;
   } else {
-    display = <Loading connected={connected} inprogress={true} />;
+    display = <Loading connected={connected} inprogress />;
   }
 
   return (
