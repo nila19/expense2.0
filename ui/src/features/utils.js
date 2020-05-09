@@ -43,14 +43,14 @@ export const buildAdhocOptions = memoize(() => {
   return ['Y', 'N'].map((e) => ({ key: e, label: e }));
 });
 
-export const formatAmt = (amount, symbol) => {
+export const formatAmt = memoize((amount, symbol) => {
   const amt = new BigNumber(amount).toFixed(2);
   return numeral(amt).format(symbol ? format.AMOUNT_SYMBOL : format.AMOUNT);
-};
+});
 
-export const formatDate = (date, fmt) => {
+export const formatDate = memoize((date, fmt) => {
   return moment(date, format.YYYYMMDD).format(fmt || format.DDMMMYYYY);
-};
+});
 
 export const format = {
   YYYYMMDD: 'YYYY-MM-DD',

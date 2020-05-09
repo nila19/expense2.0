@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 
@@ -20,7 +20,7 @@ import { selectStartupData } from 'features/startup/startupSlice';
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 import { searchExpenses } from 'features/search/expenses/expenseSlice';
 
-export const SearchForm = () => {
+export const SearchForm = memo(() => {
   const dispatch = useDispatch();
   const { categories, descriptions, transMonths, entryMonths } = useSelector(selectStartupData);
   const accounts = useSelector(selectAccounts);
@@ -153,4 +153,4 @@ export const SearchForm = () => {
       )}
     </Formik>
   );
-};
+});

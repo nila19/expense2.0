@@ -1,6 +1,7 @@
 import React from 'react';
 
 import moment from 'moment';
+import memoize from 'memoize-one';
 
 // @material-ui/icons
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
@@ -11,7 +12,7 @@ import SubtitlesIcon from '@material-ui/icons/Subtitles';
 
 import { format, formatAmt, formatDate } from 'features/utils';
 
-export const buildAccountIcon = (icon) => {
+export const buildAccountIcon = memoize((icon) => {
   switch (icon) {
     case 'account_balance':
       return <AccountBalanceIcon />;
@@ -24,9 +25,9 @@ export const buildAccountIcon = (icon) => {
     default:
       return <SubtitlesIcon />;
   }
-};
+});
 
-export const buildAccountColor = (color) => {
+export const buildAccountColor = memoize((color) => {
   switch (color) {
     case 'red':
       return 'danger';
@@ -37,36 +38,36 @@ export const buildAccountColor = (color) => {
     default:
       return 'success';
   }
-};
+});
 
-export const buildTallyInfo = (account) => {
-  const tallyAmt = formatAmt(account.tallyBalance, true);
-  const tallyDate = moment(account.tallyDt, format.YYYYMMDDHHmmss).format(format.DDMMMYYYYHHMM);
+export const buildTallyInfo = memoize((tallyBalance, tallyDt) => {
+  const tallyAmt = formatAmt(tallyBalance, true);
+  const tallyDate = moment(tallyDt, format.YYYYMMDDHHmmss).format(format.DDMMMYYYYHHMM);
   return tallyAmt + ' @ ' + tallyDate;
-};
+});
 
-export const buildBillInfo = (account, lastBill, openBill) => {
-  if (!account.billed) {
+export const buildBillInfo = memoize((billed, lastBill, openBill) => {
+  if (!billed) {
     return 'No bills.';
   }
   if (lastBill && lastBill.balance > 0) {
     const dueAmt = formatAmt(lastBill.balance, true);
-    const dueDate = formatDate(lastBill.dueDt, format.DDMMM);
-    return dueAmt + ' (Due on ' + dueDate + ')';
+    const dueDt = formatDate(lastBill.dueDt, format.DDMMM);
+    return dueAmt + ' (Due on ' + dueDt + ')';
   }
   if (openBill) {
-    const billDate = formatDate(lastBill.dueDt, format.DDMMM);
-    return 'Next bill on ' + billDate;
+    const billDt = formatDate(openBill.billDt, format.DDMMM);
+    return 'Next bill on ' + billDt;
   }
-};
+});
 
-export const buildAccountTallyInfoColor = (account) => {
-  const sameDay = moment(account.tallyDt, format.YYYYMMDDHHmmss).isSame(moment(), 'day');
+export const buildAccountTallyInfoColor = memoize((tallyDt) => {
+  const sameDay = moment(tallyDt, format.YYYYMMDDHHmmss).isSame(moment(), 'day');
   return sameDay ? 'success' : 'warning';
-};
+});
 
-export const buildAccountBillInfoColor = (account, lastBill, openBill) => {
-  if (!account.billed) {
+export const buildAccountBillInfoColor = memoize((billed, lastBill, openBill) => {
+  if (!billed) {
     return 'warning';
   }
   if (lastBill && lastBill.balance > 0) {
@@ -75,4 +76,4 @@ export const buildAccountBillInfoColor = (account, lastBill, openBill) => {
   if (openBill) {
     return 'info';
   }
-};
+});

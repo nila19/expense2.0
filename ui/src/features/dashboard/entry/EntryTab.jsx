@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -16,7 +16,7 @@ import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from '
 
 import { addExpense } from 'features/dashboard/entry/entrySlice';
 
-export const EntryTab = ({ adjust, descriptions, categories, accountOptions, categoriesOptions }) => {
+export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions, categoriesOptions }) => {
   const dispatch = useDispatch();
 
   return (
@@ -130,4 +130,4 @@ export const EntryTab = ({ adjust, descriptions, categories, accountOptions, cat
       </Formik>
     </div>
   );
-};
+});

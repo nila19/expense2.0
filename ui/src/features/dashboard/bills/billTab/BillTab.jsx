@@ -49,7 +49,9 @@ export const BillTab = ({ paid, closed }) => {
   const bills = useSelector(selectBills);
 
   useEffect(() => {
-    setPage(0);
+    if (page !== 0) {
+      setPage(0);
+    }
   }, [accountFilter]);
 
   console.log('Rendering Bills.. ' + paid + ' : ' + closed);

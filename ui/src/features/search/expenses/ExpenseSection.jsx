@@ -79,7 +79,9 @@ export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
   const [openEdit, setOpenEdit] = useState(false);
 
   useEffect(() => {
-    setPage(0);
+    if (page !== 0) {
+      setPage(0);
+    }
   }, [accountFilter, billFilter]);
 
   console.log('Rendering Expense..');

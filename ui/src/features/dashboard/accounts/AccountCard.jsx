@@ -43,6 +43,7 @@ export const AccountCard = ({ account }) => {
   const dispatch = useDispatch();
   const { accountFilter } = useSelector(selectDashboardGlobal);
   const bills = useSelector(selectBills);
+
   const lastBill = account.billed && account.bills.last ? _.find(bills, (e) => e.id === account.bills.last.id) : null;
   const openBill = account.billed && account.bills.open ? _.find(bills, (e) => e.id === account.bills.open.id) : null;
 
@@ -76,14 +77,14 @@ export const AccountCard = ({ account }) => {
           <Grid container item lg={12} spacing={1} alignItems='center'>
             <Grid item lg={2}>
               <ActionButton
-                color={buildAccountTallyInfoColor(account)}
+                color={buildAccountTallyInfoColor(account.tallyDt)}
                 onClick={() => handleTallyClick(account.id)}
                 icon={<BeenhereIcon fontSize='small' style={{ top: '1px' }} />}
               />
             </Grid>
             <Grid item lg={10}>
               <Box fontWeight='fontWeightRegular' fontSize={12} style={{ color: '#999', textAlign: 'left' }}>
-                {buildTallyInfo(account)}
+                {buildTallyInfo(account.tallyBalance, account.tallyDt)}
               </Box>
             </Grid>
           </Grid>
@@ -91,7 +92,7 @@ export const AccountCard = ({ account }) => {
             <Grid item lg={2}>
               <ActionButton
                 disabled
-                color={buildAccountBillInfoColor(account, lastBill, openBill)}
+                color={buildAccountBillInfoColor(account.billed, lastBill, openBill)}
                 icon={
                   account.billed ? (
                     <AccessTimeIcon fontSize='small' style={{ top: '1px' }} />
@@ -103,7 +104,7 @@ export const AccountCard = ({ account }) => {
             </Grid>
             <Grid item lg={10}>
               <Box fontWeight='fontWeightRegular' fontSize={12} style={{ color: '#999', textAlign: 'left' }}>
-                {buildBillInfo(account, lastBill, openBill)}
+                {buildBillInfo(account.billed, lastBill, openBill)}
               </Box>
             </Grid>
           </Grid>
