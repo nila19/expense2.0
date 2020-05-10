@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import _ from 'lodash';
@@ -33,22 +33,17 @@ import {
   buildBillInfo,
   buildAccountTallyInfoColor,
   buildAccountBillInfoColor,
+  findBill,
 } from 'features/dashboard/accounts/accountUtils';
 
 const useStyles = makeStyles(styles);
 
-export const AccountCard = ({ account }) => {
+const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
   const classes = useStyles();
-
   const dispatch = useDispatch();
-  const { accountFilter } = useSelector(selectDashboardGlobal);
-  const bills = useSelector(selectBills);
-
-  const lastBill = account.billed && account.bills.last ? _.find(bills, (e) => e.id === account.bills.last.id) : null;
-  const openBill = account.billed && account.bills.open ? _.find(bills, (e) => e.id === account.bills.open.id) : null;
 
   const handleAccountFilter = (id) => {
-    dispatch(setAccountFilter(accountFilter === id ? null : id));
+    dispatch(setAccountFilter(id));
   };
 
   const handleTallyClick = (id) => {
@@ -59,8 +54,8 @@ export const AccountCard = ({ account }) => {
     <Card style={{ marginTop: '10px', marginBottom: '0px' }}>
       <CardHeader stats icon>
         <CardIcon
-          color={accountFilter === account.id ? 'warning' : buildAccountColor(account.color)}
-          onClick={() => handleAccountFilter(account.id)}
+          color={isSelected ? 'warning' : buildAccountColor(account.color)}
+          onClick={() => handleAccountFilter(isSelected ? null : account.id)}
           style={{ padding: '7px', cursor: 'pointer' }}
         >
           {buildAccountIcon(account.icon)}
@@ -112,4 +107,16 @@ export const AccountCard = ({ account }) => {
       </CardFooter>
     </Card>
   );
-};
+});
+
+export const AccountCard = memo(({ account }) => {
+  const { accountFilter } = useSelector(selectDashboardGlobal);
+  const bills = useSelector(selectBills);
+
+  const lastBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.last.id')) : null), [account]);
+  const openBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.open.id')) : null), [account]);
+
+  const isSelected = accountFilter === account.id;
+
+  return <AccountCardUI account={account} isSelected={isSelected} lastBill={lastBill} openBill={openBill} />;
+});

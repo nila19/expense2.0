@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Grid } from '@material-ui/core';
 
 import { COUNTS } from 'app/config';
 import { EXPENSE_BLOCK } from 'app/constants';
+import { Loading } from 'features/startup/Startup';
 import { AccountSection } from 'features/dashboard/accounts/AccountSection';
 import { BillSection } from 'features/dashboard/bills/BillSection';
 import { EntrySection } from 'features/dashboard/entry/EntrySection';
@@ -21,20 +22,32 @@ const Dashboard = () => {
     dispatch(clearSearchResults());
   }, [dispatch]);
 
+  const loading = <Loading connected inprogress />;
+
   return (
     <>
       <AccountSection />
       <Grid container spacing={2} alignItems='flex-start' style={{ marginTop: -15 }}>
         <Grid item lg={6}>
-          <BillSection />
+          <Suspense fallback={loading}>
+            <BillSection />
+          </Suspense>
         </Grid>
         <Grid item lg={6}>
-          <EntrySection />
+          <Suspense fallback={loading}>
+            <EntrySection />
+          </Suspense>
         </Grid>
       </Grid>
       <Grid container spacing={2} alignItems='flex-start' style={{ marginTop: -20 }}>
         <Grid item lg={12}>
-          <ExpenseSection section={EXPENSE_BLOCK.DASHBOARD} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
+          <Suspense fallback={loading}>
+            <ExpenseSection
+              section={EXPENSE_BLOCK.DASHBOARD}
+              rowsPerPage={rowsPerPage}
+              setRowsPerPage={setRowsPerPage}
+            />
+          </Suspense>
         </Grid>
       </Grid>
     </>

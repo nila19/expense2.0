@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import memoize from 'memoize-one';
 
 import _ from 'lodash';
 
@@ -33,6 +34,37 @@ import { selectExpenseEdit } from 'features/search/expenseEdit/expenseEditSlice'
 
 const useStyles = makeStyles(styles);
 
+const validationSchema = memoize(() =>
+  Yup.object({
+    category: Yup.object({
+      id: Yup.number()
+        .nullable()
+        .when('adjust', {
+          is: false,
+          then: Yup.number().required('Required'),
+          otherwise: Yup.number().notRequired(),
+        }),
+    }).nullable(),
+    bill: Yup.object({
+      id: Yup.number()
+        .nullable()
+        .when('billed', {
+          is: true,
+          then: Yup.number().required('Required'),
+          otherwise: Yup.number().notRequired(),
+        }),
+    }).nullable(),
+    description: Yup.string().required('Required').trim().min(2, 'Min length'),
+    transDt: Yup.string().required('Required'),
+    amount: Yup.number().required('Required').moreThan(0, 'Must be > 0'),
+    accounts: Yup.object({
+      from: Yup.object({
+        id: Yup.number().required('Required'),
+      }),
+    }),
+  })
+);
+
 export const ExpenseEditForm = ({
   expense,
   billOptions,
@@ -44,34 +76,7 @@ export const ExpenseEditForm = ({
   return (
     <Formik
       initialValues={expense}
-      validationSchema={Yup.object({
-        category: Yup.object({
-          id: Yup.number()
-            .nullable()
-            .when('adjust', {
-              is: false,
-              then: Yup.number().required('Required'),
-              otherwise: Yup.number().notRequired(),
-            }),
-        }).nullable(),
-        bill: Yup.object({
-          id: Yup.number()
-            .nullable()
-            .when('billed', {
-              is: true,
-              then: Yup.number().required('Required'),
-              otherwise: Yup.number().notRequired(),
-            }),
-        }).nullable(),
-        description: Yup.string().required('Required').trim().min(2, 'Min length'),
-        transDt: Yup.string().required('Required'),
-        amount: Yup.number().required('Required').moreThan(0, 'Must be > 0'),
-        accounts: Yup.object({
-          from: Yup.object({
-            id: Yup.number().required('Required'),
-          }),
-        }),
-      })}
+      validationSchema={validationSchema()}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
         let expense = _.cloneDeep(values);

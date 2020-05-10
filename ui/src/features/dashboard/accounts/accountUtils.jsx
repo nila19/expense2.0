@@ -1,5 +1,6 @@
 import React from 'react';
 
+import _ from 'lodash';
 import moment from 'moment';
 import memoize from 'memoize-one';
 
@@ -76,4 +77,11 @@ export const buildAccountBillInfoColor = memoize((billed, lastBill, openBill) =>
   if (openBill) {
     return 'info';
   }
+});
+
+export const findBill = memoize((bills, id) => {
+  if (!id) {
+    return null;
+  }
+  return _.find(bills, { id: id });
 });

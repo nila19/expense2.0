@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import memoize from 'memoize-one';
 
 import moment from 'moment';
 
@@ -30,20 +31,26 @@ import { selectBillPay } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const useStyles = makeStyles(styles);
 
+const initialValues = memoize((bill) => ({
+  bill: bill,
+  account: { id: null },
+  paidAmt: bill.balance,
+  paidDt: formatDate(moment(), format.YYYYMMDD),
+}));
+
+const validationSchema = memoize((bill) =>
+  Yup.object({
+    paidDt: Yup.string().required('Required'),
+    paidAmt: Yup.number().required('Required').moreThan(0, 'Must be > 0').max(bill.amount, 'Must be < Bill Amt'),
+    account: Yup.object({ id: Yup.number().required('Required') }),
+  })
+);
+
 const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
   return (
     <Formik
-      initialValues={{
-        bill: bill,
-        account: { id: null },
-        paidAmt: bill.balance,
-        paidDt: formatDate(moment(), format.YYYYMMDD),
-      }}
-      validationSchema={Yup.object({
-        paidDt: Yup.string().required('Required'),
-        paidAmt: Yup.number().required('Required').moreThan(0, 'Must be > 0').max(bill.amount, 'Must be < Bill Amt'),
-        account: Yup.object({ id: Yup.number().required('Required') }),
-      })}
+      initialValues={initialValues(bill)}
+      validationSchema={validationSchema(bill)}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
         onEditSave(values);

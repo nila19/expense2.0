@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import memoize from 'memoize-one';
 
 import _ from 'lodash';
 
@@ -16,43 +17,49 @@ import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from '
 
 import { addExpense } from 'features/dashboard/entry/entrySlice';
 
+const initialValues = memoize((adjust) => ({
+  adjust: adjust,
+  accounts: {
+    from: { id: null },
+    to: { id: null },
+  },
+  category: { id: null, name: null, adjust: adjust },
+  description: null,
+  amount: null,
+  transDt: null,
+  adhoc: false,
+}));
+
+const validationSchema = memoize(() =>
+  Yup.object({
+    category: Yup.object({
+      id: Yup.number()
+        .nullable()
+        .when('adjust', {
+          is: false,
+          then: Yup.number().required('Required'),
+          otherwise: Yup.number().notRequired(),
+        }),
+    }),
+    description: Yup.string().required('Required').trim().min(2, 'Min length'),
+    transDt: Yup.string().required('Required'),
+    amount: Yup.number().required('Required').notOneOf([0]),
+    accounts: Yup.object({
+      from: Yup.object({
+        id: Yup.number().required('Required'),
+      }),
+    }),
+  })
+);
+
 export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions, categoriesOptions }) => {
   const dispatch = useDispatch();
 
   return (
     <div style={{ paddingBottom: '30px' }}>
       <Formik
-        initialValues={{
-          adjust: adjust,
-          accounts: {
-            from: { id: null },
-            to: { id: null },
-          },
-          category: { id: null, name: null, adjust: adjust },
-          description: null,
-          amount: null,
-          transDt: null,
-          adhoc: false,
-        }}
-        validationSchema={Yup.object({
-          category: Yup.object({
-            id: Yup.number()
-              .nullable()
-              .when('adjust', {
-                is: false,
-                then: Yup.number().required('Required'),
-                otherwise: Yup.number().notRequired(),
-              }),
-          }),
-          description: Yup.string().required('Required').trim().min(2, 'Min length'),
-          transDt: Yup.string().required('Required'),
-          amount: Yup.number().required('Required').notOneOf([0]),
-          accounts: Yup.object({
-            from: Yup.object({
-              id: Yup.number().required('Required'),
-            }),
-          }),
-        })}
+        initialValues={initialValues(adjust)}
+        validationSchema={validationSchema()}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           const category = values.category.id ? _.find(categories, { id: values.category.id }) : null;
