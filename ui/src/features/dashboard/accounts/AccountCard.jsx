@@ -113,8 +113,14 @@ export const AccountCard = memo(({ account }) => {
   const { accountFilter } = useSelector(selectDashboardGlobal);
   const bills = useSelector(selectBills);
 
-  const lastBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.last.id')) : null), [account]);
-  const openBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.open.id')) : null), [account]);
+  const lastBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.last.id')) : null), [
+    account,
+    bills,
+  ]);
+  const openBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.open.id')) : null), [
+    account,
+    bills,
+  ]);
 
   const isSelected = accountFilter === account.id;
 

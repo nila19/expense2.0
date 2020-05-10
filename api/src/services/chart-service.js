@@ -7,9 +7,9 @@ import { buildMonthsList } from 'utils/month-utils';
 export const buildChart = async (parms) => {
   const data = await transactionModel.findAllTransMonths(parms.db, parms.cityId);
   const months = buildMonthsList(data);
-  const regular = buildSummary({ ...parms, regular: true, adhoc: false })[0];
-  const adhoc = buildSummary({ ...parms, regular: false, adhoc: true })[0];
-  return loadChartData(months, regular, adhoc);
+  const regular = await buildSummary({ ...parms, regular: true, adhoc: false });
+  const adhoc = await buildSummary({ ...parms, regular: false, adhoc: true });
+  return loadChartData(months, regular[0], adhoc[0]);
 };
 
 const loadChartData = (months, regular, adhoc) => {

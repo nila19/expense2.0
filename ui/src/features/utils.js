@@ -43,9 +43,27 @@ export const buildAdhocOptions = memoize(() => {
   return ['Y', 'N'].map((e) => ({ key: e, label: e }));
 });
 
-export const formatAmt = memoize((amount, symbol) => {
+export const prepareChartData = (chartData) => {
+  const { labels, regulars, adhocs, totals } = chartData;
+  return labels
+    .slice(0, 24)
+    .map((e, idx) => ({ label: e, regular: regulars[idx], adhoc: adhocs[idx], total: totals[idx] }));
+};
+
+export const formatLabel = memoize((label) => {
+  return _.capitalize(label);
+});
+
+export const formatAmt = memoize((amount, symbol, noDecimal) => {
   const amt = new BigNumber(amount).toFixed(2);
-  return numeral(amt).format(symbol ? format.AMOUNT_SYMBOL : format.AMOUNT);
+  const fmt = symbol
+    ? noDecimal
+      ? format.AMOUNT_SYMBOL_2
+      : format.AMOUNT_SYMBOL
+    : noDecimal
+    ? format.AMOUNT_2
+    : format.AMOUNT;
+  return numeral(amt).format(fmt);
 });
 
 export const formatDate = memoize((date, fmt) => {
@@ -62,5 +80,7 @@ export const format = {
   YYYYMM: 'YYYYMM',
   MMMYY: 'MMM-YY',
   AMOUNT: '0,0.00',
+  AMOUNT_2: '0,0',
   AMOUNT_SYMBOL: '$ 0,0.00',
+  AMOUNT_SYMBOL_2: '$ 0,0',
 };

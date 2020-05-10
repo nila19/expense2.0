@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { axios } from 'app/axios';
+import { API } from 'app/config';
 
 import { setSelectedCity } from 'features/appGlobalSlice';
 import { loadAccounts } from 'features/dashboard/accounts/accountSlice';
@@ -8,7 +9,7 @@ import { loadBills } from 'features/dashboard/bills/billTab/billTabSlice';
 import { loadExpenses } from 'features/search/expenses/expenseSlice';
 
 export const connectToBackend = createAsyncThunk('startup/connect', async (payload, thunkApi) => {
-  const { data } = await axios().get('/app/startup/connect');
+  const { data } = await axios().get(API.STARTUP.CONNECT);
   if (data.code === 0) {
     thunkApi.dispatch(loadCities());
     thunkApi.dispatch(loadDefaultCity());
@@ -27,32 +28,32 @@ export const loadAppDataForCity = (cityId, dispatch) => {
 };
 
 export const loadCities = createAsyncThunk('appGlobal/loadCities', async () => {
-  const { data } = await axios().get('/app/startup/cities');
+  const { data } = await axios().get(API.STARTUP.CITIES);
   return data.data;
 });
 
 export const loadDefaultCity = createAsyncThunk('appGlobal/loadDefaultCity', async (payload, thunkApi) => {
-  const { data } = await axios().get('/app/startup/city/default');
+  const { data } = await axios().get(API.STARTUP.DEFAULT_CITY);
   thunkApi.dispatch(setSelectedCity(data.data.id));
 });
 
 export const loadCategories = createAsyncThunk('appGlobal/loadCategories', async (cityId) => {
-  const { data } = await axios().get('/app/startup/categories?cityId=' + cityId);
+  const { data } = await axios().get(API.STARTUP.CATEGORIES + cityId);
   return data.data;
 });
 
 export const loadDescriptions = createAsyncThunk('appGlobal/loadDescriptions', async (cityId) => {
-  const { data } = await axios().get('/app/startup/descriptions?cityId=' + cityId);
+  const { data } = await axios().get(API.STARTUP.DESCRIPTIONS + cityId);
   return data.data;
 });
 
 export const loadTransMonths = createAsyncThunk('appGlobal/loadTransMonths', async (cityId) => {
-  const { data } = await axios().get('/app/startup/months/trans?cityId=' + cityId);
+  const { data } = await axios().get(API.STARTUP.TRANS_MONTHS + cityId);
   return data.data;
 });
 
 export const loadEntryMonths = createAsyncThunk('appGlobal/loadEntryMonths', async (cityId) => {
-  const { data } = await axios().get('/app/startup/months/entry?cityId=' + cityId);
+  const { data } = await axios().get(API.STARTUP.ENTRY_MONTHS + cityId);
   return data.data;
 });
 

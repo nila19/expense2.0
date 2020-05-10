@@ -18,11 +18,13 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import EuroIcon from '@material-ui/icons/Euro';
+import AddIcon from '@material-ui/icons/Add';
 
 import Button from 'components/CustomButtons/Button.js';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAppGlobal, setSelectedCity, setAccountsExpanded } from 'features/appGlobalSlice';
+import { selectAppGlobal, setSelectedCity, setAccountsExpanded, setShowChartBlock } from 'features/appGlobalSlice';
+import { loadChart } from 'features/dashboard/chart/chartSlice';
 
 const buildCityIcon = (currency) => {
   switch (currency) {
@@ -37,7 +39,7 @@ const buildCityIcon = (currency) => {
 
 export const MenuBar = () => {
   const dispatch = useDispatch();
-  const { selectedCity, accountsExpanded } = useSelector(selectAppGlobal);
+  const { selectedCity, accountsExpanded, showChartBlock } = useSelector(selectAppGlobal);
   const { cities } = useSelector(selectStartupData);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -53,6 +55,13 @@ export const MenuBar = () => {
 
   const handleAccountExpansion = () => {
     dispatch(setAccountsExpanded(!accountsExpanded));
+  };
+
+  const handleShowChartBlock = () => {
+    dispatch(setShowChartBlock(!showChartBlock));
+    if (!showChartBlock) {
+      dispatch(loadChart(selectedCity));
+    }
   };
 
   const city = selectedCity ? _.find(cities, { id: selectedCity }) : null;
@@ -77,8 +86,8 @@ export const MenuBar = () => {
           </Button>
         </Grid>
         <Grid container item justify='flex-end' lg={6} spacing={2}>
-          <Button onClick={(e) => e.preventDefault()} color='warning' size='sm'>
-            <BarChartIcon />
+          <Button onClick={handleShowChartBlock} color={showChartBlock ? 'success' : 'warning'} size='sm'>
+            {showChartBlock ? <AddIcon /> : <BarChartIcon />}
           </Button>
           <Button onClick={handleAccountExpansion} color='primary' size='sm'>
             {accountsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}

@@ -4,7 +4,17 @@ export const BACKEND = {
 };
 
 export const API = {
-  STARTUP: { ACCOUNTS: '/app/startup/accounts?cityId=', BILLS: '/app/dashboard/bills?cityId=' },
+  STARTUP: {
+    CONNECT: '/app/startup/connect',
+    CITIES: '/app/startup/cities',
+    DEFAULT_CITY: '/app/startup/city/default',
+    CATEGORIES: '/app/startup/categories?cityId=',
+    DESCRIPTIONS: '/app/startup/descriptions?cityId=',
+    TRANS_MONTHS: '/app/startup/months/trans?cityId=',
+    ENTRY_MONTHS: '/app/startup/months/entry?cityId=',
+    ACCOUNTS: '/app/startup/accounts?cityId=',
+    BILLS: '/app/dashboard/bills?cityId=',
+  },
   ACCOUNT: { TALLY: '/app/edit/tally' },
   BILL: { CLOSE: '/app/edit/closeBill', PAY: '/app/edit/payBill' },
   EXPENSE: {
@@ -13,6 +23,9 @@ export const API = {
     DELETE: '/app/edit/delete',
     SWAP: '/app/edit/swap',
     SEARCH: '/app/search/go',
+  },
+  SUMMARY: {
+    CHART: '/app/summary/chart?cityId=',
   },
 };
 

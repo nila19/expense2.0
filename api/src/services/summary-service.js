@@ -26,7 +26,7 @@ const getDataFromDB = async (parms) => {
   const data = {};
   data.cats = await categoryModel.findForCity(parms.db, parms.cityId);
   const months = await transactionModel.findAllTransMonths(parms.db, parms.cityId);
-  data.months = await buildMonthsList(months, parms.log);
+  data.months = buildMonthsList(months, parms.log);
   data.trans = await transactionModel.findForMonthlySummary(parms.db, parms.cityId, parms.regular, parms.adhoc);
   data.fctrans = await transactionModel.findForForecast(parms.db, parms.cityId);
   return data;

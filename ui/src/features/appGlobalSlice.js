@@ -12,10 +12,14 @@ const appGlobalSlice = createSlice({
   initialState: {
     selectedCity: null,
     accountsExpanded: false,
+    showChartBlock: false,
   },
   reducers: {
     setAccountsExpanded: (state, action) => {
       state.accountsExpanded = action.payload;
+    },
+    setShowChartBlock: (state, action) => {
+      state.showChartBlock = action.payload;
     },
   },
   extraReducers: {
@@ -27,5 +31,5 @@ const appGlobalSlice = createSlice({
 
 export const selectAppGlobal = (state) => state.appGlobal;
 
-export const { setAccountsExpanded } = appGlobalSlice.actions;
+export const { setAccountsExpanded, setShowChartBlock } = appGlobalSlice.actions;
 export default appGlobalSlice.reducer;
