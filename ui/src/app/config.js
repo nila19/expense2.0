@@ -30,6 +30,13 @@ export const API = {
   },
 };
 
+export const ROUTE = {
+  BASE: '/',
+  DASHBOARD: '/dashboard',
+  SUMMARY: '/summary',
+  SEARCH: '/search',
+};
+
 export const SOCKETS = {
   ENABLED: true,
 };

@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import 'app/app.css';
 
+import { ROUTE } from 'app/config';
 import { Startup, Loading } from 'features/startup/Startup';
 import { MenuBar } from 'features/menu/MenuBar';
 
@@ -31,17 +32,17 @@ const FullApp = () => {
     <>
       <MenuBar />
       <Switch>
-        <Route path='/dashboard'>
+        <Route path={ROUTE.DASHBOARD}>
           <WithSuspense title='Expense - Dashboard' render={() => <Dashboard />} />
         </Route>
-        <Route path='/summary'>
+        <Route path={ROUTE.SUMMARY}>
           <WithSuspense title='Expense - Summary' render={() => <Summary />} />
         </Route>
-        <Route path='/search'>
+        <Route path={ROUTE.SEARCH}>
           <WithSuspense title='Expense - Search' render={() => <Search />} />
         </Route>
-        <Route path='/'>
-          <Redirect to='/dashboard' />
+        <Route path={ROUTE.BASE}>
+          <Redirect to={ROUTE.DASHBOARD} />
         </Route>
       </Switch>
     </>

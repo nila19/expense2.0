@@ -18,8 +18,7 @@ import CardHeader from 'components/Card/CardHeader.js';
 import CardBody from 'components/Card/CardBody.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
-import { COUNTS } from 'app/config';
-
+import { COUNTS, ROUTE } from 'app/config';
 import { SummaryHeader } from 'features/summary/header/SummaryHeader';
 import { SummaryBody } from 'features/summary/body/SummaryBody';
 import { getSliceForPage } from 'features/utils';
@@ -109,7 +108,7 @@ const Summary = () => {
   };
 
   if (goToSearch) {
-    return <Redirect to='/search' />;
+    return <Redirect to={ROUTE.SEARCH} />;
   }
 
   return (

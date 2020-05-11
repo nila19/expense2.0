@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import _ from 'lodash';
@@ -22,6 +22,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import Button from 'components/CustomButtons/Button.js';
 
+import { ROUTE } from 'app/config';
 import { selectStartupData } from 'features/startup/startupSlice';
 import { selectAppGlobal, setSelectedCity, setAccountsExpanded, setShowChartBlock } from 'features/appGlobalSlice';
 import { loadChart } from 'features/dashboard/chart/chartSlice';
@@ -38,11 +39,14 @@ const buildCityIcon = (currency) => {
 };
 
 export const MenuBar = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const { selectedCity, accountsExpanded, showChartBlock } = useSelector(selectAppGlobal);
   const { cities } = useSelector(selectStartupData);
 
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const isDashboard = location.pathname === ROUTE.DASHBOARD;
 
   const handleCityClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -86,14 +90,25 @@ export const MenuBar = () => {
           </Button>
         </Grid>
         <Grid container item justify='flex-end' lg={6} spacing={2}>
-          <Button onClick={handleShowChartBlock} color={showChartBlock ? 'success' : 'warning'} size='sm'>
+          <Button
+            disabled={!isDashboard}
+            onClick={handleShowChartBlock}
+            color={showChartBlock ? 'success' : 'warning'}
+            size='sm'
+          >
             {showChartBlock ? <AddIcon /> : <BarChartIcon />}
           </Button>
-          <Button onClick={handleAccountExpansion} color='primary' size='sm'>
+          <Button disabled={!isDashboard} onClick={handleAccountExpansion} color='primary' size='sm'>
             {accountsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </Button>
           {city && (
-            <Button onClick={handleCityClick} color='primary' size='sm' style={{ minWidth: 120 }}>
+            <Button
+              disabled={!isDashboard}
+              onClick={handleCityClick}
+              color='primary'
+              size='sm'
+              style={{ minWidth: 120 }}
+            >
               {city.name}
             </Button>
           )}
