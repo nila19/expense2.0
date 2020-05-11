@@ -15,7 +15,7 @@ const summarySlice = createSlice({
   name: 'summary',
   initialState: {
     loading: false,
-    data: null,
+    data: { months: [], gridRows: [], totalRow: [] },
   },
   extraReducers: {
     [loadSummary.pending]: (state, action) => {

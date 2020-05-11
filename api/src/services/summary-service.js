@@ -9,22 +9,22 @@ import { buildMonthsList } from 'utils/month-utils';
 
 export const buildSummary = async (parms) => {
   const data = await getDataFromDB(parms);
-  const grid = buildEmptyGrid(data);
-  populateGrid(data, grid);
-  calcYearlySummary(data, grid);
+  const grid = buildEmptyGrid(data.months, data.categories);
+  populateGrid(grid, data.trans, data.months);
+  calcYearlySummary(grid, data.months);
   if (parms.forecast) {
-    buildForecastGrid(data, grid);
+    buildForecastGrid(grid, data);
   }
-  weedInactiveCats(grid);
-  const gridArr = sortGridByCategory(data, grid);
-  calcTotalRow(data, gridArr);
-  return gridArr;
+  weedInactiveCategories(grid);
+  const sortedGrid = sortGridByCategory(grid, data.categories);
+  const totalRow = calcTotalRow(sortedGrid, data.months);
+  return { months: data.months, gridRows: sortedGrid, totalRow: totalRow };
 };
 
 // step - 0 : initial method to fetch all data from DB..
 const getDataFromDB = async (parms) => {
   const data = {};
-  data.cats = await categoryModel.findForCity(parms.db, parms.cityId);
+  data.categories = await categoryModel.findForCity(parms.db, parms.cityId);
   const months = await transactionModel.findAllTransMonths(parms.db, parms.cityId);
   data.months = buildMonthsList(months, parms.log);
   data.trans = await transactionModel.findForMonthlySummary(parms.db, parms.cityId, parms.regular, parms.adhoc);
@@ -33,37 +33,37 @@ const getDataFromDB = async (parms) => {
 };
 
 // step 1: build empty grid with 1 row for  each category.
-const buildEmptyGrid = (data) => {
+const buildEmptyGrid = (months, categories) => {
   const grid = {};
-  const len = data.months.length;
-  data.cats.forEach((cat) => {
-    grid[cat.id] = { category: cat, amount: _.fill(Array(len), 0), count: _.fill(Array(len), 0) };
+  const len = months.length;
+  categories.forEach((e) => {
+    grid[e.id] = { category: e, amounts: _.fill(Array(len), 0), counts: _.fill(Array(len), 0) };
   });
   return grid;
 };
 
 // step 2: populate the grid with transaction data.
-const populateGrid = (data, grid) => {
-  data.trans.forEach((trans) => {
-    const ui = grid[trans.category.id];
+const populateGrid = (grid, trans, months) => {
+  trans.forEach((trans) => {
+    const row = grid[trans.category.id];
     const mth = _.split(trans.transMonth, '-');
-    const idx = _.findIndex(data.months, ['seq', _.toNumber(mth[0] + mth[1])]);
-    ui.amount[idx] += trans.amount;
-    ui.count[idx] += 1;
+    const idx = _.findIndex(months, ['seq', _.toNumber(mth[0] + mth[1])]);
+    row.amounts[idx] += trans.amount;
+    row.counts[idx] += 1;
   });
 };
 
 // step 3: populate the yearly summary columns with totals from the months of the year.
 // yearly Summary - For each SummaryUI, populate the yearly totals by summing up the months for that year.
 // pick only the non-aggregate months for totaling.
-const calcYearlySummary = (data, grid) => {
-  data.months.forEach((year, ii) => {
+const calcYearlySummary = (grid, months) => {
+  months.forEach((year, ii) => {
     if (year.aggregate) {
-      data.months.forEach((month, jj) => {
+      months.forEach((month, jj) => {
         if (!month.aggregate && year.year === month.year) {
-          _.forIn(grid, (ui) => {
-            ui.amount[ii] += ui.amount[jj];
-            ui.count[ii] += ui.count[jj];
+          _.forIn(grid, (row) => {
+            row.amounts[ii] += row.amounts[jj];
+            row.counts[ii] += row.counts[jj];
           });
         }
       });
@@ -73,42 +73,42 @@ const calcYearlySummary = (data, grid) => {
 };
 
 // step 4: build forecast grid, if the forecast flag is on. if the flag is not on, proceed forward.
-const buildForecastGrid = (data, grid) => {
-  const fcgrid = buildEmptyGrid(data);
-  populateFcGrid(data, fcgrid);
-  embedFcToGrid(data, grid, fcgrid);
+const buildForecastGrid = (grid, data) => {
+  const forecastGrid = buildEmptyGrid(data.months, data.categories);
+  populateForecastGrid(forecastGrid, data.fctrans);
+  embedForecastToGrid(grid, forecastGrid, data.months);
 };
 
 // step 4.1: populate the forecast grid with fctransaction data.
-const populateFcGrid = (data, fcgrid) => {
-  data.fctrans.forEach((trans) => {
-    const ui = fcgrid[trans.category.id];
-    ui.amount[0] += trans.amount;
-    ui.count[0] += 1;
+const populateForecastGrid = (forecastGrid, fctrans) => {
+  fctrans.forEach((trans) => {
+    const row = forecastGrid[trans.category.id];
+    row.amounts[0] += trans.amount;
+    row.counts[0] += 1;
   });
-  _.forIn(fcgrid, (fcui) => {
-    fcui.amount[0] = fcui.amount[0] / 3;
-    fcui.count[0] = fcui.count[0] / 3;
+  _.forIn(forecastGrid, (row) => {
+    row.amounts[0] = row.amounts[0] / 3;
+    row.counts[0] = row.counts[0] / 3;
   });
 };
 
 // step 4.2: embed the main grid with fctransaction data.
-const embedFcToGrid = (data, grid, fcgrid) => {
-  const idx = _.findIndex(data.months, ['seq', _.toNumber(moment().format(format.YYYYMM))]);
-  _.forIn(fcgrid, (fcui, id) => {
-    const ui = grid[id];
-    if (ui.amount[idx] < fcui.amount[0]) {
-      ui.amount[idx] = fcui.amount[0];
-      ui.count[idx] = fcui.count[0];
+const embedForecastToGrid = (grid, forecastGrid, months) => {
+  const idx = _.findIndex(months, ['seq', _.toNumber(moment().format(format.YYYYMM))]);
+  _.forIn(forecastGrid, (forecastRow, id) => {
+    const row = grid[id];
+    if (row.amounts[idx] < forecastRow.amounts[0]) {
+      row.amounts[idx] = forecastRow.amounts[0];
+      row.counts[idx] = forecastRow.counts[0];
     }
   });
 };
 
 // step 5: identify inactive categories with no transactions ever & remove them from grid.
-const weedInactiveCats = (grid) => {
+const weedInactiveCategories = (grid) => {
   const weeds = [];
-  _.forIn(grid, (ui, id) => {
-    if (!ui.category.active && !_.some(ui.amount, Boolean)) {
+  _.forIn(grid, (row, id) => {
+    if (!row.category.active && !_.some(row.amounts, Boolean)) {
       weeds.push(id);
     }
   });
@@ -116,27 +116,21 @@ const weedInactiveCats = (grid) => {
 };
 
 // step 6: sort them based on Category sort order.
-const sortGridByCategory = (data, grid) => {
-  const gridArr = [];
-  data.cats.forEach((cat) => {
-    if (grid[cat.id]) {
-      gridArr.push(grid[cat.id]);
-    }
-  });
-  return gridArr;
+const sortGridByCategory = (grid, categories) => {
+  return categories.filter((e) => grid[e.id]).map((e) => grid[e.id]);
 };
 
-// step 7: calculate monthly total row & add it as top row.
-const calcTotalRow = (data, gridArr) => {
-  const len = data.months.length;
-  const total_ui = { amount: _.fill(Array(len), 0), count: _.fill(Array(len), 0) };
-  gridArr.forEach((ui) => {
-    data.months.forEach((month, ii) => {
-      total_ui.amount[ii] += ui.amount[ii];
+// step 7: calculate monthly total row.
+const calcTotalRow = (grid, months) => {
+  const len = months.length;
+  const totalRow = { amounts: _.fill(Array(len), 0), counts: _.fill(Array(len), 0) };
+  grid.forEach((row) => {
+    months.forEach((month, ii) => {
+      totalRow.amounts[ii] += row.amounts[ii];
     });
   });
-  total_ui.amount.forEach((amt, i) => {
-    total_ui.amount[i] = _.round(amt, 2);
+  totalRow.amounts.forEach((amt, i) => {
+    totalRow.amounts[i] = _.round(amt, 2);
   });
-  gridArr.unshift(total_ui);
+  return totalRow;
 };

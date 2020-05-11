@@ -25,12 +25,21 @@ import { SummaryBody } from 'features/summary/body/SummaryBody';
 import { getSliceForPage } from 'features/utils';
 
 import { selectSummary, loadSummary } from 'features/summary/summarySlice';
-import { selectStartupData } from 'features/startup/startupSlice';
 import { clearSearchResults } from 'features/search/expenses/expenseSlice';
 
 const useStyles = makeStyles(styles);
 
-const SummaryPage = ({ loading, page, hasNext, hasPrevious, changePage, months, summaryData, setGoToSearch }) => {
+const SummaryPage = ({
+  loading,
+  page,
+  hasNext,
+  hasPrevious,
+  changePage,
+  monthsForPage,
+  gridRows,
+  totalRow,
+  setGoToSearch,
+}) => {
   const classes = useStyles();
 
   return (
@@ -50,10 +59,21 @@ const SummaryPage = ({ loading, page, hasNext, hasPrevious, changePage, months, 
       <CardBody style={{ padding: '20px 20px' }}>
         <Table className={classes.table}>
           <TableHead>
-            <SummaryHeader hasNext={hasNext} hasPrevious={hasPrevious} changePage={changePage} months={months} />
+            <SummaryHeader
+              hasNext={hasNext}
+              hasPrevious={hasPrevious}
+              changePage={changePage}
+              monthsForPage={monthsForPage}
+            />
           </TableHead>
           <TableBody>
-            <SummaryBody page={page} months={months} summaryData={summaryData} setGoToSearch={setGoToSearch} />
+            <SummaryBody
+              page={page}
+              monthsForPage={monthsForPage}
+              gridRows={gridRows}
+              totalRow={totalRow}
+              setGoToSearch={setGoToSearch}
+            />
           </TableBody>
         </Table>
       </CardBody>
@@ -63,8 +83,8 @@ const SummaryPage = ({ loading, page, hasNext, hasPrevious, changePage, months, 
 
 const Summary = () => {
   const dispatch = useDispatch();
-  const { transMonths } = useSelector(selectStartupData);
-  const { loading, data: summaryData } = useSelector(selectSummary);
+  const { loading, data } = useSelector(selectSummary);
+  const { months, gridRows, totalRow } = data;
 
   const [page, setPage] = useState(0);
   const [goToSearch, setGoToSearch] = useState(false);
@@ -78,9 +98,9 @@ const Summary = () => {
     dispatch(loadSummary());
   }, [dispatch]);
 
-  const maxPage = useMemo(() => transMonths.length / COUNTS.SUMMARY_COLS, [transMonths]);
+  const maxPage = useMemo(() => months.length / COUNTS.SUMMARY_COLS, [months]);
 
-  const months = useMemo(() => getSliceForPage(transMonths, page, COUNTS.SUMMARY_COLS), [transMonths, page]);
+  const monthsForPage = useMemo(() => getSliceForPage(months, page, COUNTS.SUMMARY_COLS), [months, page]);
   const hasNext = page < maxPage;
   const hasPrevious = page > 0;
 
@@ -99,8 +119,9 @@ const Summary = () => {
       hasNext={hasNext}
       hasPrevious={hasPrevious}
       changePage={changePage}
-      months={months}
-      summaryData={summaryData}
+      monthsForPage={monthsForPage}
+      gridRows={gridRows}
+      totalRow={totalRow}
       setGoToSearch={setGoToSearch}
     />
   );

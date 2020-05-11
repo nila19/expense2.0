@@ -50,7 +50,7 @@ const SummaryCell = ({ row, month, idx, header, setGoToSearch }) => {
     e.target.style.color = color;
   };
 
-  const count = row.count && row.count[idx];
+  const count = row.counts && row.counts[idx];
   const cursor = header || count > 0 ? { cursor: 'pointer' } : {};
   const events = header || count > 0 ? { onClick, onMouseEnter, onMouseLeave } : {};
 
@@ -66,28 +66,26 @@ const SummaryCell = ({ row, month, idx, header, setGoToSearch }) => {
           ...cursor,
         }}
       >
-        {row.amount && formatAmt(row.amount[idx], true)}
+        {row.amounts && formatAmt(row.amounts[idx], true)}
       </TableCell>
     </Tooltip>
   );
 };
 
-export const SummaryBody = ({ page, months, summaryData, setGoToSearch }) => {
+export const SummaryBody = ({ page, monthsForPage, gridRows, totalRow, setGoToSearch }) => {
   const classes = useStyles();
 
   const baseIdx = page * COUNTS.SUMMARY_COLS;
-  const headerData = summaryData ? summaryData[0] : {};
-  const bodyData = summaryData ? summaryData.slice(1) : [];
 
   return (
     <>
-      {headerData && (
+      {totalRow && (
         <TableRow className={classes.tableRow} hover>
           <TableCell colSpan={3}></TableCell>
-          {months.map((month, idx) => (
+          {monthsForPage.map((month, idx) => (
             <SummaryCell
               key={idx}
-              row={headerData}
+              row={totalRow}
               month={month}
               idx={baseIdx + idx}
               header={true}
@@ -96,15 +94,15 @@ export const SummaryBody = ({ page, months, summaryData, setGoToSearch }) => {
           ))}
         </TableRow>
       )}
-      {bodyData &&
-        bodyData.map((row) => (
+      {gridRows &&
+        gridRows.map((row) => (
           <TableRow key={row.category.id} className={classes.tableRow} hover>
             <TableCell style={{ ...cellStyle, textAlign: 'center' }}>
               <ActionButton disabled color='primary' icon={buildCategoryIcon(row.category.icon)} />
             </TableCell>
             <TableCell style={{ ...cellStyle, textAlign: 'left' }}>{row.category.mainDesc}</TableCell>
             <TableCell style={{ ...cellStyle, textAlign: 'left' }}>{row.category.subDesc}</TableCell>
-            {months.map((month, idx) => (
+            {monthsForPage.map((month, idx) => (
               <SummaryCell
                 key={idx}
                 row={row}

@@ -20,13 +20,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MonthNames = ({ months }) => {
+const MonthNames = ({ monthsForPage }) => {
   const classes = useStyles();
 
   return (
     <>
-      {months &&
-        months.map((e) => (
+      {monthsForPage &&
+        monthsForPage.map((e) => (
           <TableCell key={e.id} style={{ marginTop: '10px', textAlign: 'center' }}>
             <span className={classes.label}>{_.toUpper(e.name)}</span>
           </TableCell>
@@ -35,7 +35,7 @@ const MonthNames = ({ months }) => {
   );
 };
 
-export const SummaryHeader = ({ months, ...controlProps }) => {
+export const SummaryHeader = ({ monthsForPage, ...controlProps }) => {
   const classes = tableStyles();
 
   return (
@@ -43,7 +43,7 @@ export const SummaryHeader = ({ months, ...controlProps }) => {
       <TableCell colSpan={3}>
         <SummaryControl {...controlProps} />
       </TableCell>
-      <MonthNames months={months} />
+      <MonthNames monthsForPage={monthsForPage} />
     </TableRow>
   );
 };
