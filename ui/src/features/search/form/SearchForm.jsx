@@ -1,6 +1,7 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
+import memoize from 'memoize-one';
 
 import _ from 'lodash';
 
@@ -18,10 +19,29 @@ import { buildCategoriesOptions, buildAccountOptions, buildMonthOptions, buildAd
 
 import { selectStartupData } from 'features/startup/startupSlice';
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
-import { searchExpenses } from 'features/search/expenses/expenseSlice';
+import { selectExpenses, searchExpenses } from 'features/search/expenses/expenseSlice';
+
+const initialValues = memoize((summaryFilter) =>
+  _.merge(
+    {
+      allRecords: false,
+      category: { id: null },
+      description: null,
+      amount: null,
+      bill: { id: null },
+      account: { id: null },
+      transMonth: { id: null, year: false },
+      entryMonth: { id: null, year: false },
+      adjust: null,
+      adhoc: null,
+    },
+    summaryFilter
+  )
+);
 
 export const SearchForm = memo(() => {
   const dispatch = useDispatch();
+  const { summaryFilter } = useSelector(selectExpenses);
   const { categories, descriptions, transMonths, entryMonths } = useSelector(selectStartupData);
   const accounts = useSelector(selectAccounts);
 
@@ -38,25 +58,9 @@ export const SearchForm = memo(() => {
     }
   };
 
-  console.log('Rendering Search Form.. ');
-  useEffect(() => {
-    // TODO: handle retain from summary page.
-  }, [dispatch]);
-
   return (
     <Formik
-      initialValues={{
-        allRecords: false,
-        category: { id: null },
-        description: null,
-        amount: null,
-        bill: { id: null },
-        account: { id: null },
-        transMonth: { id: null, year: false },
-        entryMonth: { id: null, year: false },
-        adjust: null,
-        adhoc: null,
-      }}
+      initialValues={initialValues(summaryFilter)}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
         populateYearFlag(values.transMonth, transMonths);

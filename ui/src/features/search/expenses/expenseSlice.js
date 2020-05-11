@@ -39,8 +39,9 @@ const expenseSlice = createSlice({
   name: 'expenses',
   initialState: {
     loading: false,
-    data: [], // data for dashboard page
-    searchResults: null, // data for search page
+    data: [], // data for Dashboard page
+    searchResults: null, // data for Search page
+    summaryFilter: null, // set by Summary page when clicking a month.
   },
   reducers: {
     createExpense: (state, action) => {
@@ -56,6 +57,10 @@ const expenseSlice = createSlice({
     },
     clearSearchResults: (state) => {
       state.searchResults = null;
+      state.summaryFilter = null;
+    },
+    setSummaryFilter: (state, action) => {
+      state.summaryFilter = action.payload;
     },
   },
   extraReducers: {
@@ -86,5 +91,5 @@ const expenseSlice = createSlice({
 
 export const selectExpenses = (state) => state.search.expenses;
 
-export const { createExpense, updateExpense, dropExpense, clearSearchResults } = expenseSlice.actions;
+export const { createExpense, updateExpense, dropExpense, clearSearchResults, setSummaryFilter } = expenseSlice.actions;
 export default expenseSlice.reducer;

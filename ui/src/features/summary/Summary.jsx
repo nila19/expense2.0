@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import _ from 'lodash';
 
@@ -25,32 +26,12 @@ import { getSliceForPage } from 'features/utils';
 
 import { selectSummary, loadSummary } from 'features/summary/summarySlice';
 import { selectStartupData } from 'features/startup/startupSlice';
+import { clearSearchResults } from 'features/search/expenses/expenseSlice';
 
 const useStyles = makeStyles(styles);
 
-const Summary = () => {
+const SummaryPage = ({ loading, page, hasNext, hasPrevious, changePage, months, summaryData, setGoToSearch }) => {
   const classes = useStyles();
-
-  const dispatch = useDispatch();
-  const { transMonths } = useSelector(selectStartupData);
-  const { loading, data: summaryData } = useSelector(selectSummary);
-
-  const [page, setPage] = useState(0);
-
-  useEffect(() => {
-    // dispatch(loadTransMonths(selectedCity));
-    dispatch(loadSummary());
-  }, [dispatch]);
-
-  const maxPage = useMemo(() => transMonths.length / COUNTS.SUMMARY_COLS, [transMonths]);
-
-  const months = useMemo(() => getSliceForPage(transMonths, page, COUNTS.SUMMARY_COLS), [transMonths, page]);
-  const hasNext = page < maxPage;
-  const hasPrevious = page > 0;
-
-  const changePage = (delta) => {
-    setPage(_.clamp(page + delta, 0, maxPage));
-  };
 
   return (
     <Card style={{ marginBottom: '10px' }}>
@@ -72,11 +53,56 @@ const Summary = () => {
             <SummaryHeader hasNext={hasNext} hasPrevious={hasPrevious} changePage={changePage} months={months} />
           </TableHead>
           <TableBody>
-            <SummaryBody page={page} months={months} summaryData={summaryData} />
+            <SummaryBody page={page} months={months} summaryData={summaryData} setGoToSearch={setGoToSearch} />
           </TableBody>
         </Table>
       </CardBody>
     </Card>
+  );
+};
+
+const Summary = () => {
+  const dispatch = useDispatch();
+  const { transMonths } = useSelector(selectStartupData);
+  const { loading, data: summaryData } = useSelector(selectSummary);
+
+  const [page, setPage] = useState(0);
+  const [goToSearch, setGoToSearch] = useState(false);
+
+  useEffect(() => {
+    dispatch(clearSearchResults());
+  }, [dispatch]);
+
+  useEffect(() => {
+    // dispatch(loadTransMonths(selectedCity));
+    dispatch(loadSummary());
+  }, [dispatch]);
+
+  const maxPage = useMemo(() => transMonths.length / COUNTS.SUMMARY_COLS, [transMonths]);
+
+  const months = useMemo(() => getSliceForPage(transMonths, page, COUNTS.SUMMARY_COLS), [transMonths, page]);
+  const hasNext = page < maxPage;
+  const hasPrevious = page > 0;
+
+  const changePage = (delta) => {
+    setPage(_.clamp(page + delta, 0, maxPage));
+  };
+
+  if (goToSearch) {
+    return <Redirect to='/search' />;
+  }
+
+  return (
+    <SummaryPage
+      loading={loading}
+      page={page}
+      hasNext={hasNext}
+      hasPrevious={hasPrevious}
+      changePage={changePage}
+      months={months}
+      summaryData={summaryData}
+      setGoToSearch={setGoToSearch}
+    />
   );
 };
 

@@ -1,4 +1,7 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+
+import _ from 'lodash';
 
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,18 +16,28 @@ import { buildCategoryIcon } from 'features/summary/summaryUtils';
 import { ActionButton } from 'features/inputs';
 import { formatAmt } from 'features/utils';
 
+import { searchExpenses, setSummaryFilter } from 'features/search/expenses/expenseSlice';
+
 const cellStyle = { textAlign: 'right', padding: '12px 8px', fontSize: 12 };
 const useStyles = makeStyles(styles);
 
-const CustomCell = (row, idx, header, aggregate) => {
-  const bgColor = aggregate ? (header ? '#ffc300' : '#51d1e1') : 'white';
+const SummaryCell = ({ row, month, idx, header, setGoToSearch }) => {
+  const dispatch = useDispatch();
+
+  const bgColor = month.aggregate ? (header ? '#ffc300' : '#51d1e1') : 'white';
   const bgColorHover = '#f06493';
   const colorHover = 'white';
-  const color = aggregate ? 'white' : header ? '#E91E63' : '#212121';
-  const bold = aggregate || header ? { fontWeight: 'bold' } : {};
+  const color = month.aggregate ? 'white' : header ? '#E91E63' : '#212121';
+  const bold = month.aggregate || header ? { fontWeight: 'bold' } : {};
 
   const onClick = () => {
-    console.log((row.category && row.category.id) + ' : ' + idx);
+    let searchForm = { transMonth: { id: month.id, year: month.aggregate } };
+    if (row.category && row.category.id) {
+      searchForm = _.set(searchForm, 'category.id', row.category.id);
+    }
+    dispatch(searchExpenses(searchForm));
+    dispatch(setSummaryFilter(searchForm));
+    setGoToSearch(true);
   };
 
   const onMouseEnter = (e) => {
@@ -42,7 +55,7 @@ const CustomCell = (row, idx, header, aggregate) => {
   const events = header || count > 0 ? { onClick, onMouseEnter, onMouseLeave } : {};
 
   return (
-    <Tooltip key={idx} title={count > 1 ? count : ''} placement='right-start'>
+    <Tooltip title={count > 1 ? count : ''} placement='right-start'>
       <TableCell
         {...events}
         style={{
@@ -59,12 +72,10 @@ const CustomCell = (row, idx, header, aggregate) => {
   );
 };
 
-export const SummaryBody = ({ page, months, summaryData }) => {
+export const SummaryBody = ({ page, months, summaryData, setGoToSearch }) => {
   const classes = useStyles();
 
-  const cols = COUNTS.SUMMARY_COLS;
-  const baseIdx = page * cols;
-
+  const baseIdx = page * COUNTS.SUMMARY_COLS;
   const headerData = summaryData ? summaryData[0] : {};
   const bodyData = summaryData ? summaryData.slice(1) : [];
 
@@ -73,7 +84,16 @@ export const SummaryBody = ({ page, months, summaryData }) => {
       {headerData && (
         <TableRow className={classes.tableRow} hover>
           <TableCell colSpan={3}></TableCell>
-          {months.map((col, idx) => CustomCell(headerData, baseIdx + idx, true, col.aggregate))}
+          {months.map((month, idx) => (
+            <SummaryCell
+              key={idx}
+              row={headerData}
+              month={month}
+              idx={baseIdx + idx}
+              header={true}
+              setGoToSearch={setGoToSearch}
+            />
+          ))}
         </TableRow>
       )}
       {bodyData &&
@@ -84,7 +104,16 @@ export const SummaryBody = ({ page, months, summaryData }) => {
             </TableCell>
             <TableCell style={{ ...cellStyle, textAlign: 'left' }}>{row.category.mainDesc}</TableCell>
             <TableCell style={{ ...cellStyle, textAlign: 'left' }}>{row.category.subDesc}</TableCell>
-            {months.map((col, idx) => CustomCell(row, baseIdx + idx, false, col.aggregate))}
+            {months.map((month, idx) => (
+              <SummaryCell
+                key={idx}
+                row={row}
+                month={month}
+                idx={baseIdx + idx}
+                header={false}
+                setGoToSearch={setGoToSearch}
+              />
+            ))}
           </TableRow>
         ))}
     </>
