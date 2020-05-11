@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import _ from 'lodash';
 
-// @material-ui/core
+// @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
 
 import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';
@@ -16,9 +19,8 @@ import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js'
 
 import { COUNTS } from 'app/config';
 
-import { SummaryControl } from 'features/summary/SummaryControl';
-import { SummaryHeader } from 'features/summary/SummaryHeader';
-import { SummaryData } from 'features/summary/SummaryData';
+import { SummaryHeader } from 'features/summary/header/SummaryHeader';
+import { SummaryBody } from 'features/summary/body/SummaryBody';
 import { getSliceForPage } from 'features/utils';
 
 import { selectSummary, loadSummary } from 'features/summary/summarySlice';
@@ -33,9 +35,6 @@ const Summary = () => {
   const { transMonths } = useSelector(selectStartupData);
   const { loading, data: summaryData } = useSelector(selectSummary);
 
-  const [forecast, setForecast] = useState(false);
-  const [regular, setRegular] = useState(true);
-  const [adhoc, setAdhoc] = useState(true);
   const [page, setPage] = useState(0);
 
   useEffect(() => {
@@ -48,21 +47,6 @@ const Summary = () => {
   const months = useMemo(() => getSliceForPage(transMonths, page, COUNTS.SUMMARY_COLS), [transMonths, page]);
   const hasNext = page < maxPage;
   const hasPrevious = page > 0;
-
-  const toggleForecast = () => {
-    setForecast(!forecast);
-    dispatch(loadSummary({ forecast: !forecast, regular, adhoc }));
-  };
-
-  const toggleRegular = () => {
-    setRegular(!regular);
-    dispatch(loadSummary({ forecast, regular: !regular, adhoc }));
-  };
-
-  const toggleAdhoc = () => {
-    setAdhoc(!adhoc);
-    dispatch(loadSummary({ forecast, regular, adhoc: !adhoc }));
-  };
 
   const changePage = (delta) => {
     setPage(_.clamp(page + delta, 0, maxPage));
@@ -82,28 +66,15 @@ const Summary = () => {
           </GridItem>
         </GridContainer>
       </CardHeader>
-      <CardBody style={{ padding: '10px 20px' }}>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={2}>
-            <SummaryControl
-              forecast={forecast}
-              regular={regular}
-              adhoc={adhoc}
-              toggleForecast={toggleForecast}
-              toggleRegular={toggleRegular}
-              toggleAdhoc={toggleAdhoc}
-              hasNext={hasNext}
-              hasPrevious={hasPrevious}
-              changePage={changePage}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={10}>
-            <SummaryHeader months={months} />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={12}>
-            <SummaryData page={page} months={months} summaryData={summaryData} />
-          </GridItem>
-        </GridContainer>
+      <CardBody style={{ padding: '20px 20px' }}>
+        <Table className={classes.table}>
+          <TableHead>
+            <SummaryHeader hasNext={hasNext} hasPrevious={hasPrevious} changePage={changePage} months={months} />
+          </TableHead>
+          <TableBody>
+            <SummaryBody page={page} months={months} summaryData={summaryData} />
+          </TableBody>
+        </Table>
       </CardBody>
     </Card>
   );

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,24 +12,36 @@ import GridContainer from 'components/Grid/GridContainer.js';
 
 import { CustomCheckBox } from 'features/inputs';
 
+import { loadSummary } from 'features/summary/summarySlice';
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
 }));
 
-export const SummaryControl = ({
-  forecast,
-  regular,
-  adhoc,
-  toggleForecast,
-  toggleRegular,
-  toggleAdhoc,
-  hasNext,
-  hasPrevious,
-  changePage,
-}) => {
+export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+  const [forecast, setForecast] = useState(false);
+  const [regular, setRegular] = useState(true);
+  const [adhoc, setAdhoc] = useState(true);
+
+  const toggleForecast = () => {
+    setForecast(!forecast);
+    dispatch(loadSummary({ forecast: !forecast, regular, adhoc }));
+  };
+
+  const toggleRegular = () => {
+    setRegular(!regular);
+    dispatch(loadSummary({ forecast, regular: !regular, adhoc }));
+  };
+
+  const toggleAdhoc = () => {
+    setAdhoc(!adhoc);
+    dispatch(loadSummary({ forecast, regular, adhoc: !adhoc }));
+  };
 
   return (
     <GridContainer>

@@ -18,35 +18,24 @@ import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import CategoryIcon from '@material-ui/icons/Category';
 
+const iconMap = {
+  home: HomeIcon,
+  power: PowerIcon,
+  school: SchoolIcon,
+  wifi: WifiIcon,
+  phone_iphone: PhoneIphoneIcon,
+  local_mall: LocalMallIcon,
+  restaurant: RestaurantIcon,
+  shopping_cart: ShoppingCartIcon,
+  local_movies: LocalMoviesIcon,
+  flight: FlightIcon,
+  directions_car: DirectionsCarIcon,
+  local_gas_station: LocalGasStationIcon,
+  local_hospital: LocalHospitalIcon,
+  local_laundry_service: CategoryIcon,
+};
+
 export const buildCategoryIcon = memoize((icon) => {
-  switch (icon) {
-    case 'home':
-      return <HomeIcon fontSize='small' />;
-    case 'power':
-      return <PowerIcon fontSize='small' />;
-    case 'school':
-      return <SchoolIcon fontSize='small' />;
-    case 'wifi':
-      return <WifiIcon fontSize='small' />;
-    case 'phone_iphone':
-      return <PhoneIphoneIcon fontSize='small' />;
-    case 'local_mall':
-      return <LocalMallIcon fontSize='small' />;
-    case 'restaurant':
-      return <RestaurantIcon fontSize='small' />;
-    case 'shopping_cart':
-      return <ShoppingCartIcon fontSize='small' />;
-    case 'local_movies':
-      return <LocalMoviesIcon fontSize='small' />;
-    case 'flight':
-      return <FlightIcon fontSize='small' />;
-    case 'directions_car':
-      return <DirectionsCarIcon fontSize='small' />;
-    case 'local_gas_station':
-      return <LocalGasStationIcon fontSize='small' />;
-    case 'local_hospital':
-      return <LocalHospitalIcon fontSize='small' />;
-    default:
-      return <CategoryIcon fontSize='small' />;
-  }
+  const MyIcon = iconMap[icon];
+  return <MyIcon fontSize='small' />;
 });
