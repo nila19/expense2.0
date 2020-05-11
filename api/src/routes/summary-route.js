@@ -16,11 +16,11 @@ router.all('*', (req, res, next) => {
   next();
 });
 
-router.get('/go', (req, res) => {
+router.post('/go', (req, res) => {
   doSummary(req, res);
 });
 
-router.get('/chart', (req, res) => {
+router.post('/chart', (req, res) => {
   doChart(req, res);
 });
 

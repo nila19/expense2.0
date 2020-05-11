@@ -12,7 +12,7 @@ import styles from 'assets/jss/material-dashboard-react/checkboxAdnRadioStyle.js
 
 const checkBoxStyles = makeStyles(styles);
 
-const CustomCheckBox = (props) => {
+export const CustomCheckBox = (props) => {
   const checkBoxClasses = checkBoxStyles();
   return (
     <Checkbox

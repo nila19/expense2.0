@@ -6,7 +6,7 @@ import { API } from 'app/config';
 import { prepareChartData } from 'features/utils';
 
 export const loadChart = createAsyncThunk('chart/loadChart', async (cityId) => {
-  const { data } = await axios().get(API.SUMMARY.CHART + cityId);
+  const { data } = await axios().post(API.SUMMARY.CHART, { cityId });
   return data.data;
 });
 

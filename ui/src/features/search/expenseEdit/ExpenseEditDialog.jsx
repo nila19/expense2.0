@@ -194,7 +194,7 @@ export const ExpenseEditDialog = ({ openEdit, onEditSave, onEditCancel }) => {
                   </GridItem>
                   <GridItem xs={12} sm={12} md={11}>
                     <h4 className={classes.cardTitleWhite} style={{ marginTop: '6px' }}>
-                      MODIFY EXPENSE
+                      {expense.adjust ? 'MODIFY ADJUSTMENT' : 'MODIFY EXPENSE'}
                     </h4>
                   </GridItem>
                 </GridContainer>

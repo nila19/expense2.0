@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js';
 import memoize from 'memoize-one';
 
 export const getSliceForPage = memoize((data, page, rowsPerPage) => {
-  console.log('Getting slice.. ' + data.length + ' : ' + page + ' : ' + rowsPerPage);
   const start = page * rowsPerPage;
   let end = (page + 1) * rowsPerPage;
   end = Math.min(end, data.length);

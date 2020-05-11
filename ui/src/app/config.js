@@ -25,7 +25,8 @@ export const API = {
     SEARCH: '/app/search/go',
   },
   SUMMARY: {
-    CHART: '/app/summary/chart?cityId=',
+    CHART: '/app/summary/chart',
+    SUMMARY: '/app/summary/go',
   },
 };
 
@@ -39,4 +40,5 @@ export const COUNTS = {
   DASHBOARD_EXPENSES: 10,
   SEARCH_EXPENSES: 21,
   MESSAGES: 3,
+  SUMMARY_COLS: 14,
 };

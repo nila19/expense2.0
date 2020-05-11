@@ -73,7 +73,7 @@ const calcYearlySummary = (data, grid) => {
 };
 
 // step 4: build forecast grid, if the forecast flag is on. if the flag is not on, proceed forward.
-const buildForecastGrid = (parms, data, grid) => {
+const buildForecastGrid = (data, grid) => {
   const fcgrid = buildEmptyGrid(data);
   populateFcGrid(data, fcgrid);
   embedFcToGrid(data, grid, fcgrid);

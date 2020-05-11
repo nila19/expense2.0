@@ -15,6 +15,7 @@ import { selectStartup, STATE } from 'features/startup/startupSlice';
 // lazy loaded modules.
 const Dashboard = React.lazy(() => import('features/dashboard/Dashboard'));
 const Search = React.lazy(() => import('features/search/Search'));
+const Summary = React.lazy(() => import('features/summary/Summary'));
 
 const WithSuspense = (props) => {
   const loading = <Loading connected inprogress />;
@@ -34,7 +35,7 @@ const FullApp = () => {
           <WithSuspense title='Expense - Dashboard' render={() => <Dashboard />} />
         </Route>
         <Route path='/summary'>
-          <WithSuspense title='Expense - Summary' render={() => <div>Summary page</div>} />
+          <WithSuspense title='Expense - Summary' render={() => <Summary />} />
         </Route>
         <Route path='/search'>
           <WithSuspense title='Expense - Search' render={() => <Search />} />

@@ -6,15 +6,12 @@ import { buildSummary } from 'services/summary-service';
 import { buildChart } from 'services/chart-service';
 
 export const doSummary = async (req, resp) => {
+  const { cityId, regular, adhoc, forecast } = req.body;
   const parms = {
     db: req.app.locals.db,
     log: req.app.locals.log,
-    cityId: _.toNumber(req.query.cityId),
-    regular: req.query.regular && req.query.regular == 'true',
-    adhoc: req.query.adhoc && req.query.adhoc == 'true',
-    forecast: req.query.forecast && req.query.forecast == 'true',
   };
-  const data = await buildSummary(parms);
+  const data = await buildSummary({ ...parms, cityId, regular, adhoc, forecast });
   return resp.json({ code: 0, data: data });
 };
 
@@ -22,7 +19,7 @@ export const doChart = async (req, resp) => {
   const parms = {
     db: req.app.locals.db,
     log: req.app.locals.log,
-    cityId: _.toNumber(req.query.cityId),
+    cityId: req.body.cityId,
     forecast: false,
   };
   const data = await buildChart(parms);
