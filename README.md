@@ -2,22 +2,52 @@
 
 In the project directory, you can run:
 
-## Run
+## Dev process (simplified)
+
+- Run API using `Run` instructions in api/README
+- Run UI using `Run` instructions in ui/README
+
+## Dev Script
+
+`docker-compose.yml`
+
+### Run - Dev
 
 - `docker-compose up -d`
 - `docker-compose down`
-- `docker-compose -f docker-compose-prod.yml up`
-- `docker-compose -f docker-compose-prod.yml down`
+- App runs under [http://localhost:3001](http://localhost:3001)
 
-## Build & Run (during development)
+## Build & Run - Dev
 
 - Comment `ui-prod` service & uncomment `ui-dev` service in `docker-compose.yml`
-- `docker-compose up --build` or `docker-compose up --build --remove-orphans`
+  - `docker-compose up --build` or
+  - `docker-compose up --build --remove-orphans`
+- App runs under [http://localhost:3001](http://localhost:3001)
 
-## Dump data from DB
+## Prod Script
 
+`docker-compose-prod.yml`
+
+### Run - Prod
+
+- `docker-compose -f docker-compose-prod.yml up`
+- `docker-compose -f docker-compose-prod.yml down`
+- App runs under [http://localhost:80](http://localhost:80)
+
+## Build & Run - Prod
+
+- `docker-compose -f docker-compose-prod.yml up --build` or
+- `docker-compose -f docker-compose-prod.yml up --build --remove-orphans`
+- App runs under [http://localhost:80](http://localhost:80)
+
+## Database
+
+### Dump data from DB
+
+- Use folder `C:\Java\mongodb\dumps`
 - `mongodump --out=2020-05-05 --db=expense --host=localhost --port=27017`
 
-## Restore the DB from data snapshot
+### Restore DB from data snapshot
 
+- Use folder `C:\Java\mongodb\dumps`
 - `mongorestore --db=expense 2020-05-05/expense`

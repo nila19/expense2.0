@@ -55,6 +55,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
         {formatAmt(totalAmt, true)}
       </span>
       <ActionButton
+        title='Clear Expense Filters'
         color='rose'
         disabled={!filterEnabled}
         onClick={() => dispatch(resetFilters())}

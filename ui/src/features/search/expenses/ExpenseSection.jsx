@@ -21,6 +21,10 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import TransformIcon from '@material-ui/icons/Transform';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTab';
+import TouchAppIcon from '@material-ui/icons/TouchApp';
+import FlagIcon from '@material-ui/icons/Flag';
 
 import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';
@@ -42,7 +46,7 @@ import { selectExpenses, deleteExpense, swapExpenses } from 'features/search/exp
 import { editExpense, resetForm, saveEditExpense } from 'features/search/expenseEdit/expenseEditSlice';
 
 const headers = [
-  '',
+  <TouchAppIcon style={{ fontSize: 18 }} />,
   'ID',
   'ENTRY DATE',
   'TRANS',
@@ -50,12 +54,12 @@ const headers = [
   'DESCRIPTION',
   'AMOUNT',
   'FROM',
-  '$ ->',
-  '$',
+  <TrendingFlatIcon style={{ fontSize: 18 }} />,
+  <KeyboardTabIcon style={{ fontSize: 18 }} />,
   'TO',
-  '$ ->',
-  '$',
-  '',
+  <TrendingFlatIcon style={{ fontSize: 18 }} />,
+  <KeyboardTabIcon style={{ fontSize: 18 }} />,
+  <FlagIcon style={{ fontSize: 18 }} />,
 ];
 const cellStyleDefault = { textAlign: 'center', padding: '5px 8px', fontSize: 12 };
 const useStyles = makeStyles(styles);
@@ -163,21 +167,25 @@ export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
                   <TableRow key={exp.id} className={classes.tableRow} hover>
                     <TableCell className={tableCellClasses} style={cellStyle} width='10%'>
                       <ActionButton
+                        title='Edit'
                         color='warning'
                         onClick={() => handleEdit(exp.id)}
                         icon={<EditIcon fontSize='small' />}
                       />
                       <ActionButton
+                        title='Delete'
                         color='rose'
                         onClick={() => handleDelete(exp.id)}
                         icon={<DeleteIcon fontSize='small' />}
                       />
                       <ActionButton
+                        title='Move up'
                         color='primary'
                         onClick={() => handleMove(exp.id, true)}
                         icon={<ArrowUpwardIcon fontSize='small' />}
                       />
                       <ActionButton
+                        title='Move down'
                         color='primary'
                         onClick={() => handleMove(exp.id, false)}
                         icon={<ArrowDownwardIcon fontSize='small' />}

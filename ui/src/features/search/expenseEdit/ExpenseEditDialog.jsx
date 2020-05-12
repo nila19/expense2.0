@@ -148,7 +148,7 @@ export const ExpenseEditForm = ({
             <GridItem xs={12} sm={12} md={2}>
               {!expense.adjust && (
                 <div style={{ marginTop: '30px' }}>
-                  <Field name='adhoc' id='adhoc' component={FormikCheckBox} />
+                  <Field name='adhoc' id='adhoc' title='Adhoc' component={FormikCheckBox} />
                 </div>
               )}
             </GridItem>

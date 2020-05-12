@@ -46,13 +46,13 @@ export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={2}>
-        <CustomCheckBox id='forecast' checked={forecast} onClick={toggleForecast} />
+        <CustomCheckBox id='forecast' title='Forecast' checked={forecast} onClick={toggleForecast} />
       </GridItem>
       <GridItem xs={12} sm={12} md={2}>
-        <CustomCheckBox id='regular' checked={regular} onClick={toggleRegular} />
+        <CustomCheckBox id='regular' title='Regular' disabled={!adhoc} checked={regular} onClick={toggleRegular} />
       </GridItem>
       <GridItem xs={12} sm={12} md={2}>
-        <CustomCheckBox id='adhoc' checked={adhoc} onClick={toggleAdhoc} />
+        <CustomCheckBox id='adhoc' title='Adhoc' disabled={!regular} checked={adhoc} onClick={toggleAdhoc} />
       </GridItem>
       <GridItem xs={12} sm={12} md={2}></GridItem>
       <GridItem xs={12} sm={12} md={2}>

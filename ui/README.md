@@ -2,20 +2,27 @@
 
 In the project directory, you can run:
 
-## Running
+## Run
 
-- Start API in local machine under [http://localhost:8000](http://localhost:8000)
+- API should be available in local machine under [http://localhost:8000](http://localhost:8000)
 - Run `npm start`
 - App runs under [http://localhost:3000](http://localhost:3000)
 
-## Testing
+## Run using pre-built files
 
-- Start API in local machine under [http://localhost:8000](http://localhost:8000)
+- API should be available in local machine under [http://localhost:8000](http://localhost:8000)
+- Run `npm run build`
+- Run `serve -s build`
+- App runs under [http://localhost:5000](http://localhost:5000)
+
+## Test
+
+- API should be available in local machine under [http://localhost:8000](http://localhost:8000)
 - Run `npm test`
 
-## Debugging
+## Debug
 
-- Start API in local machine under [http://localhost:8000](http://localhost:8000)
+- API should be available in local machine under [http://localhost:8000](http://localhost:8000)
 - Run `npm start`
 - App runs under [http://localhost:3000](http://localhost:3000)
 - Use `Attach Chrome` under debug options

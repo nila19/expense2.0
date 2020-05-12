@@ -17,6 +17,8 @@ import TableCell from '@material-ui/core/TableCell';
 import PaymentIcon from '@material-ui/icons/Payment';
 import DehazeIcon from '@material-ui/icons/Dehaze';
 import FilterTiltShiftIcon from '@material-ui/icons/FilterTiltShift';
+import TouchAppIcon from '@material-ui/icons/TouchApp';
+import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
@@ -32,7 +34,16 @@ import { selectDashboardGlobal, setBillFilter } from 'features/dashboard/dashboa
 import { selectBills, closeBill } from 'features/dashboard/bills/billTab/billTabSlice';
 import { payBill, resetBillPay, savePayBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
-const headers = ['', 'ID', 'ACCOUNT', 'BILL DATE', 'BILL AMT', 'BALANCE', 'DUE DATE', 'ACTION'];
+const headers = [
+  <MenuOpenIcon style={{ fontSize: 18 }} />,
+  'ID',
+  'ACCOUNT',
+  'BILL DATE',
+  'BILL AMT',
+  'BALANCE',
+  'DUE DATE',
+  <TouchAppIcon style={{ fontSize: 18 }} />,
+];
 const cellStyle = { textAlign: 'center', padding: '5px 8px', fontSize: 12 };
 const useStyles = makeStyles(styles);
 
@@ -102,6 +113,7 @@ export const BillTab = ({ paid, closed }) => {
     if (bill.closed === false) {
       billAction = moment().isAfter(bill.billDt, 'day') ? (
         <ActionButton
+          title='Close Bill'
           color='primary'
           onClick={() => handleBillClose(bill.id)}
           icon={<FilterTiltShiftIcon fontSize='small' />}
@@ -111,7 +123,12 @@ export const BillTab = ({ paid, closed }) => {
       );
     } else {
       billAction = bill.balance ? (
-        <ActionButton color='primary' onClick={() => handleBillPay(bill.id)} icon={<PaymentIcon fontSize='small' />} />
+        <ActionButton
+          title='Pay Bill'
+          color='primary'
+          onClick={() => handleBillPay(bill.id)}
+          icon={<PaymentIcon fontSize='small' />}
+        />
       ) : bill.payments && bill.payments.length > 0 ? (
         formatDate(bill.payments[0].transDt)
       ) : (
@@ -139,6 +156,7 @@ export const BillTab = ({ paid, closed }) => {
             <TableRow key={bill.id} className={classes.tableRow} hover>
               <TableCell className={tableCellClasses} style={cellStyle}>
                 <ActionButton
+                  title='Filter Expenses'
                   color={bill.id === billFilter ? 'warning' : 'primary'}
                   onClick={() => handleBillFilter(bill.id)}
                   icon={<DehazeIcon fontSize='small' />}

@@ -56,7 +56,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
   const dispatch = useDispatch();
 
   return (
-    <div style={{ paddingBottom: '30px' }}>
+    <div style={{ paddingBottom: '3px' }}>
       <Formik
         initialValues={initialValues(adjust)}
         validationSchema={validationSchema()}
@@ -120,7 +120,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
               <GridItem xs={12} sm={12} md={1}>
                 {!adjust && (
                   <div style={{ marginTop: '30px' }}>
-                    <Field name='adhoc' id='adhoc' component={FormikCheckBox} />
+                    <Field name='adhoc' id='adhoc' title='Adhoc' component={FormikCheckBox} />
                   </div>
                 )}
               </GridItem>

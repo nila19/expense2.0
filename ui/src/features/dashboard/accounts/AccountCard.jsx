@@ -72,6 +72,7 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
           <Grid container item lg={12} spacing={1} alignItems='center'>
             <Grid item lg={2}>
               <ActionButton
+                title='Tally'
                 color={buildAccountTallyInfoColor(account.tallyDt)}
                 onClick={() => handleTallyClick(account.id)}
                 icon={<BeenhereIcon fontSize='small' style={{ top: '1px' }} />}

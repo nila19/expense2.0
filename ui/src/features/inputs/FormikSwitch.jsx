@@ -7,7 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const CustomSwitch = ({ title, ...props }) => {
   return (
-    <Tooltip title={title}>
+    <Tooltip title={title} placement='top'>
       <Switch {...props} />
     </Tooltip>
   );

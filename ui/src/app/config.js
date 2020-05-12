@@ -43,7 +43,7 @@ export const SOCKETS = {
 
 export const COUNTS = {
   DASHBOARD_ACCOUNTS: 6, //keep it a factor of 12.
-  DASHBOARD_BILLS: 4,
+  DASHBOARD_BILLS: 3,
   DASHBOARD_EXPENSES: 10,
   SEARCH_EXPENSES: 21,
   MESSAGES: 3,
