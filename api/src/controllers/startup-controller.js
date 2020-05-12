@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-import { accountModel, categoryModel, cityModel, transactionModel } from 'models';
+import { accountModel, billModel, categoryModel, cityModel, transactionModel } from 'models';
 import { buildMonthsList } from 'utils/month-utils';
 import config from 'config/config';
 
@@ -25,44 +25,35 @@ export const getDefaultCity = async (req, resp) => {
   return resp.json({ code: 0, data: data });
 };
 
-export const getCityById = async (req, resp, cityId) => {
-  const data = await cityModel.findById(req.app.locals.db, cityId);
-  return resp.json({ code: 0, data: data });
-};
-
-export const getAccounts = async (req, resp) => {
-  const data = await accountModel.findForCity(req.app.locals.db, getCityId(req));
-  return resp.json({ code: 0, data: data });
-};
-
-export const getAccountsThin = async (req, resp) => {
-  const data = await accountModel.findForCityThin(req.app.locals.db, getCityId(req));
-  data.forEach((datum) => (datum.bills = null));
-  return resp.json({ code: 0, data: data });
-};
-
 export const getCategories = async (req, resp) => {
-  const data = await categoryModel.findForCity(req.app.locals.db, getCityId(req));
-  data.forEach((datum) => (datum.bills = null));
+  const data = await categoryModel.findForCity(req.app.locals.db, req.body.cityId);
   return resp.json({ code: 0, data: data });
 };
 
 export const getDescriptions = async (req, resp) => {
-  const data = await transactionModel.findAllDescriptions(req.app.locals.db, getCityId(req));
+  const data = await transactionModel.findAllDescriptions(req.app.locals.db, req.body.cityId);
   const descriptions = data.map((a) => a['_id']);
   return resp.json({ code: 0, data: descriptions });
 };
 
 export const getEntryMonths = async (req, resp) => {
-  const transMonths = await transactionModel.findAllEntryMonths(req.app.locals.db, getCityId(req));
+  const transMonths = await transactionModel.findAllEntryMonths(req.app.locals.db, req.body.cityId);
   const months = buildMonthsList(transMonths);
   return resp.json({ code: 0, data: months });
 };
 
 export const getTransMonths = async (req, resp) => {
-  const transMonths = await transactionModel.findAllTransMonths(req.app.locals.db, getCityId(req));
+  const transMonths = await transactionModel.findAllTransMonths(req.app.locals.db, req.body.cityId);
   const months = buildMonthsList(transMonths);
   return resp.json({ code: 0, data: months });
 };
 
-const getCityId = (req) => _.toNumber(req.query.cityId);
+export const getAccounts = async (req, resp) => {
+  const data = await accountModel.findForCity(req.app.locals.db, req.body.cityId);
+  return resp.json({ code: 0, data: data });
+};
+
+export const getBills = async (req, resp) => {
+  const data = await billModel.findForCity(req.app.locals.db, req.body.cityId);
+  return resp.json({ code: 0, data: data });
+};

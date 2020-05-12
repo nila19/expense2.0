@@ -18,13 +18,14 @@ export const connectToBackend = createAsyncThunk('startup/connect', async (paylo
 });
 
 export const loadAppDataForCity = (cityId, dispatch) => {
-  dispatch(loadCategories(cityId));
-  dispatch(loadDescriptions(cityId));
-  dispatch(loadTransMonths(cityId));
-  dispatch(loadEntryMonths(cityId));
-  dispatch(loadAccounts(cityId));
-  dispatch(loadBills(cityId));
-  dispatch(loadExpenses({ cityId: cityId }));
+  const payload = { cityId: cityId };
+  dispatch(loadCategories(payload));
+  dispatch(loadDescriptions(payload));
+  dispatch(loadTransMonths(payload));
+  dispatch(loadEntryMonths(payload));
+  dispatch(loadAccounts(payload));
+  dispatch(loadBills(payload));
+  dispatch(loadExpenses(payload));
 };
 
 export const loadCities = createAsyncThunk('appGlobal/loadCities', async () => {
@@ -37,23 +38,23 @@ export const loadDefaultCity = createAsyncThunk('appGlobal/loadDefaultCity', asy
   thunkApi.dispatch(setSelectedCity(data.data.id));
 });
 
-export const loadCategories = createAsyncThunk('appGlobal/loadCategories', async (cityId) => {
-  const { data } = await axios().get(API.STARTUP.CATEGORIES + cityId);
+export const loadCategories = createAsyncThunk('appGlobal/loadCategories', async (payload) => {
+  const { data } = await axios().post(API.STARTUP.CATEGORIES, payload);
   return data.data;
 });
 
-export const loadDescriptions = createAsyncThunk('appGlobal/loadDescriptions', async (cityId) => {
-  const { data } = await axios().get(API.STARTUP.DESCRIPTIONS + cityId);
+export const loadDescriptions = createAsyncThunk('appGlobal/loadDescriptions', async (payload) => {
+  const { data } = await axios().post(API.STARTUP.DESCRIPTIONS, payload);
   return data.data;
 });
 
-export const loadTransMonths = createAsyncThunk('appGlobal/loadTransMonths', async (cityId) => {
-  const { data } = await axios().get(API.STARTUP.TRANS_MONTHS + cityId);
+export const loadTransMonths = createAsyncThunk('appGlobal/loadTransMonths', async (payload) => {
+  const { data } = await axios().post(API.STARTUP.TRANS_MONTHS, payload);
   return data.data;
 });
 
-export const loadEntryMonths = createAsyncThunk('appGlobal/loadEntryMonths', async (cityId) => {
-  const { data } = await axios().get(API.STARTUP.ENTRY_MONTHS + cityId);
+export const loadEntryMonths = createAsyncThunk('appGlobal/loadEntryMonths', async (payload) => {
+  const { data } = await axios().post(API.STARTUP.ENTRY_MONTHS, payload);
   return data.data;
 });
 

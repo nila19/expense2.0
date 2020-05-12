@@ -5,8 +5,8 @@ import _ from 'lodash';
 import { axios } from 'app/axios';
 import { API } from 'app/config';
 
-export const loadBills = createAsyncThunk('billTab/loadBills', async (cityId) => {
-  const { data } = await axios().get(API.STARTUP.BILLS + cityId);
+export const loadBills = createAsyncThunk('billTab/loadBills', async (payload) => {
+  const { data } = await axios().post(API.STARTUP.BILLS, payload);
   return data.data;
 });
 

@@ -73,54 +73,62 @@ export const SearchForm = memo(() => {
           <Card style={{ marginBottom: '10px' }}>
             <CardBody style={{ padding: '10px 20px' }}>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={2}>
-                  <Field
-                    name='category.id'
-                    id='categoryId'
-                    label='Category'
-                    component={FormikComboBox}
-                    options={categoriesOptions}
-                  />
+                <GridItem xs={12} sm={12} md={5}>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <Field
+                        name='category.id'
+                        id='categoryId'
+                        label='Category'
+                        component={FormikComboBox}
+                        options={categoriesOptions}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <Field
+                        freeSolo
+                        name='description'
+                        id='description'
+                        label='Description'
+                        component={FormikComboBox}
+                        options={descriptions}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <Field
+                        name='account.id'
+                        id='accountId'
+                        label='Account'
+                        component={FormikComboBox}
+                        options={accountOptions}
+                      />
+                    </GridItem>
+                  </GridContainer>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={2}>
-                  <Field
-                    freeSolo
-                    name='description'
-                    id='description'
-                    label='Description'
-                    component={FormikComboBox}
-                    options={descriptions}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={2}>
-                  <Field
-                    name='account.id'
-                    id='accountId'
-                    label='Account'
-                    component={FormikComboBox}
-                    options={accountOptions}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
-                  <Field
-                    name='transMonth.id'
-                    id='transMonth'
-                    label='Exp Month'
-                    component={FormikComboBox}
-                    options={transMonthOptions}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
-                  <Field
-                    name='entryMonth.id'
-                    id='entryMonth'
-                    label='Entry Month'
-                    component={FormikComboBox}
-                    options={entryMonthOptions}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={1}>
-                  <Field name='amount' id='amount' label='Amount' labelWidth={60} component={FormikAmount} />
+                <GridItem xs={12} sm={12} md={4}>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <Field
+                        name='transMonth.id'
+                        id='transMonth'
+                        label='Exp Month'
+                        component={FormikComboBox}
+                        options={transMonthOptions}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <Field
+                        name='entryMonth.id'
+                        id='entryMonth'
+                        label='Entry Month'
+                        component={FormikComboBox}
+                        options={entryMonthOptions}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <Field name='amount' id='amount' label='Amount' labelWidth={60} component={FormikAmount} />
+                    </GridItem>
+                  </GridContainer>
                 </GridItem>
                 <GridItem xs={12} sm={12} md={3}>
                   <GridContainer>

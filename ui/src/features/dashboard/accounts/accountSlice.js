@@ -5,8 +5,8 @@ import _ from 'lodash';
 import { axios } from 'app/axios';
 import { API } from 'app/config';
 
-export const loadAccounts = createAsyncThunk('accounts/loadAccounts', async (cityId) => {
-  const { data } = await axios().get(API.STARTUP.ACCOUNTS + cityId);
+export const loadAccounts = createAsyncThunk('accounts/loadAccounts', async (payload) => {
+  const { data } = await axios().post(API.STARTUP.ACCOUNTS, payload);
   return data.data;
 });
 

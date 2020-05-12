@@ -10,14 +10,8 @@ class BillModel extends Model {
     this.schema = BillType;
   }
 
-  // paid = null, get all;
-  // paid = 'N', getUnpaid only,
-  // paid = 'Y', getPaid only
-  findForCity(db, cityId, paid) {
+  findForCity(db, cityId) {
     const filter = { cityId: cityId };
-    if (paid) {
-      filter.balance = paid === 'Y' ? 0 : { $gt: 0 };
-    }
     return this.find(db, filter, { projection: { _id: 0 }, sort: { billDt: -1 } });
   }
 
