@@ -3,7 +3,7 @@ version: '3'
 services:
   ui-prod:
     build:
-      context: .
+      context: ./ui
       dockerfile: app-ui.prod.Dockerfile
     image: expense-ui-nginx
     ports:
@@ -13,7 +13,7 @@ services:
       - mongodb-app
   api:
     build:
-      context: .
+      context: ./api
       dockerfile: app-api.prod.Dockerfile
     image: expense-api
     environment:

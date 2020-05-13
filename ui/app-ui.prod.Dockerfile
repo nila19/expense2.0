@@ -1,10 +1,10 @@
 FROM node:lts as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
-COPY ui/package.json /app
-COPY ui/package-lock.json /app
+COPY package.json /app
+COPY package-lock.json /app
 RUN npm ci --silent
-COPY ui /app
+COPY . /app
 RUN npm run build
 
 FROM nginx:stable-alpine

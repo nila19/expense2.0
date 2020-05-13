@@ -9,9 +9,9 @@ import dotenv from 'dotenv';
 
 // commented out for enabling docker-compose
 const result = dotenv.config();
-if (result.error) {
-  throw result.error;
-}
+// if (result.error) {
+//   throw result.error;
+// }
 
 // load all env variables into envs
 // const { parsed: envs } = result;
