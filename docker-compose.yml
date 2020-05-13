@@ -3,31 +3,24 @@ version: '3'
 services:
   ui-dev:
     build:
-      context: .
-      dockerfile: app-ui.Dockerfile
+      context: ./ui
+      dockerfile: app-ui.dev.Dockerfile
     image: expense-ui-dev
     environment:
       - PORT=3000
+    volumes:
+      - './ui:/app'
     ports:
       - 3001:3000
     stdin_open: true
     depends_on:
       - mongodb-app
-  # ui-prod:
-  #   build:
-  #     context: .
-  #     dockerfile: app-ui-prod.Dockerfile
-  #   image: expense-ui-dev-nginx
-  #   ports:
-  #     - 80:80
-  #   stdin_open: true
-  #   depends_on:
-  #     - mongodb-app
-  api:
+  api-dev:
     build:
-      context: .
-      dockerfile: app-api.Dockerfile
+      context: ./api
+      dockerfile: app-api.dev.Dockerfile
     image: expense-api-dev
+    command: nodemon --exec npm run babel-node src/bin/server.js --region=dev | bunyan
     environment:
       - MONGO_URL=mongodb://mongodb-app:27017
       - DB_NAME=expense-test
@@ -35,6 +28,7 @@ services:
       - PORT=8000
     volumes:
       - 'C:/Java/logs:/logs'
+      - './api:/app'
     ports:
       - 8000:8000
     networks:

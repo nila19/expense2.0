@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import memoize from 'memoize-one';
@@ -30,7 +30,7 @@ import { buildCategoriesOptions, buildAccountOptions, buildBillOptions } from 'f
 import { selectStartupData } from 'features/startup/startupSlice';
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
-import { selectExpenseEdit } from 'features/search/expenseEdit/expenseEditSlice';
+import { selectExpenseEdit, resetForm, saveEditExpense } from 'features/search/expenseEdit/expenseEditSlice';
 
 const useStyles = makeStyles(styles);
 
@@ -71,8 +71,15 @@ export const ExpenseEditForm = ({
   accountOptions,
   categoriesOptions,
   descriptions,
-  onEditSave,
+  setOpenEdit,
 }) => {
+  const dispatch = useDispatch();
+
+  const handleEditSave = (form) => {
+    dispatch(saveEditExpense(form));
+    setOpenEdit(false);
+  };
+
   return (
     <Formik
       initialValues={expense}
@@ -88,7 +95,7 @@ export const ExpenseEditForm = ({
           const bill = _.find(billOptions, { key: expense.bill.id });
           expense.bill.name = bill ? bill.label : null;
         }
-        onEditSave(expense);
+        handleEditSave(expense);
       }}
     >
       {({ isSubmitting }) => (
@@ -166,9 +173,10 @@ export const ExpenseEditForm = ({
   );
 };
 
-export const ExpenseEditDialog = ({ openEdit, onEditSave, onEditCancel }) => {
+export const ExpenseEditDialog = ({ openEdit, setOpenEdit }) => {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
   const { categories, descriptions } = useSelector(selectStartupData);
   const accounts = useSelector(selectAccounts);
   const bills = useSelector(selectBills);
@@ -181,10 +189,15 @@ export const ExpenseEditDialog = ({ openEdit, onEditSave, onEditCancel }) => {
     return acctId ? buildBillOptions(bills, acctId) : [];
   }, [expense, bills]);
 
+  const handleEditCancel = () => {
+    setOpenEdit(false);
+    dispatch(resetForm());
+  };
+
   return (
     <>
       {expense && (
-        <Dialog open={openEdit} onClose={onEditCancel} fullWidth width={'180px'}>
+        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={'180px'}>
           <DialogContent style={{ padding: '0px' }}>
             <Card style={{ marginBottom: '0px' }}>
               <CardHeader color='success'>
@@ -206,7 +219,7 @@ export const ExpenseEditDialog = ({ openEdit, onEditSave, onEditCancel }) => {
                   accountOptions={accountOptions}
                   categoriesOptions={categoriesOptions}
                   descriptions={descriptions}
-                  onEditSave={onEditSave}
+                  setOpenEdit={setOpenEdit}
                 />
               </CardBody>
             </Card>

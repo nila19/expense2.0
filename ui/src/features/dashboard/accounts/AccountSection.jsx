@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import _ from 'lodash';
@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 
 import { COUNTS } from 'app/config';
 import { AccountCard } from 'features/dashboard/accounts/AccountCard';
+import { sliceAccounts } from 'features/dashboard/accounts/accountUtils';
 
 import { selectAppGlobal } from 'features/appGlobalSlice';
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
@@ -16,7 +17,7 @@ export const AccountSection = () => {
   const { accountsExpanded } = useSelector(selectAppGlobal);
   const accounts = useSelector(selectAccounts);
 
-  const slicedAccounts = accountsExpanded ? accounts : _.slice(accounts, 0, COUNTS.DASHBOARD_ACCOUNTS);
+  const slicedAccounts = useMemo(() => sliceAccounts(accounts, accountsExpanded), [accounts, accountsExpanded]);
   const gridItemSize = _.round(12 / COUNTS.DASHBOARD_ACCOUNTS);
 
   return (

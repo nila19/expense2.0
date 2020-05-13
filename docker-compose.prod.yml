@@ -1,22 +1,10 @@
 version: '3'
 
 services:
-  # ui-dev:
-  #   build:
-  #     context: .
-  #     dockerfile: app-ui.Dockerfile
-  #   image: expense-ui-dev
-  #   environment:
-  #     - PORT=3000
-  #   ports:
-  #     - 3000:3000
-  #   stdin_open: true
-  #   depends_on:
-  #     - mongodb-app
   ui-prod:
     build:
       context: .
-      dockerfile: app-ui-prod.Dockerfile
+      dockerfile: app-ui.prod.Dockerfile
     image: expense-ui-nginx
     ports:
       - 80:80
@@ -26,7 +14,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: app-api.Dockerfile
+      dockerfile: app-api.prod.Dockerfile
     image: expense-api
     environment:
       - MONGO_URL=mongodb://mongodb-app:27017
@@ -54,15 +42,6 @@ services:
       - '27017'
     networks:
       - expensenet
-  # this is commented out, just to disable.
-  # mongo-express:
-  #   image: mongo-express
-  #   links:
-  #     - mongodb:mongo
-  #   ports:
-  #     - 8081:8081
-  #   networks:
-  #     - expensenet
 
 networks:
   expensenet:

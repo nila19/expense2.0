@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import _ from 'lodash';
 import classnames from 'classnames';
 import moment from 'moment';
 
@@ -22,7 +21,7 @@ import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
-import { COUNTS } from 'app/config';
+import { COUNTS, COLOR } from 'app/config';
 import { PAGINATION_BLOCK } from 'app/constants';
 import { ActionButton } from 'features/inputs';
 import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
@@ -32,7 +31,7 @@ import { filterAndSortBills } from 'features/dashboard/bills/billUtils';
 
 import { selectDashboardGlobal, setBillFilter } from 'features/dashboard/dashboardGlobalSlice';
 import { selectBills, closeBill } from 'features/dashboard/bills/billTab/billTabSlice';
-import { payBill, resetBillPay, savePayBill } from 'features/dashboard/bills/billPay/billPaySlice';
+import { payBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const headers = [
   <MenuOpenIcon style={{ fontSize: 18 }} />,
@@ -47,17 +46,61 @@ const headers = [
 const cellStyle = { textAlign: 'center', padding: '5px 8px', fontSize: 12 };
 const useStyles = makeStyles(styles);
 
+const BillAction = ({ bill, setOpenEdit }) => {
+  const dispatch = useDispatch();
+
+  const handleBillClose = (id) => {
+    dispatch(closeBill(id));
+  };
+
+  const handleBillPay = (bill) => {
+    dispatch(payBill(bill));
+    setOpenEdit(true);
+  };
+
+  // if bill is not closed & billDt is in the past, display CloseBill button
+  if (!bill.closed && moment().isAfter(bill.billDt, 'day')) {
+    return (
+      <ActionButton
+        title='Close Bill'
+        color='primary'
+        onClick={() => handleBillClose(bill.id)}
+        icon={<FilterTiltShiftIcon fontSize='small' />}
+      />
+    );
+  }
+
+  // if bill is closed & has a balance, display PayBill button
+  if (bill.closed && bill.balance > 0) {
+    return (
+      <ActionButton
+        title='Pay Bill'
+        color='primary'
+        onClick={() => handleBillPay(bill)}
+        icon={<PaymentIcon fontSize='small' />}
+      />
+    );
+  }
+
+  // if bill is closed & has a payment, display paid date.
+  if (bill.closed && bill.payments && bill.payments.length > 0) {
+    return formatDate(bill.payments[0].transDt);
+  }
+
+  return '';
+};
+
 export const BillTab = ({ paid, closed }) => {
   const classes = useStyles();
   const tableCellClasses = classnames(classes.tableCell);
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(COUNTS.DASHBOARD_BILLS);
-  const [openEdit, setOpenEdit] = useState(false);
-
   const dispatch = useDispatch();
   const { accountFilter, billFilter } = useSelector(selectDashboardGlobal);
   const bills = useSelector(selectBills);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(COUNTS.DASHBOARD_BILLS);
+  const [openEdit, setOpenEdit] = useState(false);
 
   useEffect(() => {
     if (page !== 0) {
@@ -88,56 +131,6 @@ export const BillTab = ({ paid, closed }) => {
     setPage(0);
   };
 
-  const handleBillPay = (id) => {
-    const bill = _.find(bills, { id: id });
-    dispatch(payBill(bill));
-    setOpenEdit(true);
-  };
-
-  const handleEditCancel = () => {
-    dispatch(resetBillPay());
-    setOpenEdit(false);
-  };
-
-  const handleEditSave = (form) => {
-    dispatch(savePayBill(form));
-    setOpenEdit(false);
-  };
-
-  const handleBillClose = (id) => {
-    dispatch(closeBill(id));
-  };
-
-  const buildBillAction = (bill) => {
-    let billAction = '';
-    if (bill.closed === false) {
-      billAction = moment().isAfter(bill.billDt, 'day') ? (
-        <ActionButton
-          title='Close Bill'
-          color='primary'
-          onClick={() => handleBillClose(bill.id)}
-          icon={<FilterTiltShiftIcon fontSize='small' />}
-        />
-      ) : (
-        ''
-      );
-    } else {
-      billAction = bill.balance ? (
-        <ActionButton
-          title='Pay Bill'
-          color='primary'
-          onClick={() => handleBillPay(bill.id)}
-          icon={<PaymentIcon fontSize='small' />}
-        />
-      ) : bill.payments && bill.payments.length > 0 ? (
-        formatDate(bill.payments[0].transDt)
-      ) : (
-        ''
-      );
-    }
-    return billAction;
-  };
-
   return (
     <>
       <Table className={classes.table}>
@@ -145,7 +138,7 @@ export const BillTab = ({ paid, closed }) => {
           <TableRow className={classes.tableRow}>
             {headers &&
               headers.map((value, idx) => (
-                <TableCell key={idx} style={{ ...cellStyle, color: '#E91E63' }}>
+                <TableCell key={idx} style={{ ...cellStyle, color: COLOR.ROSE }}>
                   {value}
                 </TableCell>
               ))}
@@ -181,7 +174,7 @@ export const BillTab = ({ paid, closed }) => {
                 {formatDate(bill.dueDt)}
               </TableCell>
               <TableCell className={tableCellClasses} style={cellStyle}>
-                {buildBillAction(bill)}
+                <BillAction bill={bill} setOpenEdit={setOpenEdit} />
               </TableCell>
             </TableRow>
           ))}
@@ -199,7 +192,7 @@ export const BillTab = ({ paid, closed }) => {
           <PaginationActions {...props} section={PAGINATION_BLOCK.BILLS} totalAmt={totalAmt} />
         )}
       />
-      <BillPayDialog openEdit={openEdit} onEditSave={handleEditSave} onEditCancel={handleEditCancel} />
+      <BillPayDialog openEdit={openEdit} setOpenEdit={setOpenEdit} />
     </>
   );
 };

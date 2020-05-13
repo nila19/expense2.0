@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import _ from 'lodash';
 import classnames from 'classnames';
 import moment from 'moment';
 
@@ -34,6 +33,7 @@ import CardBody from 'components/Card/CardBody.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 import taskStyles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
+import { COLOR } from 'app/config';
 import { EXPENSE_BLOCK, PAGINATION_BLOCK } from 'app/constants';
 import { ActionButton } from 'features/inputs';
 import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
@@ -43,7 +43,7 @@ import { filterAndSortExpenses, findTargetTransId } from 'features/search/expens
 
 import { selectDashboardGlobal } from 'features/dashboard/dashboardGlobalSlice';
 import { selectExpenses, deleteExpense, swapExpenses } from 'features/search/expenses/expenseSlice';
-import { editExpense, resetForm, saveEditExpense } from 'features/search/expenseEdit/expenseEditSlice';
+import { editExpense } from 'features/search/expenseEdit/expenseEditSlice';
 
 const headers = [
   <TouchAppIcon style={{ fontSize: 18 }} />,
@@ -101,14 +101,14 @@ export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
     rowsPerPage,
   ]);
 
-  const handleDelete = (id) => {
-    dispatch(deleteExpense(id));
+  const handleDelete = (exp) => {
+    dispatch(deleteExpense(exp.id));
   };
 
-  const handleMove = (id, up) => {
-    const toId = findTargetTransId(filteredExpenses, id, up);
+  const handleMove = (exp, up) => {
+    const toId = findTargetTransId(filteredExpenses, exp.id, up);
     if (toId != null) {
-      dispatch(swapExpenses({ first: { id: id }, second: { id: toId } }));
+      dispatch(swapExpenses({ first: { id: exp.id }, second: { id: toId } }));
     }
   };
 
@@ -117,20 +117,9 @@ export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
     setPage(0);
   };
 
-  const handleEdit = (id) => {
-    const exp = _.find(expensesForPage, { id: id });
+  const handleEdit = (exp) => {
     dispatch(editExpense(exp));
     setOpenEdit(true);
-  };
-
-  const handleEditCancel = () => {
-    setOpenEdit(false);
-    dispatch(resetForm());
-  };
-
-  const handleEditSave = (form) => {
-    dispatch(saveEditExpense(form));
-    setOpenEdit(false);
   };
 
   return (
@@ -154,7 +143,7 @@ export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
               <TableRow className={classes.tableRow}>
                 {headers &&
                   headers.map((value, idx) => (
-                    <TableCell key={idx} style={{ ...cellStyleDefault, color: '#E91E63' }}>
+                    <TableCell key={idx} style={{ ...cellStyleDefault, color: COLOR.ROSE }}>
                       {value}
                     </TableCell>
                   ))}
@@ -162,32 +151,32 @@ export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
             </TableHead>
             <TableBody>
               {expensesForPage.map((exp) => {
-                const cellStyle = exp.tallied ? cellStyleDefault : { ...cellStyleDefault, color: '#00abee' };
+                const cellStyle = exp.tallied ? cellStyleDefault : { ...cellStyleDefault, color: COLOR.BLUE };
                 return (
                   <TableRow key={exp.id} className={classes.tableRow} hover>
                     <TableCell className={tableCellClasses} style={cellStyle} width='10%'>
                       <ActionButton
                         title='Edit'
                         color='warning'
-                        onClick={() => handleEdit(exp.id)}
+                        onClick={() => handleEdit(exp)}
                         icon={<EditIcon fontSize='small' />}
                       />
                       <ActionButton
                         title='Delete'
                         color='rose'
-                        onClick={() => handleDelete(exp.id)}
+                        onClick={() => handleDelete(exp)}
                         icon={<DeleteIcon fontSize='small' />}
                       />
                       <ActionButton
                         title='Move up'
                         color='primary'
-                        onClick={() => handleMove(exp.id, true)}
+                        onClick={() => handleMove(exp, true)}
                         icon={<ArrowUpwardIcon fontSize='small' />}
                       />
                       <ActionButton
                         title='Move down'
                         color='primary'
-                        onClick={() => handleMove(exp.id, false)}
+                        onClick={() => handleMove(exp, false)}
                         icon={<ArrowDownwardIcon fontSize='small' />}
                       />
                     </TableCell>
@@ -261,7 +250,7 @@ export const ExpenseSection = ({ section, rowsPerPage, setRowsPerPage }) => {
           />
         </CardBody>
       </Card>
-      <ExpenseEditDialog openEdit={openEdit} onEditSave={handleEditSave} onEditCancel={handleEditCancel} />
+      <ExpenseEditDialog openEdit={openEdit} setOpenEdit={setOpenEdit} />
     </>
   );
 };

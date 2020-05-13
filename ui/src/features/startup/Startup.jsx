@@ -12,7 +12,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 
 import SnackbarContent from 'components/Snackbar/SnackbarContent.js';
 
-import { SOCKETS } from 'app/config';
+import { SOCKETS, COLOR } from 'app/config';
 import { axios } from 'app/axios';
 import { startListening } from 'app/sockets';
 
@@ -40,11 +40,11 @@ export const Startup = () => {
 const BorderLinearProgress = withStyles({
   root: {
     height: 20,
-    backgroundColor: lighten('#00d3ee', 0.5),
+    backgroundColor: lighten(COLOR.BLUE, 0.5),
   },
   bar: {
     borderRadius: 20,
-    backgroundColor: '#00d3ee',
+    backgroundColor: COLOR.BLUE,
   },
 })(LinearProgress);
 

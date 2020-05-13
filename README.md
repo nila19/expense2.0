@@ -30,14 +30,14 @@ In the project directory, you can run:
 
 ### Run - Prod
 
-- `docker-compose -f docker-compose-prod.yml up`
-- `docker-compose -f docker-compose-prod.yml down`
+- `docker-compose -f docker-compose.prod.yml up`
+- `docker-compose -f docker-compose.prod.yml down`
 - App runs under [http://localhost:80](http://localhost:80)
 
 ## Build & Run - Prod
 
-- `docker-compose -f docker-compose-prod.yml up --build` or
-- `docker-compose -f docker-compose-prod.yml up --build --remove-orphans`
+- `docker-compose -f docker-compose.prod.yml up --build` or
+- `docker-compose -f docker-compose.prod.yml up --build --remove-orphans`
 - App runs under [http://localhost:80](http://localhost:80)
 
 ## Database

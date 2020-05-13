@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
-
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 // @material-ui/core
@@ -11,9 +10,9 @@ import GridContainer from 'components/Grid/GridContainer.js';
 import Card from 'components/Card/Card.js';
 import CardHeader from 'components/Card/CardHeader.js';
 import CardBody from 'components/Card/CardBody.js';
-
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
+import { COLOR } from 'app/config';
 import { formatAmt, formatLabel } from 'features/utils';
 
 import { selectChart } from 'features/dashboard/chart/chartSlice';
@@ -44,9 +43,9 @@ export const ChartSection = memo(() => {
             labelFormatter={(e) => formatLabel(e)}
           />
           <Legend formatter={(e) => formatLabel(e)} />
-          <Bar dataKey='regular' stackId='a' fill='#8884d8' />
-          <Bar dataKey='adhoc' stackId='a' fill='#82ca9d' />
-          <Line dataKey='total' type='monotone' stroke='#ff7300' />
+          <Bar dataKey='regular' stackId='a' fill={COLOR.BLUE} />
+          <Bar dataKey='adhoc' stackId='a' fill={COLOR.ROSE_LIGHT} />
+          <Line dataKey='total' type='monotone' stroke={COLOR.ORANGE} />
         </ComposedChart>
       </CardBody>
     </Card>

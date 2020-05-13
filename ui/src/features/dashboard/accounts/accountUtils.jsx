@@ -11,6 +11,7 @@ import MuseumIcon from '@material-ui/icons/Museum';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import SubtitlesIcon from '@material-ui/icons/Subtitles';
 
+import { COUNTS } from 'app/config';
 import { format, formatAmt, formatDate } from 'features/utils';
 
 export const buildAccountIcon = memoize((icon) => {
@@ -79,9 +80,14 @@ export const buildAccountBillInfoColor = memoize((billed, lastBill, openBill) =>
   }
 });
 
-export const findBill = memoize((bills, id) => {
-  if (!id) {
+export const findBill = memoize((bills, account, path) => {
+  const id = _.get(account, path);
+  if (!(account.billed && id)) {
     return null;
   }
   return _.find(bills, { id: id });
+});
+
+export const sliceAccounts = memoize((accounts, expanded) => {
+  return expanded ? accounts : _.slice(accounts, 0, COUNTS.DASHBOARD_ACCOUNTS);
 });

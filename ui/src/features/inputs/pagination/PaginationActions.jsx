@@ -10,6 +10,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
+import { COLOR } from 'app/config';
 import { PAGINATION_BLOCK } from 'app/constants';
 import { ActionButton } from 'features/inputs';
 import { formatAmt } from 'features/utils';
@@ -51,7 +52,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
 
   return (
     <div className={classes.root}>
-      <span style={{ color: '#e91e63', fontSize: 12, paddingLeft: 20, paddingRight: 20 }}>
+      <span style={{ color: COLOR.ROSE, fontSize: 12, paddingLeft: 20, paddingRight: 20 }}>
         {formatAmt(totalAmt, true)}
       </span>
       <ActionButton

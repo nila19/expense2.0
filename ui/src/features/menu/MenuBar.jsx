@@ -19,6 +19,7 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import EuroIcon from '@material-ui/icons/Euro';
 import AddIcon from '@material-ui/icons/Add';
+import LocationCityIcon from '@material-ui/icons/LocationCity';
 
 import Button from 'components/CustomButtons/Button.js';
 
@@ -53,7 +54,9 @@ export const MenuBar = () => {
   };
 
   const handleCitySelect = (id) => {
-    dispatch(setSelectedCity(id));
+    if (id !== selectedCity) {
+      dispatch(setSelectedCity(id));
+    }
     setAnchorEl(null);
   };
 
@@ -109,7 +112,7 @@ export const MenuBar = () => {
               size='sm'
               style={{ minWidth: 120 }}
             >
-              {city.name}
+              <LocationCityIcon /> {city.name}
             </Button>
           )}
           {city && (

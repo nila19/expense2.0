@@ -1,8 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import _ from 'lodash';
-
 // @material-ui/core components
 import { Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,6 +17,7 @@ import CardIcon from 'components/Card/CardIcon.js';
 import CardFooter from 'components/Card/CardFooter.js';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
+import { COLOR } from 'app/config';
 import { ActionButton } from 'features/inputs';
 
 import { selectDashboardGlobal, setAccountFilter } from 'features/dashboard/dashboardGlobalSlice';
@@ -79,7 +78,7 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
               />
             </Grid>
             <Grid item lg={10}>
-              <Box fontWeight='fontWeightRegular' fontSize={12} style={{ color: '#999', textAlign: 'left' }}>
+              <Box fontWeight='fontWeightRegular' fontSize={12} style={{ color: COLOR.GREY, textAlign: 'left' }}>
                 {buildTallyInfo(account.tallyBalance, account.tallyDt)}
               </Box>
             </Grid>
@@ -99,7 +98,7 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
               />
             </Grid>
             <Grid item lg={10}>
-              <Box fontWeight='fontWeightRegular' fontSize={12} style={{ color: '#999', textAlign: 'left' }}>
+              <Box fontWeight='fontWeightRegular' fontSize={12} style={{ color: COLOR.GREY, textAlign: 'left' }}>
                 {buildBillInfo(account.billed, lastBill, openBill)}
               </Box>
             </Grid>
@@ -114,15 +113,8 @@ export const AccountCard = memo(({ account }) => {
   const { accountFilter } = useSelector(selectDashboardGlobal);
   const bills = useSelector(selectBills);
 
-  const lastBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.last.id')) : null), [
-    account,
-    bills,
-  ]);
-  const openBill = useMemo(() => (account.billed ? findBill(bills, _.get(account, 'bills.open.id')) : null), [
-    account,
-    bills,
-  ]);
-
+  const lastBill = useMemo(() => findBill(bills, account, 'bills.last.id'), [account, bills]);
+  const openBill = useMemo(() => findBill(bills, account, 'bills.open.id'), [account, bills]);
   const isSelected = accountFilter === account.id;
 
   return <AccountCardUI account={account} isSelected={isSelected} lastBill={lastBill} openBill={openBill} />;

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import memoize from 'memoize-one';
@@ -27,7 +27,7 @@ import { CustomTextField, FormikAmount, FormikComboBox, FormikDatePicker } from 
 import { format, formatAmt, formatDate, buildAccountOptions } from 'features/utils';
 
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
-import { selectBillPay } from 'features/dashboard/bills/billPay/billPaySlice';
+import { selectBillPay, resetBillPay, savePayBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const useStyles = makeStyles(styles);
 
@@ -46,14 +46,21 @@ const validationSchema = memoize((bill) =>
   })
 );
 
-const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
+const BillPayForm = ({ bill, accountOptions, setOpenEdit }) => {
+  const dispatch = useDispatch();
+
+  const handleEditSave = (form) => {
+    dispatch(savePayBill(form));
+    setOpenEdit(false);
+  };
+
   return (
     <Formik
       initialValues={initialValues(bill)}
       validationSchema={validationSchema(bill)}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
-        onEditSave(values);
+        handleEditSave(values);
       }}
     >
       {({ isSubmitting }) => (
@@ -105,18 +112,24 @@ const BillPayForm = ({ bill, accountOptions, onEditSave }) => {
   );
 };
 
-export const BillPayDialog = ({ openEdit, onEditSave, onEditCancel }) => {
+export const BillPayDialog = ({ openEdit, setOpenEdit }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const bill = useSelector(selectBillPay);
   const accounts = useSelector(selectAccounts);
   // only cash accounts can be used for bill pay.
   const accountOptions = useMemo(() => buildAccountOptions(accounts.filter((e) => e.cash === true)), [accounts]);
 
+  const handleEditCancel = () => {
+    dispatch(resetBillPay());
+    setOpenEdit(false);
+  };
+
   return (
     <>
       {bill && (
-        <Dialog open={openEdit} onClose={onEditCancel} fullWidth width={'180px'}>
+        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={'180px'}>
           <DialogContent style={{ padding: '0px' }}>
             <Card style={{ marginBottom: '0px' }}>
               <CardHeader color='primary'>
@@ -132,7 +145,7 @@ export const BillPayDialog = ({ openEdit, onEditSave, onEditCancel }) => {
                 </GridContainer>
               </CardHeader>
               <CardBody>
-                <BillPayForm bill={bill} accountOptions={accountOptions} onEditSave={onEditSave} />
+                <BillPayForm bill={bill} accountOptions={accountOptions} setOpenEdit={setOpenEdit} />
               </CardBody>
             </Card>
           </DialogContent>

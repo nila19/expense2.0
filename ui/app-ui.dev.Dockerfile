@@ -1,9 +1,9 @@
 FROM node:lts
 WORKDIR /app
-COPY ui/package.json /app
-COPY ui/package-lock.json /app
+COPY package.json /app
+COPY package-lock.json /app
 RUN npm install
-COPY ui /app
+# COPY ui /app
 # the following env variables need to be set if running directly as docker, instead of docker-compose
 # ENV MONGO_URL=host.docker.internal:27017/expense
 # ENV LOG_PATH=/logs

@@ -1,19 +1,21 @@
+import { COLOR } from 'app/config';
+
 export const labelColor = {
   '& label.Mui-focused': {
-    color: 'green',
+    color: COLOR.GREEN,
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: 'green',
+    borderBottomColor: COLOR.GREEN,
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
-      borderColor: '#999',
+      borderColor: COLOR.GREY,
     },
     '&:hover fieldset': {
-      borderColor: 'green',
+      borderColor: COLOR.GREEN,
     },
     '&.Mui-focused fieldset': {
-      borderColor: 'green',
+      borderColor: COLOR.GREEN,
     },
   },
 };

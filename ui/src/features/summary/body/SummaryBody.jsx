@@ -11,7 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 
-import { COUNTS } from 'app/config';
+import { COUNTS, COLOR } from 'app/config';
 import { buildCategoryIcon } from 'features/summary/summaryUtils';
 import { ActionButton } from 'features/inputs';
 import { formatAmt } from 'features/utils';
@@ -24,10 +24,10 @@ const useStyles = makeStyles(styles);
 const SummaryCell = ({ row, month, idx, header, setGoToSearch }) => {
   const dispatch = useDispatch();
 
-  const bgColor = month.aggregate ? (header ? '#ffc300' : '#51d1e1') : 'white';
-  const bgColorHover = '#f06493';
-  const colorHover = 'white';
-  const color = month.aggregate ? 'white' : header ? '#E91E63' : '#212121';
+  const bgColor = month.aggregate ? (header ? COLOR.ORANGE : COLOR.BLUE_GREEN) : COLOR.WHITE;
+  const bgColorHover = COLOR.ROSE_LIGHT;
+  const colorHover = COLOR.WHITE;
+  const color = month.aggregate ? COLOR.WHITE : header ? COLOR.ROSE : COLOR.BLACK;
   const bold = month.aggregate || header ? { fontWeight: 'bold' } : {};
 
   const onClick = () => {

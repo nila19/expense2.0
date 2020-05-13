@@ -42,10 +42,22 @@ export const SOCKETS = {
 };
 
 export const COUNTS = {
-  DASHBOARD_ACCOUNTS: 6, //keep it a factor of 12.
+  DASHBOARD_ACCOUNTS: 6, // should be a factor of 12
   DASHBOARD_BILLS: 3,
   DASHBOARD_EXPENSES: 10,
   SEARCH_EXPENSES: 21,
   MESSAGES: 3,
   SUMMARY_COLS: 14,
+};
+
+export const COLOR = {
+  GREY: '#999',
+  GREEN: 'green',
+  WHITE: 'white',
+  ROSE: '#E91E63',
+  ROSE_LIGHT: '#F27BA3',
+  BLUE: '#00ABEE',
+  BLUE_GREEN: '#51D1E1',
+  BLACK: '#212121',
+  ORANGE: '#FF9800',
 };

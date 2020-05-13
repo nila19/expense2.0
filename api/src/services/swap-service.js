@@ -3,13 +3,7 @@
 import { accountModel, transactionModel } from 'models';
 import { checkCityEditable } from 'utils/common-utils';
 
-export const swapExpenses = async (parms, data) => {
-  const cityId = _.toNumber(data.cityId);
-  await processSwapRow(parms, cityId, data.first, data.second);
-};
-
-// step 3: processes each swap row.
-const processSwapRow = async (parms, cityId, first, second) => {
+export const swapExpenses = async (parms, { cityId, first, second }) => {
   const trans = {};
   const accts = {};
   const balances = {};
