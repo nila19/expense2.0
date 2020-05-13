@@ -3,7 +3,7 @@
 import { MongoClient } from 'mongodb';
 
 import config from 'config/config';
-import { executeBillClosure } from 'services/bill-closer-service';
+import { executeBillClosure } from 'services/bill/bill-closer-service';
 
 let okToLog = true;
 let billClosed = false;

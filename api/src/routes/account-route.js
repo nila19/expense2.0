@@ -1,23 +1,24 @@
 'use strict';
 
+import _ from 'lodash';
 import { Router } from 'express';
 
 import { inject404 } from 'routes/error-route';
-import { doSearch } from 'controllers/search-controller';
+import { tallyAccount } from 'controllers/account-controller';
 
 const router = Router();
 
-router.use((req, res, next) => {
+router.use(function (req, res, next) {
   res.locals.authenticated = true;
   next();
 });
 
-router.all('*', (req, res, next) => {
+router.all('*', function (req, res, next) {
   next();
 });
 
-router.post('/search', (req, res) => {
-  doSearch(req, res);
+router.post('/tally', function (req, res) {
+  tallyAccount(req, res);
 });
 
 router.use(inject404());

@@ -8,8 +8,8 @@ import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
 import { accountModel, billModel, transactionModel } from 'models';
-import { payBill } from 'services/bill-pay-service';
-import { deleteExpense } from 'services/delete-service';
+import { payBill } from 'services/bill/bill-pay-service';
+import { deleteExpense } from 'services/expense/delete-service';
 
 should();
 use(require('chai-things'));

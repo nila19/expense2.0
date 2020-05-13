@@ -4,15 +4,7 @@ import _ from 'lodash';
 import { Router } from 'express';
 
 import { inject404 } from 'routes/error-route';
-import {
-  tallyAccount,
-  addExpense,
-  modifyExpense,
-  deleteExpense,
-  swapExpenses,
-  closeBill,
-  payBill,
-} from 'controllers/edit-controller';
+import { addExpense, modifyExpense, deleteExpense, swapExpenses } from 'controllers/expense-controller';
 
 const router = Router();
 
@@ -23,10 +15,6 @@ router.use(function (req, res, next) {
 
 router.all('*', function (req, res, next) {
   next();
-});
-
-router.post('/tally', function (req, res) {
-  tallyAccount(req, res);
 });
 
 router.post('/add', function (req, res) {
@@ -43,14 +31,6 @@ router.post('/delete', function (req, res) {
 
 router.post('/swap', function (req, res) {
   swapExpenses(req, res);
-});
-
-router.post('/closeBill', function (req, res) {
-  closeBill(req, res);
-});
-
-router.post('/payBill', function (req, res) {
-  payBill(req, res);
 });
 
 router.use(inject404());

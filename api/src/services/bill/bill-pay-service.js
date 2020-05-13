@@ -3,7 +3,7 @@
 import _ from 'lodash';
 
 import { billModel } from 'models';
-import { addExpense } from 'services/add-service';
+import { addExpense } from 'services/expense/add-service';
 import { checkCityEditable } from 'utils/common-utils';
 
 export const payBill = async (parms, data) => {

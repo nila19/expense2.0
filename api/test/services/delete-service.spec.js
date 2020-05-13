@@ -3,15 +3,13 @@
 'use strict';
 
 import _ from 'lodash';
-import moment from 'moment';
 import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
-import { format } from 'config/formats';
 import { ping } from 'config/mongodb-config';
 import { accountModel, billModel, transactionModel } from 'models';
-import { addExpense } from 'services/add-service';
-import { deleteExpense } from 'services/delete-service';
+import { addExpense } from 'services/expense/add-service';
+import { deleteExpense } from 'services/expense/delete-service';
 
 should();
 use(require('chai-things'));

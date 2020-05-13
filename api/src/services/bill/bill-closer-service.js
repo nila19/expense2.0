@@ -3,7 +3,7 @@
 import _ from 'lodash';
 
 import { billModel, cityModel } from 'models';
-import { closeBill } from 'services/bill-service';
+import { closeBill } from 'services/bill/bill-service';
 
 // unused, since billCloser is disabled in config.
 export const executeBillClosure = async (parms) => {

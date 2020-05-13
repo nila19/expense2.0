@@ -16,7 +16,7 @@ router.all('*', (req, res, next) => {
   next();
 });
 
-router.post('/go', (req, res) => {
+router.post('/summary', (req, res) => {
   doSummary(req, res);
 });
 

@@ -9,7 +9,7 @@ import { selectAppGlobal } from 'features/appGlobalSlice';
 const executeFetch = async (payload = {}, thunkApi) => {
   const { selectedCity } = selectAppGlobal(thunkApi.getState());
   payload = { ...(payload || {}), cityId: payload.cityId || selectedCity };
-  const { data } = await axios().post(API.EXPENSE.SEARCH, payload);
+  const { data } = await axios().post(API.SEARCH.SEARCH, payload);
   return data.data;
 };
 

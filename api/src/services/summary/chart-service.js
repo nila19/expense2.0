@@ -1,7 +1,7 @@
 'use strict';
 
 import { transactionModel } from 'models';
-import { buildSummary } from 'services/summary-service';
+import { buildSummary } from 'services/summary/summary-service';
 import { buildMonthsList } from 'utils/month-utils';
 
 export const buildChart = async (parms) => {

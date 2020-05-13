@@ -1,8 +1,8 @@
 'use strict';
 
-import { transactionModel } from 'models';
+import { doSearch as _doSearch } from 'services/search-service';
 
 export const doSearch = async (req, resp) => {
-  const data = await transactionModel.findForSearch(req.app.locals.db, req.body);
+  const data = await _doSearch(req.app.locals.db, req.body);
   return resp.json({ code: 0, data: data });
 };

@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 
-import { buildSummary } from 'services/summary-service';
-import { buildChart } from 'services/chart-service';
+import { buildSummary } from 'services/summary/summary-service';
+import { buildChart } from 'services/summary/chart-service';
 
 export const doSummary = async (req, resp) => {
   const { cityId, regular, adhoc, forecast } = req.body;

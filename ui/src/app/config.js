@@ -15,18 +15,18 @@ export const API = {
     ACCOUNTS: '/app/startup/accounts',
     BILLS: '/app/startup/bills',
   },
-  ACCOUNT: { TALLY: '/app/edit/tally' },
-  BILL: { CLOSE: '/app/edit/closeBill', PAY: '/app/edit/payBill' },
+  ACCOUNT: { TALLY: '/app/account/tally' },
+  BILL: { CLOSE: '/app/bill/closeBill', PAY: '/app/bill/payBill' },
   EXPENSE: {
-    ADD: '/app/edit/add',
-    MODIFY: '/app/edit/modify',
-    DELETE: '/app/edit/delete',
-    SWAP: '/app/edit/swap',
-    SEARCH: '/app/search/go',
+    ADD: '/app/expense/add',
+    MODIFY: '/app/expense/modify',
+    DELETE: '/app/expense/delete',
+    SWAP: '/app/expense/swap',
   },
+  SEARCH: { SEARCH: '/app/search/search' },
   SUMMARY: {
     CHART: '/app/summary/chart',
-    SUMMARY: '/app/summary/go',
+    SUMMARY: '/app/summary/summary',
   },
 };
 
