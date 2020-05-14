@@ -7,7 +7,7 @@ import numeral from 'numeral';
 import { format } from 'config/formats';
 import { accountModel, billModel, sequenceModel, transactionModel } from 'models';
 import { transferCash } from 'services/cash-service';
-import { checkCityEditable } from 'utils/common-utils';
+import { checkCityEditable, buildBillName } from 'utils/common-utils';
 
 export const addExpense = async (parms, data) => {
   await checkCityEditable(parms.db, data.cityId);
@@ -94,7 +94,7 @@ const copyAccountsData = async (parms, data, trans) => {
         account: { id: from.id, name: from.name },
         billDt: from.bills.open.billDt,
       };
-      trans.bill.name = billModel.buildBillName(from, trans.bill);
+      trans.bill.name = buildBillName(from, trans.bill);
       const amount = numeral(data.amount).value();
       await billModel.findOneAndUpdate(
         parms.db,

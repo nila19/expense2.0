@@ -58,11 +58,4 @@ export class Model {
   aggregate(db, criteria) {
     return db.collection(this.collection).aggregate(criteria).toArray();
   }
-
-  // updateOne(db, filter, mod, options) {
-  //   let opt = { multi: true, upsert: true };
-  //   // embed the multi/upsert options based on input options.
-  //   opt = options ? _.assign({}, opt, options) : opt;
-  //   return db.collection(this.collection).updateOne(filter, mod, opt);
-  // }
 }

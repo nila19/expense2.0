@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import { format } from 'config/formats';
 import { accountModel, billModel, cityModel, sequenceModel, transactionModel } from 'models';
+import { buildBillName } from 'utils/common-utils';
 
 export const closeBill = async (parms, data) => {
   console.log(JSON.stringify(data));
@@ -99,6 +100,6 @@ const buildEmptyBill = (city, ac, seq) => {
     balance: 0,
     payments: [],
   };
-  bill.name = billModel.buildBillName(bill.account, bill);
+  bill.name = buildBillName(bill.account, bill);
   return bill;
 };

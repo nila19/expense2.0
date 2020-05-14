@@ -16,3 +16,7 @@ export const checkAccountsActive = (finImpact, from, to) => {
     }
   }
 };
+
+export const buildBillName = (acct, bill) => {
+  return bill.id ? acct.name + ' : ' + bill.billDt + ' #' + bill.id : acct.name + ' #0';
+};

@@ -15,27 +15,6 @@ class AccountModel extends Model {
     return this.find(db, { cityId: cityId, active: true }, { projection: { _id: 0 }, sort: { seq: 1 } });
   }
 
-  findForCityThin(db, cityId) {
-    return this.find(
-      db,
-      { cityId: cityId },
-      {
-        projection: { _id: 0, id: 1, name: 1, active: 1, billed: 1, cash: 1 },
-        sort: { active: -1, seq: 1 },
-      }
-    );
-  }
-
-  findBillable(db, cityId) {
-    return this.find(db, { cityId: cityId, active: true, billed: true }, { projection: { _id: 0 }, sort: { seq: 1 } });
-  }
-
-  findOneAndUpdate(db, filter, mod, options) {
-    const promise = super.findOneAndUpdate(db, filter, mod, options);
-    this._publish(db, filter.id, STATE.UPDATED, promise);
-    return promise;
-  }
-
   async findById(db, id) {
     const acct = await this.findOne(db, { id: id });
     await this._injectLastBill(db, acct);
@@ -53,6 +32,12 @@ class AccountModel extends Model {
     if (acct.billed && acct.bills.open && acct.bills.open.id) {
       acct.bills.open = await billModel.findById(db, acct.bills.open.id);
     }
+  }
+
+  findOneAndUpdate(db, filter, mod, options) {
+    const promise = super.findOneAndUpdate(db, filter, mod, options);
+    this._publish(db, filter.id, STATE.UPDATED, promise);
+    return promise;
   }
 
   async _publish(db, id, state, promise) {

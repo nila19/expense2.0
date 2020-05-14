@@ -15,17 +15,6 @@ class BillModel extends Model {
     return this.find(db, filter, { projection: { _id: 0 }, sort: { billDt: -1 } });
   }
 
-  // paid = null, get all (including 'open', for modify dropdown);
-  // paid = 'N', getUnpaid only,
-  // paid = 'Y', getPaid only
-  findForAcct(db, acctId, paid) {
-    const filter = { 'account.id': acctId };
-    if (paid) {
-      filter.balance = paid === 'Y' ? 0 : { $gt: 0 };
-    }
-    return this.find(db, filter, { projection: { _id: 0 }, sort: { billDt: -1 } });
-  }
-
   // used by billCloser
   findForCityOpen(db, cityId) {
     return this.find(db, { cityId: cityId, closed: false }, { projection: { _id: 0 }, sort: { billDt: -1 } });
@@ -41,10 +30,6 @@ class BillModel extends Model {
     const promise = super.insertOne(db, data);
     this._publish(db, data.id, STATE.CREATED, promise);
     return promise;
-  }
-
-  buildBillName(acct, bill) {
-    return bill.id ? acct.name + ' : ' + bill.billDt + ' #' + bill.id : acct.name + ' #0';
   }
 
   async _publish(db, id, state, promise) {
