@@ -17,7 +17,8 @@ import express from 'express';
 
 import config from 'config/config';
 import { routes } from 'config/route-config';
-import { connect } from 'config/mongodb-config';
+import { connect as mongo_connect } from 'config/mongodb-config';
+import { connect as firebase_connect } from 'config/firebase-config';
 import { logger } from 'utils/logger';
 import { errorHandler } from 'bin/handler';
 
@@ -34,8 +35,9 @@ const app = express();
 // store logger in app context for use from other components.
 app.locals.log = logger;
 
-// mongodb connection
-connect(app);
+// db connections
+mongo_connect(app);
+firebase_connect(app);
 
 // serving static files
 const staticPath = join(__dirname, '../../public');

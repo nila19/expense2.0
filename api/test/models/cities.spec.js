@@ -22,7 +22,7 @@ describe('models.cities', () => {
   });
   describe('findAllCities', () => {
     it('should fetch all cities', async () => {
-      const _cities = await cityModel.findAllCities(db);
+      const _cities = await cityModel.findAll(db);
       _cities.should.contain.some.with.property('active', true);
       _cities.should.contain.some.with.property('active', false);
     });

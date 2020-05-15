@@ -7,6 +7,10 @@ import { inject404 } from 'routes/error-route';
 import {
   doConnect,
   getAllCities,
+  getAllFireCities,
+  getCapitalFireCities,
+  getPopulatedCapitalFireCities,
+  getCAFireCities,
   getDefaultCity,
   getAccounts,
   getCategories,
@@ -33,6 +37,22 @@ router.get('/connect', (req, res) => {
 
 router.get('/cities', (req, res) => {
   getAllCities(req, res);
+});
+
+router.get('/fire-cities', (req, res) => {
+  getAllFireCities(req, res);
+});
+
+router.get('/capital-fire-cities', (req, res) => {
+  getCapitalFireCities(req, res);
+});
+
+router.get('/populated-capital-fire-cities', (req, res) => {
+  getPopulatedCapitalFireCities(req, res);
+});
+
+router.get('/ca-fire-cities', (req, res) => {
+  getCAFireCities(req, res);
 });
 
 router.get('/city/default', (req, res) => {

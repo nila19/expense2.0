@@ -9,8 +9,8 @@ class CityModel extends Model {
     this.schema = CityType;
   }
 
-  findAllCities(db) {
-    return this.findAll(db, { projection: { _id: 0 }, sort: { startDt: -1 } });
+  findAll(db) {
+    return super.findAll(db, { projection: { _id: 0 }, sort: { startDt: -1 } });
   }
 
   findActive(db) {

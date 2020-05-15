@@ -4,19 +4,45 @@ import _ from 'lodash';
 
 import config from 'config/config';
 import { accountModel, billModel, categoryModel, cityModel, transactionModel } from 'models';
+import { accountModel as fireAccountModel, cityModel as fireCityModel } from 'fire-models';
 import { buildMonthsList } from 'utils/month-utils';
 
-export const doConnect = async (db, log) => {
+export const connectToMongoDB = async (db, log) => {
   if (!db) {
-    log.info('DB connection not available...  DB URL :: ' + config.dburl);
+    log.info('MongoDB connection not available...  => ' + config.dburl);
     return { code: config.error };
   }
-  await accountModel.findById(db, 0);
-  return { code: 0, data: { env: config.env } };
+  const records = await accountModel.findAll(db);
+  return { code: 0, data: { mongoEnv: config.env, mongoCount: records.length } };
+};
+
+export const connectToFirebase = async (firebase, log) => {
+  if (!firebase) {
+    log.info('Firebase connection not available...  => ' + config.authDomain);
+    return { code: config.error };
+  }
+  const records = await fireAccountModel.findAll(firebase);
+  return { code: 0, data: { fireEnv: config.env, fireCount: records.size } };
 };
 
 export const getAllCities = async (db) => {
-  return await cityModel.findAllCities(db);
+  return await cityModel.findAll(db);
+};
+
+export const getAllFireCities = async (db) => {
+  return await fireCityModel.findAll(db);
+};
+
+export const getCapitalFireCities = async (db) => {
+  return await fireCityModel.findCapital(db);
+};
+
+export const getPopulatedCapitalFireCities = async (db) => {
+  return await fireCityModel.findPopulatedCapital(db);
+};
+
+export const getCAFireCities = async (db) => {
+  return await fireCityModel.findCACities(db);
 };
 
 export const getDefaultCity = async (db) => {
