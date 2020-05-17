@@ -4,19 +4,26 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { FORMAT, MONTH_TYPE } from 'config/formats';
-import { accountModel, billModel, descriptionModel, monthModel, transactionModel } from 'models';
+import { accountModel, billModel, descriptionModel, monthModel, summaryModel, transactionModel } from 'models';
 import { transferCash } from 'services/cash-service';
 import { checkCityEditable, checkAccountsActive } from 'utils/common-utils';
 
 export const modifyExpense = async (parms, data) => {
   data.amount = _.toNumber(data.amount);
   const tran = await transactionModel.findById(parms.db, data.id);
-  await descriptionModel.decrement(parms.db, tran.cityId, tran.description);
-  await monthModel.decrement(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
+
   await checkCityEditable(parms.db, tran.cityId);
   await loadAccountsInfo(parms, data);
   const finImpact = checkFinImpact(data, tran);
   checkAccountsActive(finImpact, data.accounts.from, data.accounts.to);
+
+  // undo lookup / summary tables for old values
+  await descriptionModel.decrement(parms.db, tran.cityId, tran.description);
+  await monthModel.decrement(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
+  if (!tran.adjust) {
+    const categoryOld = { id: tran.category.id, name: tran.category.name };
+    await summaryModel.decrement(parms.db, tran.cityId, categoryOld, tran.transMonth, tran.adhoc, tran.amount);
+  }
 
   const billChange = checkBillChangeNeeded(data, tran);
   await modifyBillBalance(parms, data, tran, billChange);
@@ -24,8 +31,14 @@ export const modifyExpense = async (parms, data) => {
   copyTransData(data, tran);
   await calcTransAcctBalances(parms, data, tran, finImpact);
   await transactionModel.updateTrans(parms.db, tran);
+
+  // update lookup / summary tables with new values
   await descriptionModel.incrementOrInsert(parms.db, tran.cityId, tran.description);
   await monthModel.incrementOrInsert(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
+  if (!tran.adjust) {
+    const categoryNew = { id: tran.category.id, name: tran.category.name };
+    await summaryModel.incrementOrInsert(parms.db, tran.cityId, categoryNew, tran.transMonth, tran.adhoc, tran.amount);
+  }
 };
 
 const loadAccountsInfo = async (parms, data) => {

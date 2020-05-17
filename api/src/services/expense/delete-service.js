@@ -1,7 +1,7 @@
 'use strict';
 
 import { MONTH_TYPE } from 'config/formats';
-import { accountModel, billModel, descriptionModel, monthModel, transactionModel } from 'models';
+import { accountModel, billModel, descriptionModel, monthModel, summaryModel, transactionModel } from 'models';
 import { transferCash } from 'services/cash-service';
 import { checkCityEditable, checkAccountsActive } from 'utils/common-utils';
 
@@ -15,9 +15,15 @@ export const deleteExpense = async (parms) => {
   await transferCash({ db: parms.db, from: accts.to, to: accts.from, amount: tran.amount, seq: tran.seq });
   await modifyBillBalance(parms, tran);
   await transactionModel.deleteOne(parms.db, { id: parms.transId });
+
+  // undo lookup / summary tables for old values
   await descriptionModel.decrement(parms.db, tran.cityId, tran.description);
   await monthModel.decrement(parms.db, tran.cityId, MONTH_TYPE.ENTRY, tran.entryMonth);
   await monthModel.decrement(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
+  if (!tran.adjust) {
+    const category = { id: tran.category.id, name: tran.category.name };
+    await summaryModel.decrement(parms.db, tran.cityId, category, tran.transMonth, tran.adhoc, tran.amount);
+  }
 };
 
 // step 3: fetch from & to accounts info from DB

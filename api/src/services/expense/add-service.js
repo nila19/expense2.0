@@ -5,7 +5,15 @@ import moment from 'moment';
 import numeral from 'numeral';
 
 import { FORMAT, MONTH_TYPE } from 'config/formats';
-import { accountModel, billModel, descriptionModel, monthModel, sequenceModel, transactionModel } from 'models';
+import {
+  accountModel,
+  billModel,
+  descriptionModel,
+  monthModel,
+  sequenceModel,
+  summaryModel,
+  transactionModel,
+} from 'models';
 import { transferCash } from 'services/cash-service';
 import { checkCityEditable, buildBillName } from 'utils/common-utils';
 
@@ -17,9 +25,6 @@ export const addExpense = async (parms, data) => {
   const seq = await sequenceModel.findOneAndUpdate(parms.db, { table: 'transactions', cityId: data.cityId });
   tran = { ...tran, id: seq.value.seq, seq: seq.value.seq };
   await transactionModel.insertOne(parms.db, tran);
-  await descriptionModel.incrementOrInsert(parms.db, data.cityId, tran.description);
-  await monthModel.incrementOrInsert(parms.db, data.cityId, MONTH_TYPE.ENTRY, tran.entryMonth);
-  await monthModel.incrementOrInsert(parms.db, data.cityId, MONTH_TYPE.TRANS, tran.transMonth);
   await transferCash({
     db: parms.db,
     from: data.accounts.from,
@@ -39,6 +44,16 @@ export const addExpense = async (parms, data) => {
       },
     }
   );
+
+  // update lookup / summary tables with new values
+  await descriptionModel.incrementOrInsert(parms.db, tran.cityId, tran.description);
+  await monthModel.incrementOrInsert(parms.db, tran.cityId, MONTH_TYPE.ENTRY, tran.entryMonth);
+  await monthModel.incrementOrInsert(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
+  if (!tran.adjust) {
+    const category = { id: tran.category.id, name: tran.category.name };
+    await summaryModel.incrementOrInsert(parms.db, tran.cityId, category, tran.transMonth, tran.adhoc, tran.amount);
+  }
+
   return await transactionModel.findById(parms.db, tran.id);
 };
 
