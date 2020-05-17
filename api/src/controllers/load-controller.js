@@ -1,4 +1,4 @@
-const load = async (db) => {
+const _loadCities = async (db) => {
   const cities = db.collection('cities');
 
   await cities.doc('SF').set({
@@ -51,14 +51,73 @@ const load = async (db) => {
   });
 };
 
-const getCount = async (db) => {
+const _loadLandmarks = async (db) => {
+  let cities = db.collection('cities');
+
+  Promise.all([
+    cities.doc('SF').collection('landmarks').doc().set({
+      name: 'Golden Gate Bridge',
+      type: 'bridge',
+    }),
+    cities.doc('SF').collection('landmarks').doc().set({
+      name: 'Legion of Honor',
+      type: 'museum',
+    }),
+    cities.doc('LA').collection('landmarks').doc().set({
+      name: 'Griffith Park',
+      type: 'park',
+    }),
+    cities.doc('LA').collection('landmarks').doc().set({
+      name: 'The Getty',
+      type: 'museum',
+    }),
+    cities.doc('DC').collection('landmarks').doc().set({
+      name: 'Lincoln Memorial',
+      type: 'memorial',
+    }),
+    cities.doc('DC').collection('landmarks').doc().set({
+      name: 'National Air and Space Museum',
+      type: 'museum',
+    }),
+    cities.doc('TOK').collection('landmarks').doc().set({
+      name: 'Ueno Park',
+      type: 'park',
+    }),
+    cities.doc('TOK').collection('landmarks').doc().set({
+      name: 'National Museum of Nature and Science',
+      type: 'museum',
+    }),
+    cities.doc('BJ').collection('landmarks').doc().set({
+      name: 'Jingshan Park',
+      type: 'park',
+    }),
+    cities.doc('BJ').collection('landmarks').doc().set({
+      name: 'Beijing Ancient Observatory',
+      type: 'museum',
+    }),
+  ]);
+};
+
+const getCityCount = async (db) => {
   const records = await db.collection('cities').get();
   return records.size;
 };
 
 export const loadCities = async (req, resp) => {
   const { firebase } = req.app.locals;
-  await load(firebase);
-  const count = await getCount(firebase);
+  await _loadCities(firebase);
+  const count = await getCityCount(firebase);
+  return resp.json({ code: 0, data: count });
+};
+
+const getLandmarkCount = async (db) => {
+  const records = await db.collectionGroup('landmarks').get();
+  return records.size;
+};
+
+export const loadLandmarks = async (req, resp) => {
+  const { firebase } = req.app.locals;
+  await _loadLandmarks(firebase);
+  const count = await getLandmarkCount(firebase);
   return resp.json({ code: 0, data: count });
 };

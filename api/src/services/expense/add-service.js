@@ -4,8 +4,8 @@ import _ from 'lodash';
 import moment from 'moment';
 import numeral from 'numeral';
 
-import { format } from 'config/formats';
-import { accountModel, billModel, sequenceModel, transactionModel } from 'models';
+import { FORMAT, MONTH_TYPE } from 'config/formats';
+import { accountModel, billModel, descriptionModel, monthModel, sequenceModel, transactionModel } from 'models';
 import { transferCash } from 'services/cash-service';
 import { checkCityEditable, buildBillName } from 'utils/common-utils';
 
@@ -17,6 +17,9 @@ export const addExpense = async (parms, data) => {
   const seq = await sequenceModel.findOneAndUpdate(parms.db, { table: 'transactions', cityId: data.cityId });
   tran = { ...tran, id: seq.value.seq, seq: seq.value.seq };
   await transactionModel.insertOne(parms.db, tran);
+  await descriptionModel.incrementOrInsert(parms.db, data.cityId, tran.description);
+  await monthModel.incrementOrInsert(parms.db, data.cityId, MONTH_TYPE.ENTRY, tran.entryMonth);
+  await monthModel.incrementOrInsert(parms.db, data.cityId, MONTH_TYPE.TRANS, tran.transMonth);
   await transferCash({
     db: parms.db,
     from: data.accounts.from,
@@ -52,13 +55,15 @@ const copyTransData = (data) => {
   const trans = {
     id: 0,
     cityId: data.cityId,
-    entryDt: moment().format(format.YYYYMMDDHHmmss),
-    entryMonth: moment().date(1).format(format.YYYYMMDD),
+    entryDt: moment().format(FORMAT.YYYYMMDDHHmmss),
+    entryMonth: moment().date(1).format(FORMAT.YYYYMMDD),
+    entryYear: moment().year(),
     category: { id: 0, name: ' ~ ' },
     description: _.startCase(_.lowerCase(data.description.name || data.description)),
     amount: numeral(data.amount).value(),
-    transDt: moment(data.transDt, format.YYYYMMDD).format(format.YYYYMMDD),
-    transMonth: moment(data.transDt, format.YYYYMMDD).date(1).format(format.YYYYMMDD),
+    transDt: moment(data.transDt, FORMAT.YYYYMMDD).format(FORMAT.YYYYMMDD),
+    transMonth: moment(data.transDt, FORMAT.YYYYMMDD).date(1).format(FORMAT.YYYYMMDD),
+    transYear: moment(data.transDt, FORMAT.YYYYMMDD).year(),
     seq: 0,
     accounts: {
       from: { id: 0, name: '', balanceBf: 0, balanceAf: 0 },

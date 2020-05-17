@@ -4,35 +4,30 @@ import { Model } from 'fire-models/Model';
 
 class CityModel extends Model {
   constructor() {
-    super('cities', null);
+    super('cities', false, null);
     this.schema = null;
   }
 
-  async findCapital(db) {
-    const records = await db.collection(this.collection).where('capital', '==', true).get();
-    return super.extract(records);
+  async findCapitals(db) {
+    const filters = [['capital', '==', true]];
+    const orders = [['country', 'asc']];
+    return await this.find(db, filters, orders, 3);
   }
 
-  async findPopulatedCapital(db) {
-    const records = await db
-      .collection(this.collection)
-      .where('capital', '==', true)
-      .where('population', '>', 1000000)
-      .get();
-    return super.extract(records);
+  async findPopulatedCapitals(db) {
+    const filters = [
+      ['capital', '==', true],
+      ['population', '>', 1000000],
+    ];
+    return await this.find(db, filters);
   }
-
-  // async findCACities(db) {
-  //   const records = await db.collection(this.collection).where('country', '==', 'USA').where('state', '==', 'CA').get();
-  //   return super.extract(records);
-  // }
 
   async findCACities(db) {
-    const wheres = [
+    const filters = [
       ['country', '==', 'USA'],
       ['state', '==', 'CA'],
     ];
-    return await this.find(db, wheres);
+    return await this.find(db, filters);
   }
 }
 

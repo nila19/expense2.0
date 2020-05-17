@@ -3,8 +3,8 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { format } from 'config/formats';
-import { categoryModel, transactionModel } from 'models';
+import { FORMAT, MONTH_TYPE } from 'config/formats';
+import { categoryModel, monthModel, transactionModel } from 'models';
 import { buildMonthsList } from 'utils/month-utils';
 
 export const buildSummary = async (parms) => {
@@ -22,13 +22,16 @@ export const buildSummary = async (parms) => {
 };
 
 // step - 0 : initial method to fetch all data from DB..
-const getDataFromDB = async (parms) => {
+const getDataFromDB = async ({ db, log, cityId, regular, adhoc }) => {
   const data = {};
-  data.categories = await categoryModel.findForCity(parms.db, parms.cityId);
-  const months = await transactionModel.findAllTransMonths(parms.db, parms.cityId);
-  data.months = buildMonthsList(months, parms.log);
-  data.trans = await transactionModel.findForMonthlySummary(parms.db, parms.cityId, parms.regular, parms.adhoc);
-  data.fctrans = await transactionModel.findForForecast(parms.db, parms.cityId);
+  data.categories = await categoryModel.findForCity(db, cityId);
+
+  const transMonths = await monthModel.findForCity(db, cityId, MONTH_TYPE.TRANS);
+  const months = transMonths.map((e) => e.id);
+  data.months = buildMonthsList(months, log);
+
+  data.trans = await transactionModel.findForMonthlySummary(db, cityId, regular, adhoc);
+  data.fctrans = await transactionModel.findForForecast(db, cityId);
   return data;
 };
 
@@ -94,7 +97,7 @@ const populateForecastGrid = (forecastGrid, fctrans) => {
 
 // step 4.2: embed the main grid with fctransaction data.
 const embedForecastToGrid = (grid, forecastGrid, months) => {
-  const idx = _.findIndex(months, ['seq', _.toNumber(moment().format(format.YYYYMM))]);
+  const idx = _.findIndex(months, ['seq', _.toNumber(moment().format(FORMAT.YYYYMM))]);
   _.forIn(forecastGrid, (forecastRow, id) => {
     const row = grid[id];
     if (row.amounts[idx] < forecastRow.amounts[0]) {

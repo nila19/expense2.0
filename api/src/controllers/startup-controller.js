@@ -10,6 +10,7 @@ import {
   getCapitalFireCities as _getCapitalFireCities,
   getPopulatedCapitalFireCities as _getPopulatedCapitalFireCities,
   getCAFireCities as _getCAFireCities,
+  getMuseumLandmarks as _getMuseumLandmarks,
   getDefaultCity as _getDefaultCity,
   getCategories as _getCategories,
   getDescriptions as _getDescriptions,
@@ -48,6 +49,11 @@ export const getPopulatedCapitalFireCities = async (req, resp) => {
 
 export const getCAFireCities = async (req, resp) => {
   const data = await _getCAFireCities(req.app.locals.firebase);
+  return resp.json({ code: 0, data: data });
+};
+
+export const getMuseumLandmarks = async (req, resp) => {
+  const data = await _getMuseumLandmarks(req.app.locals.firebase);
   return resp.json({ code: 0, data: data });
 };
 

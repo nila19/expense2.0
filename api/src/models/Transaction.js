@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import { PIPE, STATE, publish } from 'bin/socket-handler';
 import config from 'config/config';
-import { format } from 'config/formats';
+import { FORMAT } from 'config/formats';
 import { Model } from 'models/Model';
 import { TransactionType } from 'models/schema';
 
@@ -63,8 +63,8 @@ class TransactionModel extends Model {
   // get Transactions for the last 3 months excluding the current month.
   findForForecast(db, cityId) {
     const thisMonth = moment().date(1);
-    const beginMth = thisMonth.clone().subtract(4, 'months').format(format.YYYYMMDD);
-    const endMth = thisMonth.clone().subtract(1, 'months').format(format.YYYYMMDD);
+    const beginMth = thisMonth.clone().subtract(4, 'months').format(FORMAT.YYYYMMDD);
+    const endMth = thisMonth.clone().subtract(1, 'months').format(FORMAT.YYYYMMDD);
     const filter = {
       cityId: cityId,
       adhoc: false,
@@ -72,23 +72,6 @@ class TransactionModel extends Model {
       transMonth: { $gt: beginMth, $lte: endMth },
     };
     return this.find(db, filter, { projection: { _id: 0 }, sort: { seq: -1 } });
-  }
-
-  findAllEntryMonths(db, cityId) {
-    return this.distinct(db, 'entryMonth', { cityId: cityId }, { projection: { _id: 0 }, sort: { entryMonth: -1 } });
-  }
-
-  findAllTransMonths(db, cityId) {
-    return this.distinct(db, 'transMonth', { cityId: cityId }, { projection: { _id: 0 }, sort: { transMonth: -1 } });
-  }
-
-  findAllDescriptions(db, cityId) {
-    const criteria = [
-      { $match: { cityId: cityId } },
-      { $group: { _id: '$description', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-    ];
-    return this.aggregate(db, criteria);
   }
 
   findForSearch(db, data) {
@@ -139,22 +122,22 @@ class TransactionModel extends Model {
       if (data.entryMonth.year === true) {
         // set startDt as 31-Dec of previous year, since that it is > than.
         // set endDt as 1-Jan of next year, since that it is > than.
-        const yearBegin = entry.clone().month(0).date(0).format(format.YYYYMMDD);
-        const yearEnd = entry.clone().month(11).date(31).format(format.YYYYMMDD);
+        const yearBegin = entry.clone().month(0).date(0).format(FORMAT.YYYYMMDD);
+        const yearEnd = entry.clone().month(11).date(31).format(FORMAT.YYYYMMDD);
         filter.$and = [{ entryMonth: { $gt: yearBegin } }, { entryMonth: { $lt: yearEnd } }];
       } else {
-        filter.entryMonth = entry.format(format.YYYYMMDD);
+        filter.entryMonth = entry.format(FORMAT.YYYYMMDD);
       }
     }
     if (data.transMonth && data.transMonth.id) {
       const trans = moment(data.transMonth.id);
       if (data.transMonth.year === true) {
         // set startDt as 31-Dec of previous year, since that it is > than.
-        const yearBegin = trans.clone().month(0).date(0).format(format.YYYYMMDD);
-        const yearEnd = trans.clone().month(11).date(31).format(format.YYYYMMDD);
+        const yearBegin = trans.clone().month(0).date(0).format(FORMAT.YYYYMMDD);
+        const yearEnd = trans.clone().month(11).date(31).format(FORMAT.YYYYMMDD);
         filter.$and = [{ transMonth: { $gt: yearBegin } }, { transMonth: { $lt: yearEnd } }];
       } else {
-        filter.transMonth = trans.format(format.YYYYMMDD);
+        filter.transMonth = trans.format(FORMAT.YYYYMMDD);
       }
     }
     return filter;

@@ -11,6 +11,7 @@ import {
   getCapitalFireCities,
   getPopulatedCapitalFireCities,
   getCAFireCities,
+  getMuseumLandmarks,
   getDefaultCity,
   getAccounts,
   getCategories,
@@ -53,6 +54,10 @@ router.get('/populated-capital-fire-cities', (req, res) => {
 
 router.get('/ca-fire-cities', (req, res) => {
   getCAFireCities(req, res);
+});
+
+router.get('/museum-landmarks', (req, res) => {
+  getMuseumLandmarks(req, res);
 });
 
 router.get('/city/default', (req, res) => {

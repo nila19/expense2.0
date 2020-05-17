@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { format } from 'config/formats';
+import { FORMAT } from 'config/formats';
 import { accountModel, billModel, cityModel, sequenceModel, transactionModel } from 'models';
 import { buildBillName } from 'utils/common-utils';
 
@@ -92,9 +92,9 @@ const buildEmptyBill = (city, ac, seq) => {
     id: seq,
     cityId: city.id,
     account: { id: ac.id, name: ac.name },
-    createdDt: moment().format(format.YYYYMMDDHHmmss),
-    billDt: billDt.format(format.YYYYMMDD),
-    dueDt: dueDt.format(format.YYYYMMDD),
+    createdDt: moment().format(FORMAT.YYYYMMDDHHmmss),
+    billDt: billDt.format(FORMAT.YYYYMMDD),
+    dueDt: dueDt.format(FORMAT.YYYYMMDD),
     closed: false,
     amount: 0,
     balance: 0,

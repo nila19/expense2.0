@@ -2,12 +2,12 @@
 
 import moment from 'moment';
 
-import { format } from 'config/formats';
+import { FORMAT } from 'config/formats';
 import { accountModel, sequenceModel, tallyHistoryModel, transactionModel } from 'models';
 import { checkCityEditable } from 'utils/common-utils';
 
 export const tallyAccount = async (parms, acctId) => {
-  const tallyDt = moment().format(format.YYYYMMDDHHmmss);
+  const tallyDt = moment().format(FORMAT.YYYYMMDDHHmmss);
 
   const account = await accountModel.findById(parms.db, acctId);
   await checkCityEditable(parms.db, account.cityId);

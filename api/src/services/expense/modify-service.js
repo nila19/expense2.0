@@ -3,14 +3,16 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { format } from 'config/formats';
-import { accountModel, billModel, transactionModel } from 'models';
+import { FORMAT, MONTH_TYPE } from 'config/formats';
+import { accountModel, billModel, descriptionModel, monthModel, transactionModel } from 'models';
 import { transferCash } from 'services/cash-service';
 import { checkCityEditable, checkAccountsActive } from 'utils/common-utils';
 
 export const modifyExpense = async (parms, data) => {
   data.amount = _.toNumber(data.amount);
   const tran = await transactionModel.findById(parms.db, data.id);
+  await descriptionModel.decrement(parms.db, tran.cityId, tran.description);
+  await monthModel.decrement(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
   await checkCityEditable(parms.db, tran.cityId);
   await loadAccountsInfo(parms, data);
   const finImpact = checkFinImpact(data, tran);
@@ -22,6 +24,8 @@ export const modifyExpense = async (parms, data) => {
   copyTransData(data, tran);
   await calcTransAcctBalances(parms, data, tran, finImpact);
   await transactionModel.updateTrans(parms.db, tran);
+  await descriptionModel.incrementOrInsert(parms.db, tran.cityId, tran.description);
+  await monthModel.incrementOrInsert(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
 };
 
 const loadAccountsInfo = async (parms, data) => {
@@ -119,8 +123,9 @@ const copyTransData = (data, tran) => {
   tran.description = _.startCase(_.lowerCase(data.description.name || data.description));
   tran.amount = _.toNumber(data.amount);
   if (tran.transDt !== data.transDt) {
-    tran.transDt = moment(data.transDt, format.YYYYMMDD).format(format.YYYYMMDD);
-    tran.transMonth = moment(data.transDt, format.YYYYMMDD).date(1).format(format.YYYYMMDD);
+    tran.transDt = moment(data.transDt, FORMAT.YYYYMMDD).format(FORMAT.YYYYMMDD);
+    tran.transMonth = moment(data.transDt, FORMAT.YYYYMMDD).date(1).format(FORMAT.YYYYMMDD);
+    tran.transYear = moment(data.transDt, FORMAT.YYYYMMDD).year();
   }
   tran.adhoc = data.adhoc;
   tran.adjust = data.adjust;

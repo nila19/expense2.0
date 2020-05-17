@@ -50,11 +50,13 @@ export const TransactionType = joi.object({
   cityId: joi.number().positive().required(),
   entryDt: joi.string().required(),
   entryMonth: joi.string().required(),
+  entryYear: joi.number().required(),
   category: CategoryTypeMin.allow(null),
   description: joi.string().required(),
   amount: joi.number().required().allow(0),
   transDt: joi.string().required(),
   transMonth: joi.string().required(),
+  transYear: joi.number().required(),
   seq: joi.number().positive().required(),
   accounts: joi.object({
     from: AccountTypeMin.allow(null),
@@ -86,6 +88,19 @@ export const BillType = joi.object({
   amount: joi.number().allow(0),
   balance: joi.number().allow(0),
   payments: joi.array().items(PaymentType).optional(),
+});
+
+export const DescriptionType = joi.object({
+  id: joi.string().required(),
+  cityId: joi.number().positive().required(),
+  count: joi.number().allow(0),
+});
+
+export const MonthType = joi.object({
+  id: joi.string().required(),
+  type: joi.string().required(),
+  cityId: joi.number().positive().required(),
+  count: joi.number().allow(0),
 });
 
 export const TallyHistoryType = joi.object({
