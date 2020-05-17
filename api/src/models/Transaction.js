@@ -33,49 +33,36 @@ class TransactionModel extends Model {
   }
 
   findForCity(db, cityId) {
-    return this.find(db, { cityId: cityId }, { projection: { _id: 0 }, sort: { seq: -1 } });
+    return this.find(db, { cityId }, { sort: { seq: -1 } });
   }
 
-  findForAcct(db, cityId, acctId, billId) {
-    const filter = { cityId: cityId };
-    if (billId) {
-      filter['bill.id'] = billId;
-    } else {
-      filter.$or = [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }];
-    }
-    return this.find(db, filter, { projection: { _id: 0 }, sort: { seq: -1 } });
+  findForAcct(db, cityId, acctId) {
+    const filter = { cityId };
+    filter.$or = [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }];
+    return this.find(db, filter, { sort: { seq: -1 } });
+  }
+
+  findForBill(db, cityId, billId) {
+    const filter = { cityId, bill: { id: billId } };
+    return this.find(db, filter, { sort: { seq: -1 } });
   }
 
   findPrevious(db, cityId, acctId, seq) {
-    const filter = { cityId: cityId, seq: { $lt: seq } };
+    const filter = { cityId, seq: { $lt: seq } };
     filter.$or = [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }];
-    return this.findOne(db, filter, { projection: { _id: 0 }, sort: { seq: -1 } });
+    return this.findOne(db, filter, { sort: { seq: -1 } });
   }
 
   findForMonthlySummary(db, cityId, regular, adhoc) {
-    const filter = { cityId: cityId, adjust: false };
+    const filter = { cityId, adjust: false };
     if (!(regular && adhoc)) {
       filter.adhoc = regular && !adhoc ? false : true;
     }
-    return this.find(db, filter, { projection: { _id: 0 }, sort: { seq: -1 } });
-  }
-
-  // get Transactions for the last 3 months excluding the current month.
-  findForForecast(db, cityId) {
-    const thisMonth = moment().date(1);
-    const beginMth = thisMonth.clone().subtract(4, 'months').format(FORMAT.YYYYMMDD);
-    const endMth = thisMonth.clone().subtract(1, 'months').format(FORMAT.YYYYMMDD);
-    const filter = {
-      cityId: cityId,
-      adhoc: false,
-      adjust: false,
-      transMonth: { $gt: beginMth, $lte: endMth },
-    };
-    return this.find(db, filter, { projection: { _id: 0 }, sort: { seq: -1 } });
+    return this.find(db, filter, { sort: { seq: -1 } });
   }
 
   findForSearch(db, data) {
-    const options = { projection: { _id: 0 }, sort: { seq: -1 } };
+    const options = { sort: { seq: -1 } };
     let filter = { cityId: _.toNumber(data.cityId) };
     filter = this.buildSearchQueryOne(data, filter);
     filter = this.buildSearchQueryTwo(data, filter);

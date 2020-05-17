@@ -78,23 +78,6 @@ describe('models.transactions', () => {
       trans.should.all.have.property('adjust', false);
     });
   });
-  describe('findForForecast', () => {
-    const thisMth = moment().date(1);
-    const beginMth = _.toNumber(thisMth.clone().subtract(4, 'months').format('YYYYMMDD'));
-    const endMth = _.toNumber(thisMth.clone().subtract(1, 'months').format('YYYYMMDD'));
-
-    it('should fetch transaction for forecast', async () => {
-      const trans = await transactionModel.findForForecast(db, cityId);
-      trans.should.all.have.property('cityId', cityId);
-      trans.should.all.have.property('adhoc', false);
-      trans.should.all.have.property('adjust', false);
-      const dates = trans.map((t) => {
-        const mth = _.split(t.transMonth, '-');
-        return _.toNumber(mth[0] + mth[1] + mth[2]);
-      });
-      dates.should.all.be.within(beginMth, endMth);
-    });
-  });
   describe('update', () => {
     const transId = 10889;
     const newAmt = 10;

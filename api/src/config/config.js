@@ -29,6 +29,7 @@ const root = {
   thinList: 200,
   pct75: 0.75,
   pct125: 1.25,
+  forecastMonths: 3,
   error: 1000,
   pulse: {
     on: true,

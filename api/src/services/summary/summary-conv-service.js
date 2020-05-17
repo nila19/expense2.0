@@ -24,7 +24,6 @@ const getDataFromDB = async ({ db, log, cityId, regular, adhoc }) => {
   data.months = buildMonthsList(months, log);
 
   data.trans = await transactionModel.findForMonthlySummary(db, cityId, regular, adhoc);
-  data.fctrans = await transactionModel.findForForecast(db, cityId);
   return data;
 };
 

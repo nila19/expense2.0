@@ -26,7 +26,7 @@ export const closeBill = async (parms, data) => {
 const closeOldBill = async (parms, bill) => {
   let totalAmt = 0;
   const acct = await accountModel.findById(parms.db, bill.account.id);
-  const trans = await transactionModel.findForAcct(parms.db, bill.cityId, bill.account.id, bill.id);
+  const trans = await transactionModel.findForBill(parms.db, bill.cityId, bill.id);
   trans.forEach((tran) => (totalAmt += tran.amount));
   totalAmt = _.round(totalAmt, 2);
   bill.amount = acct.cash ? totalAmt * -1 : totalAmt;

@@ -1,5 +1,9 @@
 'use strict';
 
+import moment from 'moment';
+
+import config from 'config/config';
+import { FORMAT } from 'config/formats';
 import { Model } from 'models/Model';
 import { SummaryType } from 'models/schema';
 
@@ -9,11 +13,20 @@ class SummaryModel extends Model {
     this.schema = SummaryType;
   }
 
-  findForCity(db, cityId, adhocFlag) {
-    const filter = { cityId: cityId };
-    if (adhocFlag) {
-      filter['adhoc'] = adhocFlag === 'Y';
+  findForCity(db, cityId, regular, adhoc) {
+    const filter = { cityId };
+    if (!(regular && adhoc)) {
+      filter.adhoc = adhoc;
     }
+    return super.find(db, filter);
+  }
+
+  findForForecast(db, cityId) {
+    const beginPeriod = config.forecastMonths + 1;
+    const thisMonth = moment().date(1);
+    const beginMth = thisMonth.clone().subtract(beginPeriod, 'months').format(FORMAT.YYYYMMDD);
+    const endMth = thisMonth.clone().subtract(1, 'months').format(FORMAT.YYYYMMDD);
+    const filter = { cityId, adhoc: false, transMonth: { $gt: beginMth, $lte: endMth } };
     return super.find(db, filter);
   }
 
