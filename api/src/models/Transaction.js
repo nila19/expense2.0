@@ -170,6 +170,7 @@ class TransactionModel extends Model {
         amount: trans.amount,
         transDt: trans.transDt,
         transMonth: trans.transMonth,
+        transYear: trans.transYear,
         adhoc: trans.adhoc,
         adjust: trans.adjust,
         tallied: trans.tallied,

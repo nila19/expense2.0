@@ -14,7 +14,7 @@ class DescriptionModel extends Model {
     return super.find(db, filter, { projection: { _id: 0 }, sort: { count: -1 } });
   }
 
-  async incrementOrInsert(db, cityId, id) {
+  incrementOrInsert(db, cityId, id) {
     const filter = { cityId: cityId, id: id };
     const mod = {
       $inc: { count: 1 },
@@ -23,7 +23,7 @@ class DescriptionModel extends Model {
     return super.updateOne(db, filter, mod, { upsert: true });
   }
 
-  async decrement(db, cityId, id) {
+  decrement(db, cityId, id) {
     const filter = { cityId: cityId, id: id };
     return super.findOneAndUpdate(db, filter, { $inc: { count: -1 } });
   }

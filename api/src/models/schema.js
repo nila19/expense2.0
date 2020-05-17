@@ -103,6 +103,15 @@ export const MonthType = joi.object({
   count: joi.number().allow(0),
 });
 
+export const SummaryType = joi.object({
+  category: CategoryTypeMin.required(),
+  transMonth: joi.string().required(),
+  cityId: joi.number().positive().required(),
+  adhoc: joi.boolean(),
+  count: joi.number().allow(0),
+  amount: joi.number().allow(0),
+});
+
 export const TallyHistoryType = joi.object({
   id: joi.number().positive().required(),
   cityId: joi.number().positive().required(),

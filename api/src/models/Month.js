@@ -14,7 +14,7 @@ class MonthModel extends Model {
     return this.find(db, filter, { projection: { _id: 0 }, sort: { id: -1 } });
   }
 
-  async incrementOrInsert(db, cityId, type, id) {
+  incrementOrInsert(db, cityId, type, id) {
     const filter = { cityId: cityId, type: type, id: id };
     const mod = {
       $inc: { count: 1 },
@@ -23,7 +23,7 @@ class MonthModel extends Model {
     return super.updateOne(db, filter, mod, { upsert: true });
   }
 
-  async decrement(db, cityId, type, id) {
+  decrement(db, cityId, type, id) {
     const filter = { cityId: cityId, type: type, id: id };
     return super.findOneAndUpdate(db, filter, { $inc: { count: -1 } });
   }

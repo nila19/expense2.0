@@ -4,9 +4,10 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { FORMAT, MONTH_TYPE } from 'config/formats';
-import { cityModel, monthModel, descriptionModel, transactionModel } from 'models';
+import { cityModel, monthModel, descriptionModel, transactionModel, summaryModel } from 'models';
+import { buildSummary } from 'services/summary/summary-service';
 
-export const convertDescriptionsAndMonths = async (db) => {
+export const convertDescAndMonths = async (db) => {
   const citiesMap = await buildMapOfCounts(db);
 
   // clear existing records
@@ -92,4 +93,40 @@ export const addYears = async (db) => {
   });
   await Promise.all(p0);
   console.log('Processed all...');
+};
+
+export const convertSummary = async (db) => {
+  const cities = await cityModel.findAll(db);
+  const p0 = cities.map(async (city) => {
+    // clear existing records
+    await summaryModel.deleteMany(db, {});
+    const regular = await buildSummary({ db, cityId: city.id, regular: true, adhoc: false });
+    await loadSummaryInDB(db, city.id, false, regular);
+
+    const adhoc = await buildSummary({ db, cityId: city.id, regular: false, adhoc: true });
+    await loadSummaryInDB(db, city.id, true, adhoc);
+    console.log('Processed city -> ' + city.id);
+  });
+  await Promise.all(p0);
+  console.log('Processed all...');
+};
+
+const loadSummaryInDB = async (db, cityId, adhoc, { months, gridRows }) => {
+  const p1 = months.map(async (month, idx) => {
+    if (month.aggregate) {
+      return;
+    }
+    const transMonth = month.id;
+    const p2 = gridRows.map(async ({ category, amounts, counts }) => {
+      const cat = { id: category.id, name: category.name };
+      const amount = amounts[idx];
+      const count = counts[idx];
+      if (amount !== 0 && count > 1) {
+        const item = { cityId, adhoc, category: cat, transMonth, count, amount };
+        return await summaryModel.insertOne(db, item);
+      }
+    });
+    await Promise.all(p2);
+  });
+  await Promise.all(p1);
 };
