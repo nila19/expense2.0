@@ -14,6 +14,11 @@ export class Model {
     await query.doc(id).set(data);
   }
 
+  async insertOne(db, data) {
+    let query = this.getCollection(db);
+    await query.doc(id).add(data);
+  }
+
   async updateById(db, id, data, options) {
     let query = this.getCollection(db);
     await query.doc(id).set(data, options || { merge: true });
@@ -44,11 +49,7 @@ export class Model {
     return items && items.length ? items[0] : null;
   }
 
-  async findAll(db) {
-    return await this.find(db, []);
-  }
-
-  async find(db, filters, orders, limit) {
+  async find(db, { filters, orders, limit } = {}) {
     let query = this.getCollection(db);
     if (filters) {
       filters.forEach((e) => {

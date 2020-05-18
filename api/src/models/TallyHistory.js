@@ -10,7 +10,7 @@ class TallyHistoryModel extends Model {
   }
 
   findForAcct(db, acctId) {
-    return this.find(db, { 'account.id': acctId }, { projection: { _id: 0 }, sort: { id: -1 } });
+    return this.find(db, { 'account.id': acctId }, { sort: { id: -1 } });
   }
 }
 

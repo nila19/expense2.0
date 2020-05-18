@@ -1,33 +1,24 @@
 'use strict';
 
 import { Model } from 'fire-models/Model';
+import { CityType } from 'fire-models/schema';
 
 class CityModel extends Model {
   constructor() {
-    super('cities', false, null);
-    this.schema = null;
+    super('cities', false, CityType);
+    this.schema = CityType;
   }
 
-  async findCapitals(db) {
-    const filters = [['capital', '==', true]];
-    const orders = [['country', 'asc']];
-    return await this.find(db, filters, orders, 3);
+  findAll(db) {
+    return super.find(db, { orders: [['startDt', 'desc']] });
   }
 
-  async findPopulatedCapitals(db) {
-    const filters = [
-      ['capital', '==', true],
-      ['population', '>', 1000000],
-    ];
-    return await this.find(db, filters);
+  findActive(db) {
+    return this.find(db, { filters: [['active', '==', true]], orders: [['startDt', 'desc']] });
   }
 
-  async findCACities(db) {
-    const filters = [
-      ['country', '==', 'USA'],
-      ['state', '==', 'CA'],
-    ];
-    return await this.find(db, filters);
+  findDefault(db) {
+    return this.findOne(db, { filters: [['default', '==', true]] });
   }
 }
 

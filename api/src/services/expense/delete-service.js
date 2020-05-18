@@ -28,10 +28,9 @@ export const deleteExpense = async (parms) => {
 
 // step 3: fetch from & to accounts info from DB
 const fetchAccounts = async (parms, tran) => {
-  const accts = { from: { id: 0, balance: 0 }, to: { id: 0, balance: 0 } };
-  accts.from = await accountModel.findById(parms.db, tran.accounts.from.id);
-  accts.to = await accountModel.findById(parms.db, tran.accounts.to.id);
-  return accts;
+  const from = await accountModel.findById(parms.db, tran.accounts.from.id);
+  const to = await accountModel.findById(parms.db, tran.accounts.to.id);
+  return { from, to };
 };
 
 // step 4: if the expense has been included in a bill, deduct the bill amount & balance.

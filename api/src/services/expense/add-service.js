@@ -59,8 +59,8 @@ export const addExpense = async (parms, data) => {
 
 // step 3: fetch from & to accounts info from DB
 const loadAccountsInfo = async (parms, data) => {
-  const fromId = data.accounts.from && data.accounts.from.id ? data.accounts.from.id : 0;
-  const toId = data.accounts.to && data.accounts.to.id ? data.accounts.to.id : 0;
+  const fromId = data.accounts.from?.id || 0;
+  const toId = data.accounts.to?.id || 0;
   data.accounts.from = await accountModel.findById(parms.db, fromId);
   data.accounts.to = await accountModel.findById(parms.db, toId);
 };
@@ -108,7 +108,7 @@ const copyAccountsData = async (parms, data, trans) => {
       balanceBf: from.balance,
       balanceAf: from.balance,
     };
-    if (from.billed && from.bills && from.bills.open) {
+    if (from.billed && from.bills?.open) {
       trans.bill = {
         id: from.bills.open.id,
         account: { id: from.id, name: from.name },

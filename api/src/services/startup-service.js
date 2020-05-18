@@ -26,7 +26,7 @@ export const connectToFirebase = async (firebase, log) => {
     log.info('Firebase connection not available...  => ' + config.authDomain);
     return { code: config.error };
   }
-  const records = await fireAccountModel.findAll(firebase);
+  const records = await fireAccountModel.find(firebase);
   return { code: 0, data: { fireEnv: config.env, fireCount: records.size } };
 };
 

@@ -6,33 +6,38 @@ import { FORMAT } from 'config/formats';
 import { accountModel, sequenceModel, tallyHistoryModel, transactionModel } from 'models';
 import { checkCityEditable } from 'utils/common-utils';
 
-export const tallyAccount = async (parms, acctId) => {
+export const tallyAccount = async ({ db }, acctId) => {
   const tallyDt = moment().format(FORMAT.YYYYMMDDHHmmss);
 
-  const account = await accountModel.findById(parms.db, acctId);
-  await checkCityEditable(parms.db, account.cityId);
+  const account = await accountModel.findById(db, acctId);
+  await checkCityEditable(db, account.cityId);
+
+  // update account with last tallied info
   await accountModel.findOneAndUpdate(
-    parms.db,
+    db,
     { id: account.id },
     { $set: { tallyBalance: account.balance, tallyDt: tallyDt } }
   );
-  const seq = await sequenceModel.findOneAndUpdate(parms.db, { table: 'tallyhistories', cityId: account.cityId });
-  await tallyHistoryModel.insertOne(parms.db, buildTallyHistory(seq.value.seq, account, tallyDt));
-  const trans = await transactionModel.findForAcct(parms.db, account.cityId, account.id);
 
-  for (const tran of trans) {
-    if (!tran.tallied) {
-      await transactionModel.findOneAndUpdate(parms.db, { id: tran.id }, { $set: { tallied: true, tallyDt: tallyDt } });
-    }
-  }
+  // insert tally history record
+  const tallyRecord = await buildTallyRecord(db, account, tallyDt);
+  await tallyHistoryModel.insertOne(db, tallyRecord);
+
+  // mark the un-tallied trans as tallied
+  const trans = await transactionModel.findNotTallied(db, account.cityId, account.id);
+  const p0 = trans.map(async (tran) => {
+    return transactionModel.findOneAndUpdate(db, { id: tran.id }, { $set: { tallied: true, tallyDt: tallyDt } });
+  });
+  await Promise.all(p0);
 };
 
-const buildTallyHistory = (seq, ac, tallyDt) => {
+const buildTallyRecord = async (db, account, tallyDt) => {
+  const sequence = await sequenceModel.findOneAndUpdate(db, { table: 'tallyhistories', cityId: account.cityId });
   return {
-    id: seq,
-    account: { id: ac.id, name: ac.name },
-    cityId: ac.cityId,
+    id: sequence.value.seq,
+    account: { id: account.id, name: account.name },
+    cityId: account.cityId,
     tallyDt: tallyDt,
-    balance: ac.balance,
+    balance: account.balance,
   };
 };

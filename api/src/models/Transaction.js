@@ -42,6 +42,12 @@ class TransactionModel extends Model {
     return this.find(db, filter, { sort: { seq: -1 } });
   }
 
+  findNotTallied(db, cityId, acctId) {
+    const filter = { cityId, tallied: false };
+    filter.$or = [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }];
+    return this.find(db, filter, { sort: { seq: -1 } });
+  }
+
   findForBill(db, cityId, billId) {
     const filter = { cityId, bill: { id: billId } };
     return this.find(db, filter, { sort: { seq: -1 } });
@@ -61,73 +67,12 @@ class TransactionModel extends Model {
     return this.find(db, filter, { sort: { seq: -1 } });
   }
 
-  findForSearch(db, data) {
+  findForSearch(db, filter, allRecords) {
     const options = { sort: { seq: -1 } };
-    let filter = { cityId: _.toNumber(data.cityId) };
-    filter = this.buildSearchQueryOne(data, filter);
-    filter = this.buildSearchQueryTwo(data, filter);
-    // thin list
-    if (!data.allRecords || data.allRecords !== true) {
+    if (!allRecords || allRecords !== true) {
       options.limit = config.thinList;
     }
     return this.find(db, filter, options);
-  }
-
-  buildSearchQueryOne(data, filter) {
-    if (data.account && data.account.id) {
-      filter.$or = [
-        { 'accounts.from.id': _.toNumber(data.account.id) },
-        { 'accounts.to.id': _.toNumber(data.account.id) },
-      ];
-    }
-    if (data.bill && data.bill.id) {
-      filter['bill.id'] = _.toNumber(data.bill.id);
-    }
-    if (data.category && data.category.id) {
-      filter['category.id'] = _.toNumber(data.category.id);
-    }
-    if (data.description) {
-      filter.description = { $regex: new RegExp(data.description, 'gi') };
-    }
-    if (data.amount) {
-      const amt75 = _.toNumber(data.amount) * config.pct75;
-      const amt125 = _.toNumber(data.amount) * config.pct125;
-      filter.$and = [{ amount: { $gt: amt75 } }, { amount: { $lt: amt125 } }];
-    }
-    if (data.adhoc) {
-      filter.adhoc = data.adhoc === 'Y';
-    }
-    if (data.adjust) {
-      filter.adjust = data.adjust === 'Y';
-    }
-    return filter;
-  }
-
-  buildSearchQueryTwo(data, filter) {
-    if (data.entryMonth && data.entryMonth.id) {
-      const entry = moment(data.entryMonth.id);
-      if (data.entryMonth.year === true) {
-        // set startDt as 31-Dec of previous year, since that it is > than.
-        // set endDt as 1-Jan of next year, since that it is > than.
-        const yearBegin = entry.clone().month(0).date(0).format(FORMAT.YYYYMMDD);
-        const yearEnd = entry.clone().month(11).date(31).format(FORMAT.YYYYMMDD);
-        filter.$and = [{ entryMonth: { $gt: yearBegin } }, { entryMonth: { $lt: yearEnd } }];
-      } else {
-        filter.entryMonth = entry.format(FORMAT.YYYYMMDD);
-      }
-    }
-    if (data.transMonth && data.transMonth.id) {
-      const trans = moment(data.transMonth.id);
-      if (data.transMonth.year === true) {
-        // set startDt as 31-Dec of previous year, since that it is > than.
-        const yearBegin = trans.clone().month(0).date(0).format(FORMAT.YYYYMMDD);
-        const yearEnd = trans.clone().month(11).date(31).format(FORMAT.YYYYMMDD);
-        filter.$and = [{ transMonth: { $gt: yearBegin } }, { transMonth: { $lt: yearEnd } }];
-      } else {
-        filter.transMonth = trans.format(FORMAT.YYYYMMDD);
-      }
-    }
-    return filter;
   }
 
   insertOne(db, data) {

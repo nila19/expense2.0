@@ -10,11 +10,11 @@ class CityModel extends Model {
   }
 
   findAll(db) {
-    return super.findAll(db, { projection: { _id: 0 }, sort: { startDt: -1 } });
+    return super.findAll(db, { sort: { startDt: -1 } });
   }
 
   findActive(db) {
-    return this.find(db, { active: true }, { projection: { _id: 0 }, sort: { startDt: -1 } });
+    return this.find(db, { active: true }, { sort: { startDt: -1 } });
   }
 
   findDefault(db) {
