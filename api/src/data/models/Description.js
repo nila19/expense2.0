@@ -1,11 +1,12 @@
 'use strict';
 
+import { COLLECTION } from 'config/constants';
 import { Model } from 'data/models/Model';
 import { DescriptionType } from 'data/models/schema';
 
 class DescriptionModel extends Model {
   constructor() {
-    super('descriptions', DescriptionType);
+    super(COLLECTION.DESCRIPTION, DescriptionType);
     this.schema = DescriptionType;
   }
 

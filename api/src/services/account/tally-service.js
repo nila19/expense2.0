@@ -2,7 +2,7 @@
 
 import moment from 'moment';
 
-import { FORMAT, COLLECTION } from 'config/formats';
+import { FORMAT, COLLECTION } from 'config/constants';
 import { accountModel, sequenceModel, tallyHistoryModel } from 'data/models';
 import { accountService, transactionService } from 'data/services';
 import { checkCityEditable } from 'utils/common-utils';

@@ -1,11 +1,12 @@
 'use strict';
 
+import { COLLECTION } from 'config/constants';
 import { Model } from 'data/models/Model';
 import { MonthType } from 'data/models/schema';
 
 class MonthModel extends Model {
   constructor() {
-    super('months', MonthType);
+    super(COLLECTION.MONTH, MonthType);
     this.schema = MonthType;
   }
 

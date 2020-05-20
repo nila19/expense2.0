@@ -2,8 +2,8 @@
 
 import { Router } from 'express';
 
-import { inject404 } from 'routes/error-route';
 import { loadCities, loadLandmarks } from 'controllers/fire-load-controller';
+import { inject404 } from 'routes/error-route';
 
 const router = Router();
 

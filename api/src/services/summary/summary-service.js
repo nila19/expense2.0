@@ -4,7 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import config from 'config/config';
-import { FORMAT, MONTH_TYPE } from 'config/formats';
+import { FORMAT, MONTH_TYPE } from 'config/constants';
 import { categoryModel, monthModel, summaryModel } from 'data/models';
 import { buildMonthsList } from 'utils/month-utils';
 

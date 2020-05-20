@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { COLLECTION, FORMAT } from 'config/formats';
+import { COLLECTION, FORMAT } from 'config/constants';
 import { accountModel, billModel, sequenceModel, transactionModel } from 'data/models';
 import { accountService, billService } from 'data/services';
 import { buildBillName } from 'utils/common-utils';

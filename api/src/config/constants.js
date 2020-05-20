@@ -18,6 +18,7 @@ export const COLLECTION = {
   ACCOUNT: 'accounts',
   BILL: 'bills',
   CATEGORY: 'categories',
+  DESCRIPTION: 'descriptions',
   CITY: 'cities',
   MONTH: 'months',
   SEQUENCE: 'sequences',

@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { FORMAT, MONTH_TYPE } from 'config/formats';
+import { FORMAT, MONTH_TYPE } from 'config/constants';
 import { cityModel, monthModel, descriptionModel, transactionModel, summaryModel } from 'data/models';
 import { buildSummary } from 'services/conversion/summary-service';
 

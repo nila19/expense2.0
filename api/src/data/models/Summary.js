@@ -3,13 +3,13 @@
 import moment from 'moment';
 
 import config from 'config/config';
-import { FORMAT } from 'config/formats';
+import { COLLECTION, FORMAT } from 'config/constants';
 import { Model } from 'data/models/Model';
 import { SummaryType } from 'data/models/schema';
 
 class SummaryModel extends Model {
   constructor() {
-    super('summaries', SummaryType);
+    super(COLLECTION.SUMMARY, SummaryType);
     this.schema = SummaryType;
   }
 

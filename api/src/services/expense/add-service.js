@@ -1,6 +1,6 @@
 'use strict';
 
-import { COLLECTION } from 'config/formats';
+import { COLLECTION } from 'config/constants';
 import { sequenceModel, transactionModel } from 'data/models';
 import { billService, transactionService } from 'data/services';
 import { transferCash } from 'services/cash-service';

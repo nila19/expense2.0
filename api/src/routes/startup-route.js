@@ -2,7 +2,6 @@
 
 import { Router } from 'express';
 
-import { inject404 } from 'routes/error-route';
 import {
   doConnect,
   getAllCities,
@@ -14,6 +13,7 @@ import {
   getTransMonths,
   getBills,
 } from 'controllers/startup-controller';
+import { inject404 } from 'routes/error-route';
 
 const router = Router();
 

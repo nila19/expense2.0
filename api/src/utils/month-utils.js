@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { FORMAT } from 'config/formats';
+import { FORMAT } from 'config/constants';
 
 // step 2.0 - build the months array structure.
 export const buildMonthsList = (dates) => {

@@ -3,7 +3,7 @@
 import _ from 'lodash';
 
 import config from 'config/config';
-import { MONTH_TYPE } from 'config/formats';
+import { MONTH_TYPE } from 'config/constants';
 import { accountModel, billModel, categoryModel, cityModel, descriptionModel, monthModel } from 'data/models';
 import { buildMonthsList } from 'utils/month-utils';
 

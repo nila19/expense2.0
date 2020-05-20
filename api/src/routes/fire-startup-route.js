@@ -2,7 +2,6 @@
 
 import { Router } from 'express';
 
-import { inject404 } from 'routes/error-route';
 import {
   doConnect,
   getAllFireCities,
@@ -11,6 +10,7 @@ import {
   getCAFireCities,
   getMuseumLandmarks,
 } from 'controllers/fire-startup-controller';
+import { inject404 } from 'routes/error-route';
 
 const router = Router();
 
