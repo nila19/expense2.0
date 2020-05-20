@@ -4,8 +4,8 @@ import moment from 'moment';
 
 import config from 'config/config';
 import { FORMAT } from 'config/formats';
-import { Model } from 'models/Model';
-import { SummaryType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { SummaryType } from 'data/models/schema';
 
 class SummaryModel extends Model {
   constructor() {

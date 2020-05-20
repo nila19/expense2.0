@@ -1,8 +1,8 @@
 'use strict';
 
 import { PIPE, STATE, publish } from 'bin/socket-handler';
-import { Model } from 'models/Model';
-import { BillType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { BillType } from 'data/models/schema';
 
 class BillModel extends Model {
   constructor() {

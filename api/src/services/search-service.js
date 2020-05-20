@@ -4,7 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { FORMAT } from 'config/formats';
-import { transactionModel } from 'models';
+import { transactionModel } from 'data/models';
 
 export const doSearch = async (db, form) => {
   const filter = buildSearchFilter(form);

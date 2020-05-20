@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import config from 'config/config';
 import { FORMAT, MONTH_TYPE } from 'config/formats';
-import { categoryModel, monthModel, summaryModel } from 'models';
+import { categoryModel, monthModel, summaryModel } from 'data/models';
 import { buildMonthsList } from 'utils/month-utils';
 
 export const buildSummary = async ({ forecast, ...others }) => {

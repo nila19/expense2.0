@@ -1,7 +1,7 @@
 'use strict';
 
 import { MONTH_TYPE } from 'config/formats';
-import { descriptionModel, monthModel, summaryModel } from 'models';
+import { descriptionModel, monthModel, summaryModel } from 'data/models';
 
 export const addToLookups = async (db, tran) => {
   await descriptionModel.incrementOrInsert(db, tran.cityId, tran.description);

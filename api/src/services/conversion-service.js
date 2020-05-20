@@ -4,7 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { FORMAT, MONTH_TYPE } from 'config/formats';
-import { cityModel, monthModel, descriptionModel, transactionModel, summaryModel } from 'models';
+import { cityModel, monthModel, descriptionModel, transactionModel, summaryModel } from 'data/models';
 import { buildSummary } from 'services/summary/summary-conv-service';
 
 export const convertDescAndMonths = async (db) => {

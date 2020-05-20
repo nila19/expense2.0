@@ -1,4 +1,4 @@
-import { billModel } from 'models';
+import { billModel } from 'data/models';
 
 export const incrementBillAmt = (db, id, amount) => {
   return billModel.findOneAndUpdate(db, { id }, { $inc: { amount: amount, balance: amount } });

@@ -15,12 +15,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import express from 'express';
 
+import { errorHandler } from 'bin/handler';
 import config from 'config/config';
 import { routes } from 'config/route-config';
 import { connect as mongo_connect } from 'config/mongodb-config';
 import { connect as firebase_connect } from 'config/firebase-config';
 import { logger } from 'utils/logger';
-import { errorHandler } from 'bin/handler';
 
 // * TODO: Use Docker/Kube
 // TODO: Add test cases

@@ -1,7 +1,7 @@
 'use strict';
 
-import { Model } from 'models/Model';
-import { DescriptionType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { DescriptionType } from 'data/models/schema';
 
 class DescriptionModel extends Model {
   constructor() {

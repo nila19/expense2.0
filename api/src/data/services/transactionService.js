@@ -1,4 +1,4 @@
-import { transactionModel } from 'models';
+import { transactionModel } from 'data/models';
 
 export const updateTallyInfo = async (db, account, tallyDt) => {
   const trans = await transactionModel.findNotTallied(db, account.cityId, account.id);

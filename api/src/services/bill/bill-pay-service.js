@@ -2,7 +2,7 @@
 
 import numeral from 'numeral';
 
-import { billService } from 'data-services';
+import { billService } from 'data/services';
 import { addExpense } from 'services/expense/add-service';
 import { checkCityEditable } from 'utils/common-utils';
 

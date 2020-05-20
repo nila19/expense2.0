@@ -1,7 +1,7 @@
 'use strict';
 
-import { Model } from 'models/Model';
-import { CategoryType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { CategoryType } from 'data/models/schema';
 
 class CategoryModel extends Model {
   constructor() {

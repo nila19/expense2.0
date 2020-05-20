@@ -1,4 +1,4 @@
-import { accountModel, billModel } from 'models';
+import { accountModel, billModel } from 'data/models';
 
 export const updateTallyInfo = (db, account, tallyDt) => {
   return accountModel.findOneAndUpdate(

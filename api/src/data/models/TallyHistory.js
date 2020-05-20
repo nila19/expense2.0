@@ -1,8 +1,8 @@
 'use strict';
 
 import { COLLECTION } from 'config/formats';
-import { Model } from 'models/Model';
-import { TallyHistoryType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { TallyHistoryType } from 'data/models/schema';
 
 class TallyHistoryModel extends Model {
   constructor() {

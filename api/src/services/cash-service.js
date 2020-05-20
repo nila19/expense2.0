@@ -1,7 +1,7 @@
 'use strict';
 
-import { accountModel, transactionModel } from 'models';
-import { accountService, transactionService } from 'data-services';
+import { accountModel, transactionModel } from 'data/models';
+import { accountService, transactionService } from 'data/services';
 
 // transfer cash from one account to another
 export const transferCash = async ({ db, amount, from, to, seq }) => {

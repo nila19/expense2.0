@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-import { billModel, cityModel } from 'models';
+import { billModel, cityModel } from 'data/models';
 import { closeBill } from 'services/bill/bill-service';
 
 // unused, since billCloser is disabled in config.

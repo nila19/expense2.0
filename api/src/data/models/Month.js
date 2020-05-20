@@ -1,7 +1,7 @@
 'use strict';
 
-import { Model } from 'models/Model';
-import { MonthType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { MonthType } from 'data/models/schema';
 
 class MonthModel extends Model {
   constructor() {

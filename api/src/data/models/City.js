@@ -1,7 +1,7 @@
 'use strict';
 
-import { Model } from 'models/Model';
-import { CityType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { CityType } from 'data/models/schema';
 
 class CityModel extends Model {
   constructor() {

@@ -1,8 +1,8 @@
 'use strict';
 
 import { COLLECTION } from 'config/formats';
-import { Model } from 'models/Model';
-import { SequenceType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { SequenceType } from 'data/models/schema';
 
 class SequenceModel extends Model {
   constructor() {

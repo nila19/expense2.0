@@ -4,8 +4,8 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { COLLECTION, FORMAT } from 'config/formats';
-import { accountModel, billModel, sequenceModel, transactionModel } from 'models';
-import { accountService, billService } from 'data-services';
+import { accountModel, billModel, sequenceModel, transactionModel } from 'data/models';
+import { accountService, billService } from 'data/services';
 import { buildBillName } from 'utils/common-utils';
 
 export const closeBill = async ({ db }, data) => {

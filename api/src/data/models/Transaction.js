@@ -5,8 +5,8 @@
 import { COLLECTION } from 'config/formats';
 import { PIPE, STATE, publish } from 'bin/socket-handler';
 import config from 'config/config';
-import { Model } from 'models/Model';
-import { TransactionType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { TransactionType } from 'data/models/schema';
 
 const searchForm = {
   cityId: 'int',

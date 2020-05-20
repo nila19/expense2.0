@@ -1,8 +1,8 @@
 'use strict';
 
 import { COLLECTION } from 'config/formats';
-import { billService, transactionService } from 'data-services';
-import { sequenceModel, transactionModel } from 'models';
+import { sequenceModel, transactionModel } from 'data/models';
+import { billService, transactionService } from 'data/services';
 import { transferCash } from 'services/cash-service';
 import { addToLookups } from 'services/lookup-services';
 import { checkCityEditable, fetchAccounts } from 'utils/common-utils';

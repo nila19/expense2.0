@@ -1,7 +1,7 @@
 'use strict';
 
-import { cityModel } from 'models';
-import { accountService } from 'data-services';
+import { cityModel } from 'data/models';
+import { accountService } from 'data/services';
 
 export const checkCityEditable = async (db, id) => {
   const city = await cityModel.findById(db, id);

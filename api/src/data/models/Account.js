@@ -2,8 +2,8 @@
 
 import { COLLECTION } from 'config/formats';
 import { PIPE, STATE, publish } from 'bin/socket-handler';
-import { Model } from 'models/Model';
-import { AccountType } from 'models/schema';
+import { Model } from 'data/models/Model';
+import { AccountType } from 'data/models/schema';
 
 class AccountModel extends Model {
   constructor() {
