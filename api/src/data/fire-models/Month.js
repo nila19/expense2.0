@@ -2,31 +2,33 @@
 
 import firebase from 'firebase';
 
-import { Model } from 'fire-models/Model';
-import { DescriptionType } from 'fire-models/schema';
+import { Model } from 'data/fire-models/Model';
+import { MonthType } from 'data/fire-models/schema';
 
 const incrementByOne = firebase.firestore.FieldValue.increment(1);
 const decrementByOne = firebase.firestore.FieldValue.increment(-1);
 
-class DescriptionModel extends Model {
+class MonthModel extends Model {
   constructor() {
-    super('descriptions', false, DescriptionType);
-    this.schema = DescriptionType;
+    super('months', false, MonthType);
+    this.schema = MonthType;
   }
 
-  findForCity(db, cityId) {
+  findForCity(db, cityId, type) {
     return super.find(db, {
       filters: [
         ['cityId', '==', cityId],
+        ['type', '==', type],
         ['count', '>', 0],
       ],
-      orders: [['count', 'desc']],
+      orders: [['id', 'desc']],
     });
   }
 
-  incrementOrInsert(db, cityId, id) {
+  incrementOrInsert(db, cityId, type, id) {
     const filters = [
       ['cityId', '==', cityId],
+      ['type', '==', type],
       ['id', '==', id],
     ];
 
@@ -34,18 +36,19 @@ class DescriptionModel extends Model {
     if(item) {
       return super.updateById(db, item._id, {count: incrementByOne})
     } else {
-      const data = {cityId, id, count: 1};
+      const data = {cityId, type, id, count: 1};
       return super.insertOne(db, data)
     }
   }
 
-  decrement(db, cityId, id) {
+  decrement(db, cityId, type, id) {
     const filters = [
       ['cityId', '==', cityId],
+      ['type', '==', type],
       ['id', '==', id],
     ];
     return super.findOneAndUpdate(db, filters, {count: decrementByOne});
   }
 }
 
-export const descriptionModel = new DescriptionModel();
+export const monthModel = new MonthModel();

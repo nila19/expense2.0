@@ -1,6 +1,6 @@
 'use strict';
 
-import { Model } from 'fire-models/Model';
+import { Model } from 'data/fire-models/Model';
 
 class LandmarkModel extends Model {
   constructor() {

@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import { FORMAT, MONTH_TYPE } from 'config/formats';
 import { cityModel, monthModel, descriptionModel, transactionModel, summaryModel } from 'data/models';
-import { buildSummary } from 'services/summary/summary-conv-service';
+import { buildSummary } from 'services/conversion/summary-service';
 
 export const convertDescAndMonths = async (db) => {
   const citiesMap = await buildMapOfCounts(db);

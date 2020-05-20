@@ -6,7 +6,7 @@ import {
   convertDescAndMonths as _convertDescAndMonths,
   addYears as _addYears,
   convertSummary as _convertSummary,
-} from 'services/conversion-service';
+} from 'services/conversion/conversion-service';
 
 export const convertDescAndMonths = async (req, resp) => {
   await _convertDescAndMonths(req.app.locals.db);

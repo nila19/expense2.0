@@ -1,3 +1,17 @@
+export const loadCities = async (req, resp) => {
+  const { firebase } = req.app.locals;
+  await _loadCities(firebase);
+  const count = await getCityCount(firebase);
+  return resp.json({ code: 0, data: count });
+};
+
+export const loadLandmarks = async (req, resp) => {
+  const { firebase } = req.app.locals;
+  await _loadLandmarks(firebase);
+  const count = await getLandmarkCount(firebase);
+  return resp.json({ code: 0, data: count });
+};
+
 const _loadCities = async (db) => {
   const cities = db.collection('cities');
 
@@ -103,21 +117,7 @@ const getCityCount = async (db) => {
   return records.size;
 };
 
-export const loadCities = async (req, resp) => {
-  const { firebase } = req.app.locals;
-  await _loadCities(firebase);
-  const count = await getCityCount(firebase);
-  return resp.json({ code: 0, data: count });
-};
-
 const getLandmarkCount = async (db) => {
   const records = await db.collectionGroup('landmarks').get();
   return records.size;
-};
-
-export const loadLandmarks = async (req, resp) => {
-  const { firebase } = req.app.locals;
-  await _loadLandmarks(firebase);
-  const count = await getLandmarkCount(firebase);
-  return resp.json({ code: 0, data: count });
 };

@@ -2,8 +2,8 @@
 
 import firebase from 'firebase';
 
-import { Model } from 'fire-models/Model';
-import { SequenceType } from 'fire-models/schema';
+import { Model } from 'data/fire-models/Model';
+import { SequenceType } from 'data/fire-models/schema';
 
 const incrementByOne = firebase.firestore.FieldValue.increment(1);
 

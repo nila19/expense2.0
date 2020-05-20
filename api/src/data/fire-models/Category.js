@@ -1,7 +1,7 @@
 'use strict';
 
-import { Model } from 'fire-models/Model';
-import { CategoryType } from 'fire-models/schema';
+import { Model } from 'data/fire-models/Model';
+import { CategoryType } from 'data/fire-models/schema';
 
 class CategoryModel extends Model {
   constructor() {

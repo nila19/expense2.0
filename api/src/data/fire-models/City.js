@@ -1,7 +1,7 @@
 'use strict';
 
-import { Model } from 'fire-models/Model';
-import { CityType } from 'fire-models/schema';
+import { Model } from 'data/fire-models/Model';
+import { CityType } from 'data/fire-models/schema';
 
 class CityModel extends Model {
   constructor() {

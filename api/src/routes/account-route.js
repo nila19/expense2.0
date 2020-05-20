@@ -1,6 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
 import { Router } from 'express';
 
 import { inject404 } from 'routes/error-route';
