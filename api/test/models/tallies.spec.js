@@ -6,7 +6,7 @@ import { should, use } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
-import { tallyHistoryModel } from 'models';
+import { tallyHistoryModel } from 'data/models';
 
 should();
 use(require('chai-things'));

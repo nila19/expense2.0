@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
+import config from 'config/config';
 import { FORMAT } from 'config/formats';
 import { transactionModel } from 'data/models';
 

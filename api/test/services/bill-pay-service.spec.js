@@ -7,7 +7,7 @@ import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
-import { accountModel, billModel, transactionModel } from 'models';
+import { accountModel, billModel, transactionModel } from 'data/models';
 import { payBill } from 'services/bill/bill-pay-service';
 import { deleteExpense } from 'services/expense/delete-service';
 

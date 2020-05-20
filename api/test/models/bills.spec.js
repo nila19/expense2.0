@@ -6,7 +6,7 @@ import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
-import { billModel } from 'models';
+import { billModel } from 'data/models';
 
 should();
 use(require('chai-things'));
@@ -29,32 +29,6 @@ describe('models.bills', () => {
       _bills.should.all.have.property('cityId', cityId);
       _bills.should.contain.some.with.property('closed', true);
       _bills.should.contain.some.with.property('closed', false);
-    });
-    it('should fetch all paid bills', async () => {
-      const _bills = await billModel.findForCity(db, cityId, 'Y');
-      _bills.should.all.have.property('cityId', cityId);
-      _bills.should.all.have.property('balance', 0);
-    });
-    it('should fetch all unpaid bills', async () => {
-      const _bills = await billModel.findForCity(db, cityId, 'N');
-      _bills.should.all.have.property('cityId', cityId);
-      _bills.map((b) => b.balance).should.all.be.above(0);
-    });
-  });
-  describe('findForAcct', () => {
-    it('should fetch all bills including open', async () => {
-      const _bills = await billModel.findForAcct(db, acctId, null);
-      _bills.map((b) => b.account).should.all.have.property('id', acctId);
-    });
-    it('should fetch all paid bills', async () => {
-      const _bills = await billModel.findForAcct(db, acctId, 'Y');
-      _bills.map((b) => b.account).should.all.have.property('id', acctId);
-      _bills.should.all.have.property('balance', 0);
-    });
-    it('should fetch all unpaid bills', async () => {
-      const _bills = await billModel.findForAcct(db, acctId, 'N');
-      _bills.map((b) => b.account).should.all.have.property('id', acctId);
-      _bills.map((b) => b.balance).should.all.be.above(0);
     });
   });
   describe('findForCityOpen', () => {

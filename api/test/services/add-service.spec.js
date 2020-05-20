@@ -8,7 +8,7 @@ import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
-import { accountModel, transactionModel } from 'models';
+import { accountModel, transactionModel } from 'data/models';
 import { addExpense } from 'services/expense/add-service';
 import { deleteExpense } from 'services/expense/delete-service';
 
@@ -60,7 +60,7 @@ describe('services.addService', () => {
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '2017-05-15',
-        accounts: { from: { id: acctId }, to: null },
+        accounts: { from: { id: acctId }, to: { id: null } },
       };
       let transId = 0;
       let acBalance = 0;
@@ -90,7 +90,7 @@ describe('services.addService', () => {
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '2017-05-15',
-        accounts: { from: { id: acctId }, to: null },
+        accounts: { from: { id: acctId }, to: { id: null } },
       };
       let transId = 0;
       let acBalance = 0;
@@ -141,7 +141,7 @@ describe('services.addService', () => {
         description: { name: 'Mocha testing' },
         amount: amt,
         transDt: '2017-05-15',
-        accounts: { from: { id: acctId }, to: null },
+        accounts: { from: { id: acctId }, to: { id: null } },
       };
       let transId = 0;
       let acBalance = 0;
@@ -307,7 +307,7 @@ describe('services.addService', () => {
       description: 'Mocha testing 3',
       amount: amt,
       transDt: '2017-05-20',
-      accounts: { from: null, to: { id: toAcctId } },
+      accounts: { from: { id: null }, to: { id: toAcctId } },
     };
     let transId = 0;
     let toAcBalance = 0;
@@ -357,7 +357,7 @@ describe('services.addService', () => {
       description: 'Mocha testing 3',
       amount: amt,
       transDt: '2017-05-20',
-      accounts: { from: { id: fromAcctId }, to: null },
+      accounts: { from: { id: fromAcctId }, to: { id: null } },
     };
     let transId = 0;
     let frAcBalance = 0;
