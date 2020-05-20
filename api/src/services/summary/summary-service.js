@@ -8,12 +8,12 @@ import { FORMAT, MONTH_TYPE } from 'config/formats';
 import { categoryModel, monthModel, summaryModel } from 'models';
 import { buildMonthsList } from 'utils/month-utils';
 
-export const buildSummary = async (parms) => {
-  const { categories, months, summaries, forecastSummaries } = await getDataFromDB(parms);
+export const buildSummary = async ({ forecast, ...others }) => {
+  const { categories, months, summaries, forecastSummaries } = await getDataFromDB(others);
   const grid = buildEmptyGrid(months, categories);
   populateGrid(grid, months, summaries);
   calcYearlySummary(grid, months);
-  if (parms.forecast) {
+  if (forecast) {
     buildForecastGrid(grid, categories, months, summaries, forecastSummaries);
   }
   weedInactiveCategories(grid);

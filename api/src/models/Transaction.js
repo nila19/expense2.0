@@ -2,12 +2,9 @@
 
 'use strict';
 
-import _ from 'lodash';
-import moment from 'moment';
-
+import { COLLECTION } from 'config/formats';
 import { PIPE, STATE, publish } from 'bin/socket-handler';
 import config from 'config/config';
-import { FORMAT } from 'config/formats';
 import { Model } from 'models/Model';
 import { TransactionType } from 'models/schema';
 
@@ -25,38 +22,38 @@ const searchForm = {
   allRecords: 'boolean',
 };
 
+const options = { sort: { seq: -1 } };
+const acctIdFilter = (acctId) => ({ $or: [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }] });
+
 class TransactionModel extends Model {
   constructor() {
-    super('transactions', TransactionType);
+    super(COLLECTION.TRANSACTION, TransactionType);
     this.schema = TransactionType;
     this.searchForm = searchForm;
   }
 
   findForCity(db, cityId) {
-    return this.find(db, { cityId }, { sort: { seq: -1 } });
+    return this.find(db, { cityId }, options);
   }
 
   findForAcct(db, cityId, acctId) {
-    const filter = { cityId };
-    filter.$or = [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }];
-    return this.find(db, filter, { sort: { seq: -1 } });
+    const filter = { cityId, ...acctIdFilter(acctId) };
+    return this.find(db, filter, options);
   }
 
   findNotTallied(db, cityId, acctId) {
-    const filter = { cityId, tallied: false };
-    filter.$or = [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }];
-    return this.find(db, filter, { sort: { seq: -1 } });
+    const filter = { cityId, ...acctIdFilter(acctId), tallied: false };
+    return this.find(db, filter, options);
   }
 
   findForBill(db, cityId, billId) {
-    const filter = { cityId, bill: { id: billId } };
-    return this.find(db, filter, { sort: { seq: -1 } });
+    const filter = { cityId, 'bill.id': billId };
+    return this.find(db, filter, options);
   }
 
   findPrevious(db, cityId, acctId, seq) {
-    const filter = { cityId, seq: { $lt: seq } };
-    filter.$or = [{ 'accounts.from.id': acctId }, { 'accounts.to.id': acctId }];
-    return this.findOne(db, filter, { sort: { seq: -1 } });
+    const filter = { cityId, ...acctIdFilter(acctId), seq: { $lt: seq } };
+    return this.findOne(db, filter, options);
   }
 
   findForMonthlySummary(db, cityId, regular, adhoc) {
@@ -64,15 +61,12 @@ class TransactionModel extends Model {
     if (!(regular && adhoc)) {
       filter.adhoc = regular && !adhoc ? false : true;
     }
-    return this.find(db, filter, { sort: { seq: -1 } });
+    return this.find(db, filter, options);
   }
 
   findForSearch(db, filter, allRecords) {
-    const options = { sort: { seq: -1 } };
-    if (!allRecords || allRecords !== true) {
-      options.limit = config.thinList;
-    }
-    return this.find(db, filter, options);
+    const limit = !allRecords || allRecords !== true ? { limit: config.thinList } : {};
+    return this.find(db, filter, { ...options, ...limit });
   }
 
   insertOne(db, data) {
@@ -87,35 +81,8 @@ class TransactionModel extends Model {
     return promise;
   }
 
-  findOneAndUpdate(db, filter, mod, options) {
-    const promise = super.findOneAndUpdate(db, filter, mod, options);
-    this._publish(db, filter.id, STATE.UPDATED, promise);
-    return promise;
-  }
-
-  updateTrans(db, trans) {
-    const filter = { cityId: trans.cityId, id: trans.id };
-    const mod = {
-      $set: {
-        category: trans.category,
-        description: trans.description,
-        amount: trans.amount,
-        transDt: trans.transDt,
-        transMonth: trans.transMonth,
-        transYear: trans.transYear,
-        adhoc: trans.adhoc,
-        adjust: trans.adjust,
-        tallied: trans.tallied,
-        tallyDt: trans.tallyDt,
-        accounts: trans.accounts,
-      },
-    };
-    if (trans.bill) {
-      mod.$set.bill = trans.bill;
-    } else {
-      mod.$unset = { bill: '' };
-    }
-    const promise = super.findOneAndUpdate(db, filter, mod);
+  findOneAndUpdate(db, filter, mod, _options) {
+    const promise = super.findOneAndUpdate(db, filter, mod, _options);
     this._publish(db, filter.id, STATE.UPDATED, promise);
     return promise;
   }

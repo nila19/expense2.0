@@ -1,37 +1,22 @@
 'use strict';
 
+import { COLLECTION } from 'config/formats';
 import { PIPE, STATE, publish } from 'bin/socket-handler';
 import { Model } from 'models/Model';
-import { billModel } from 'models/Bill';
 import { AccountType } from 'models/schema';
 
 class AccountModel extends Model {
   constructor() {
-    super('accounts', AccountType);
+    super(COLLECTION.ACCOUNT, AccountType);
     this.schema = AccountType;
   }
 
   findForCity(db, cityId) {
-    return this.find(db, { cityId: cityId, active: true }, { projection: { _id: 0 }, sort: { seq: 1 } });
+    return this.find(db, { cityId: cityId, active: true }, { sort: { seq: 1 } });
   }
 
-  async findById(db, id) {
-    const acct = await this.findOne(db, { id: id });
-    await this._injectLastBill(db, acct);
-    await this._injectOpenBill(db, acct);
-    return acct;
-  }
-
-  async _injectLastBill(db, acct) {
-    if (acct.billed && acct.bills.last && acct.bills.last.id) {
-      acct.bills.last = await billModel.findById(db, acct.bills.last.id);
-    }
-  }
-
-  async _injectOpenBill(db, acct) {
-    if (acct.billed && acct.bills.open && acct.bills.open.id) {
-      acct.bills.open = await billModel.findById(db, acct.bills.open.id);
-    }
+  findById(db, id) {
+    return super.findOne(db, { id: id });
   }
 
   findOneAndUpdate(db, filter, mod, options) {

@@ -5,12 +5,12 @@ import { monthModel } from 'models';
 import { buildSummary } from 'services/summary/summary-service';
 import { buildMonthsList } from 'utils/month-utils';
 
-export const buildChart = async (parms) => {
-  const transMonths = await monthModel.findForCity(parms.db, parms.cityId, MONTH_TYPE.TRANS);
+export const buildChart = async ({ db, log, cityId }) => {
+  const transMonths = await monthModel.findForCity(db, cityId, MONTH_TYPE.TRANS);
   const data = transMonths.map((e) => e.id);
   const months = buildMonthsList(data);
-  const regular = await buildSummary({ ...parms, regular: true, adhoc: false });
-  const adhoc = await buildSummary({ ...parms, regular: false, adhoc: true });
+  const regular = await buildSummary({ db, log, cityId, regular: true, adhoc: false });
+  const adhoc = await buildSummary({ db, log, cityId, regular: false, adhoc: true });
   return loadChartData(months, regular.totalRow, adhoc.totalRow);
 };
 

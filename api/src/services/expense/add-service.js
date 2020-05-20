@@ -1,134 +1,45 @@
 'use strict';
 
-import _ from 'lodash';
-import moment from 'moment';
-import numeral from 'numeral';
-
-import { FORMAT, MONTH_TYPE } from 'config/formats';
-import {
-  accountModel,
-  billModel,
-  descriptionModel,
-  monthModel,
-  sequenceModel,
-  summaryModel,
-  transactionModel,
-} from 'models';
+import { COLLECTION } from 'config/formats';
+import { billService, transactionService } from 'data-services';
+import { sequenceModel, transactionModel } from 'models';
 import { transferCash } from 'services/cash-service';
-import { checkCityEditable, buildBillName } from 'utils/common-utils';
+import { addToLookups } from 'services/lookup-services';
+import { checkCityEditable, fetchAccounts } from 'utils/common-utils';
+import { buildTranBasic, buildTranAccountsNew, buildTranBillNew } from 'services/expense/expense-utils';
 
-export const addExpense = async (parms, data) => {
-  await checkCityEditable(parms.db, data.cityId);
-  await loadAccountsInfo(parms, data);
-  let tran = copyTransData(data);
-  await copyAccountsData(parms, data, tran);
-  const seq = await sequenceModel.findOneAndUpdate(parms.db, { table: 'transactions', cityId: data.cityId });
-  tran = { ...tran, id: seq.value.seq, seq: seq.value.seq };
-  await transactionModel.insertOne(parms.db, tran);
+export const addExpense = async ({ db }, data) => {
+  await checkCityEditable(db, data.cityId);
+
+  const tran = await buildTran(db, data);
+  await transactionModel.insertOne(db, tran);
   await transferCash({
-    db: parms.db,
+    db: db,
     from: data.accounts.from,
     to: data.accounts.to,
     amount: tran.amount,
     seq: 0,
   });
+
+  if (tran.bill?.id) {
+    await billService.incrementBillAmt(db, tran.bill.id, tran.amount);
+  }
+
   // re-fetch from DB to get the revised balances after cash transfer
-  await loadAccountsInfo(parms, data);
-  await transactionModel.findOneAndUpdate(
-    parms.db,
-    { id: tran.id },
-    {
-      $set: {
-        'accounts.from.balanceAf': data.accounts.from.balance,
-        'accounts.to.balanceAf': data.accounts.to.balance,
-      },
-    }
-  );
+  const { from, to } = await fetchAccounts(db, data.accounts);
+  await transactionService.updateBalanceAf(db, tran.id, from.balance, to.balance);
 
   // update lookup / summary tables with new values
-  await descriptionModel.incrementOrInsert(parms.db, tran.cityId, tran.description);
-  await monthModel.incrementOrInsert(parms.db, tran.cityId, MONTH_TYPE.ENTRY, tran.entryMonth);
-  await monthModel.incrementOrInsert(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
-  if (!tran.adjust) {
-    const category = { id: tran.category.id, name: tran.category.name };
-    await summaryModel.incrementOrInsert(parms.db, tran.cityId, category, tran.transMonth, tran.adhoc, tran.amount);
-  }
-
-  return await transactionModel.findById(parms.db, tran.id);
+  await addToLookups(db, tran);
+  return await transactionModel.findById(db, tran.id);
 };
 
-// step 3: fetch from & to accounts info from DB
-const loadAccountsInfo = async (parms, data) => {
-  const fromId = data.accounts.from?.id || 0;
-  const toId = data.accounts.to?.id || 0;
-  data.accounts.from = await accountModel.findById(parms.db, fromId);
-  data.accounts.to = await accountModel.findById(parms.db, toId);
-};
-
-// step 2: copy transaction data from input to transaction record.
-const copyTransData = (data) => {
-  const trans = {
-    id: 0,
-    cityId: data.cityId,
-    entryDt: moment().format(FORMAT.YYYYMMDDHHmmss),
-    entryMonth: moment().date(1).format(FORMAT.YYYYMMDD),
-    entryYear: moment().year(),
-    category: { id: 0, name: ' ~ ' },
-    description: _.startCase(_.lowerCase(data.description.name || data.description)),
-    amount: numeral(data.amount).value(),
-    transDt: moment(data.transDt, FORMAT.YYYYMMDD).format(FORMAT.YYYYMMDD),
-    transMonth: moment(data.transDt, FORMAT.YYYYMMDD).date(1).format(FORMAT.YYYYMMDD),
-    transYear: moment(data.transDt, FORMAT.YYYYMMDD).year(),
-    seq: 0,
-    accounts: {
-      from: { id: 0, name: '', balanceBf: 0, balanceAf: 0 },
-      to: { id: 0, name: '', balanceBf: 0, balanceAf: 0 },
-    },
-    adhoc: data.adhoc,
-    adjust: data.adjust,
-    status: true,
-    tallied: false,
-    tallyDt: null,
-  };
-  if (data.category && data.category.id) {
-    trans.category.id = data.category.id;
-    trans.category.name = data.category.name;
-  }
-  return trans;
-};
-
-// step 3: copy accounts data from input to transaction record.
-const copyAccountsData = async (parms, data, trans) => {
-  const from = data.accounts.from;
-  const to = data.accounts.to;
-  if (from.id) {
-    trans.accounts.from = {
-      id: from.id,
-      name: from.name,
-      balanceBf: from.balance,
-      balanceAf: from.balance,
-    };
-    if (from.billed && from.bills?.open) {
-      trans.bill = {
-        id: from.bills.open.id,
-        account: { id: from.id, name: from.name },
-        billDt: from.bills.open.billDt,
-      };
-      trans.bill.name = buildBillName(from, trans.bill);
-      const amount = numeral(data.amount).value();
-      await billModel.findOneAndUpdate(
-        parms.db,
-        { id: from.bills.open.id },
-        { $inc: { amount: amount, balance: amount } }
-      );
-    }
-  }
-  if (to.id) {
-    trans.accounts.to = {
-      id: to.id,
-      name: to.name,
-      balanceBf: to.balance,
-      balanceAf: to.balance,
-    };
-  }
+const buildTran = async (db, data) => {
+  // fetch from & to accounts info from DB
+  const accounts = await fetchAccounts(db, data.accounts);
+  const seq = await sequenceModel.findNextSeq(db, data.cityId, COLLECTION.TRANSACTION);
+  const tranBasic = buildTranBasic(data);
+  const tranAccts = buildTranAccountsNew(accounts);
+  const tranBill = buildTranBillNew(accounts);
+  return { ...tranBasic, ...tranAccts, ...tranBill, id: seq, seq };
 };

@@ -1,74 +1,80 @@
 'use strict';
 
-import _ from 'lodash';
-import moment from 'moment';
+import numeral from 'numeral';
 
-import { FORMAT, MONTH_TYPE } from 'config/formats';
-import { accountModel, billModel, descriptionModel, monthModel, summaryModel, transactionModel } from 'models';
+import { transactionModel } from 'models';
+import { billService, transactionService } from 'data-services';
 import { transferCash } from 'services/cash-service';
-import { checkCityEditable, checkAccountsActive } from 'utils/common-utils';
+import { addToLookups, removeFromLookups } from 'services/lookup-services';
+import { checkCityEditable, checkAccountsActive, fetchAccounts } from 'utils/common-utils';
+import { buildTranBasic, buildTranAccountsModify, buildTranBillModify } from 'services/expense/expense-utils';
 
-export const modifyExpense = async (parms, data) => {
-  data.amount = _.toNumber(data.amount);
-  const tran = await transactionModel.findById(parms.db, data.id);
+export const modifyExpense = async ({ db }, data) => {
+  data.amount = numeral(data.amount).value();
+  const oldTran = await transactionModel.findById(db, data.id);
 
-  await checkCityEditable(parms.db, tran.cityId);
-  await loadAccountsInfo(parms, data);
-  const finImpact = checkFinImpact(data, tran);
-  checkAccountsActive(finImpact, data.accounts.from, data.accounts.to);
+  await checkCityEditable(db, oldTran.cityId);
+  const accounts = await fetchAccounts(db, data.accounts);
+  const finImpact = checkFinImpact(oldTran, data);
+  if (finImpact) {
+    checkAccountsActive(accounts);
+  }
 
   // undo lookup / summary tables for old values
-  await descriptionModel.decrement(parms.db, tran.cityId, tran.description);
-  await monthModel.decrement(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
-  if (!tran.adjust) {
-    const categoryOld = { id: tran.category.id, name: tran.category.name };
-    await summaryModel.decrement(parms.db, tran.cityId, categoryOld, tran.transMonth, tran.adhoc, tran.amount);
+  await removeFromLookups(db, oldTran);
+
+  // if the bill # is changed, modify bill balances
+  await modifyBillBalance(db, oldTran, data);
+
+  const newTran = buildTran(oldTran, data);
+  if (finImpact) {
+    await adjustCash(db, oldTran, data);
+    await calcTransAcctBalances(db, newTran, accounts);
   }
 
-  const billChange = checkBillChangeNeeded(data, tran);
-  await modifyBillBalance(parms, data, tran, billChange);
-  await adjustCash(parms, data, tran, finImpact);
-  copyTransData(data, tran);
-  await calcTransAcctBalances(parms, data, tran, finImpact);
-  await transactionModel.updateTrans(parms.db, tran);
+  await transactionService.modifyTransaction(db, newTran);
 
   // update lookup / summary tables with new values
-  await descriptionModel.incrementOrInsert(parms.db, tran.cityId, tran.description);
-  await monthModel.incrementOrInsert(parms.db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
-  if (!tran.adjust) {
-    const categoryNew = { id: tran.category.id, name: tran.category.name };
-    await summaryModel.incrementOrInsert(parms.db, tran.cityId, categoryNew, tran.transMonth, tran.adhoc, tran.amount);
-  }
+  await addToLookups(db, newTran);
 };
 
-const loadAccountsInfo = async (parms, data) => {
-  data.accounts.from = await accountModel.findById(parms.db, data.accounts.from.id ? data.accounts.from.id : 0);
-  data.accounts.to = await accountModel.findById(parms.db, data.accounts.to.id ? data.accounts.to.id : 0);
-};
-
-const checkFinImpact = (data, tran) => {
+const checkFinImpact = (tran, data) => {
   let finImpact = false;
   if (tran.amount !== data.amount) {
     finImpact = true;
-  } else if (tran.accounts.from.id !== data.accounts.from.id) {
+  } else if (tran.accounts.from?.id !== data.accounts.from?.id) {
     finImpact = true;
-  } else if (tran.adjust && tran.accounts.to.id !== data.accounts.to.id) {
+  } else if (tran.adjust && tran.accounts.to?.id !== data.accounts.to?.id) {
     finImpact = true;
   }
   return finImpact;
 };
 
+const modifyBillBalance = async (db, tran, data) => {
+  const billChange = isBillChangeNeeded(tran, data);
+  if (!billChange) {
+    return;
+  }
+  // reverse the old amount & add the new amount.
+  if (tran.bill?.id) {
+    await billService.incrementBillAmt(db, tran.bill.id, -tran.amount);
+  }
+  if (data.bill?.id) {
+    await billService.incrementBillAmt(db, data.bill.id, data.amount);
+  }
+};
+
 // step 4: check if there is any change in bill & if a modification to bill is needed.
-const checkBillChangeNeeded = (data, tran) => {
+const isBillChangeNeeded = (tran, data) => {
   let billChange = false;
+  const tranBillId = tran.bill?.id;
+  const dataBillId = data.bill?.id;
   // if no bill before & after change, then skip.
-  const transBillId = tran.bill && tran.bill.id;
-  const dataBillId = data.bill && data.bill.id;
-  if (!transBillId && !dataBillId) {
+  if (!tranBillId && !dataBillId) {
     billChange = false;
-  } else if ((transBillId && !dataBillId) || (!transBillId && dataBillId)) {
+  } else if ((tranBillId && !dataBillId) || (!tranBillId && dataBillId)) {
     billChange = true;
-  } else if (transBillId !== dataBillId) {
+  } else if (tranBillId !== dataBillId) {
     billChange = true;
   } else if (tran.amount !== data.amount) {
     billChange = true;
@@ -76,41 +82,17 @@ const checkBillChangeNeeded = (data, tran) => {
   return billChange;
 };
 
-const modifyBillBalance = async (parms, data, tran, billChange) => {
-  if (!billChange) {
-    return;
-  }
-  // reverse the trans balance & add the 'data' balance.
-  if (tran.bill) {
-    await billModel.findOneAndUpdate(
-      parms.db,
-      { id: tran.bill.id },
-      { $inc: { amount: -tran.amount, balance: -tran.amount } }
-    );
-  }
-  if (data.bill && data.bill.id) {
-    await billModel.findOneAndUpdate(
-      parms.db,
-      { id: data.bill.id },
-      { $inc: { amount: data.amount, balance: data.amount } }
-    );
-  }
-};
-
-const adjustCash = async (parms, data, tran, finImpact) => {
-  if (!finImpact) {
-    return;
-  }
+const adjustCash = async (db, tran, data) => {
   // reverse the from / to accounts to reverse cash first.
   await transferCash({
-    db: parms.db,
+    db: db,
     from: tran.accounts.to,
     to: tran.accounts.from,
     amount: tran.amount,
     seq: tran.seq,
   });
   await transferCash({
-    db: parms.db,
+    db: db,
     from: data.accounts.from,
     to: data.accounts.to,
     amount: data.amount,
@@ -119,68 +101,23 @@ const adjustCash = async (parms, data, tran, finImpact) => {
 };
 
 // step 2: copy transaction data from input to transaction record.
-const copyTransData = (data, tran) => {
-  tran.category = { id: 0, name: ' ~ ' };
-  if (data.category && data.category.id) {
-    tran.category.id = data.category.id;
-    tran.category.name = data.category.name;
-  }
-  delete tran.bill;
-  if (data.bill && data.bill.id) {
-    tran.bill = {
-      id: data.bill.id,
-      name: data.bill.name,
-      account: { id: data.accounts.from.id, name: data.accounts.from.name },
-    };
-  }
-  tran.description = _.startCase(_.lowerCase(data.description.name || data.description));
-  tran.amount = _.toNumber(data.amount);
-  if (tran.transDt !== data.transDt) {
-    tran.transDt = moment(data.transDt, FORMAT.YYYYMMDD).format(FORMAT.YYYYMMDD);
-    tran.transMonth = moment(data.transDt, FORMAT.YYYYMMDD).date(1).format(FORMAT.YYYYMMDD);
-    tran.transYear = moment(data.transDt, FORMAT.YYYYMMDD).year();
-  }
-  tran.adhoc = data.adhoc;
-  tran.adjust = data.adjust;
-  tran.tallied = false;
-  tran.tallyDt = null;
-  // retain the old balanceBf/balanceAf amounts hoping no finImpact..
-  // if finImpact, these will be revised by the next method...
-  if (data.accounts.from.id) {
-    tran.accounts.from = {
-      id: data.accounts.from.id,
-      name: data.accounts.from.name,
-      balanceBf: tran.accounts.from.balanceBf,
-      balanceAf: tran.accounts.from.balanceAf,
-    };
-  } else {
-    tran.accounts.from = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
-  }
-  if (data.accounts.to.id) {
-    tran.accounts.to = {
-      id: data.accounts.to.id,
-      name: data.accounts.to.name,
-      balanceBf: tran.accounts.to.balanceBf,
-      balanceAf: tran.accounts.to.balanceAf,
-    };
-  } else {
-    tran.accounts.to = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
-  }
+const buildTran = (oldTran, data) => {
+  const tranBasic = buildTranBasic(data);
+  const tranAccts = buildTranAccountsModify(data.accounts, oldTran);
+  const tranBill = buildTranBillModify(data);
+  return { ...tranBasic, ...tranAccts, ...tranBill };
 };
 
-const calcTransAcctBalances = async (parms, data, tran, finImpact) => {
-  if (!finImpact) {
-    return;
-  }
-  await calcTransAcctBalance(parms, tran, tran.accounts.from, data.accounts.from.cash);
-  await calcTransAcctBalance(parms, tran, tran.accounts.to, data.accounts.to.cash);
+const calcTransAcctBalances = async (db, tran, { from, to }) => {
+  await calcTransAcctBalance(db, tran, tran.accounts.from, from.cash);
+  await calcTransAcctBalance(db, tran, tran.accounts.to, to.cash);
 };
 
-const calcTransAcctBalance = async (parms, tran, acct, cash) => {
+const calcTransAcctBalance = async (db, tran, acct, cash) => {
   if (!acct.id) {
     return;
   }
-  const prev = await transactionModel.findPrevious(parms.db, tran.cityId, acct.id, tran.seq);
+  const prev = await transactionModel.findPrevious(db, tran.cityId, acct.id, tran.seq);
   if (acct.id === prev.accounts.from.id) {
     acct.balanceBf = prev.accounts.from.balanceAf;
   } else if (acct.id === prev.accounts.to.id) {

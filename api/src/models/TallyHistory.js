@@ -1,11 +1,12 @@
 'use strict';
 
+import { COLLECTION } from 'config/formats';
 import { Model } from 'models/Model';
 import { TallyHistoryType } from 'models/schema';
 
 class TallyHistoryModel extends Model {
   constructor() {
-    super('tallyhistories', TallyHistoryType);
+    super(COLLECTION.TALLY, TallyHistoryType);
     this.schema = TallyHistoryType;
   }
 
