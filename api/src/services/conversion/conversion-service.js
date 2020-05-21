@@ -13,12 +13,23 @@ export const convertDescAndMonths = async (db) => {
   const citiesMap = await buildMapOfCounts(db);
 
   // clear existing records
-  await descriptionModel.deleteMany(db, {});
-  await monthModel.deleteMany(db, {});
+  await recreateCollections(db);
 
   // insert new records
   const counts = await insertCountsToDB(db, citiesMap);
   console.log('All inserted => ' + JSON.stringify(counts));
+};
+
+const recreateCollections = async (db) => {
+  try {
+    await descriptionModel._dropCollection(db);
+    await monthModel._dropCollection(db);
+  } catch (err) {
+    console.log('Error while dropping collections => ' + JSON.stringify(err));
+  }
+
+  await descriptionModel._createCollection(db);
+  await monthModel._createCollection(db);
 };
 
 const insertCountsToDB = async (db, citiesMap) => {
@@ -84,11 +95,9 @@ export const addYears = async (db) => {
   const cities = await cityModel.findAll(db);
   const p0 = cities.map(async (city) => {
     const trans = await transactionModel.findForCity(db, city.id);
-    const p1 = trans.map(async (tran) => {
-      const entryYear = moment(tran.entryMonth, FORMAT.YYYYMMDD).year();
-      const transYear = moment(tran.transMonth, FORMAT.YYYYMMDD).year();
-      const mod = { $set: { entryYear: entryYear, transYear: transYear } };
-      await transactionModel.findOneAndUpdate(db, { id: tran.id }, mod);
+    const p1 = trans.map(async ({ id, entryMonth, transMonth }) => {
+      const mod = { $set: { entryYear: year(entryMonth), transYear: year(transMonth) } };
+      await transactionModel.findOneAndUpdate(db, { id }, mod);
     });
     await Promise.all(p1);
     console.log('Processed city -> ' + city.id);
@@ -97,11 +106,14 @@ export const addYears = async (db) => {
   console.log('Processed all...');
 };
 
+const year = _.memoize((month) => moment(month, FORMAT.YYYYMMDD).year());
+
 export const convertSummary = async (db) => {
+  // clear existing records
+  await recreateSummaryCollection(db);
+
   const cities = await cityModel.findAll(db);
   const p0 = cities.map(async (city) => {
-    // clear existing records
-    await summaryModel.deleteMany(db, {});
     const regular = await buildSummary({ db, cityId: city.id, regular: true, adhoc: false });
     await insertSummaryToDB(db, city.id, false, regular);
 
@@ -111,6 +123,16 @@ export const convertSummary = async (db) => {
   });
   await Promise.all(p0);
   console.log('Processed all...');
+};
+
+const recreateSummaryCollection = async (db) => {
+  try {
+    await summaryModel._dropCollection(db);
+  } catch (err) {
+    console.log('Error while dropping collections => ' + JSON.stringify(err));
+  }
+
+  await summaryModel._createCollection(db);
 };
 
 const insertSummaryToDB = async (db, cityId, adhoc, { months, gridRows }) => {

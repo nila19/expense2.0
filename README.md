@@ -15,14 +15,14 @@ In the project directory, you can run:
 
 - `docker-compose up -d`
 - `docker-compose down`
-- App runs under [http://localhost:3001](http://localhost:3001)
+- App runs under [http://localhost:3000](http://localhost:3000)
 
 ## Build & Run - Dev
 
 - Comment `ui-prod` service & uncomment `ui-dev` service in `docker-compose.yml`
   - `docker-compose up --build` or
   - `docker-compose up --build --remove-orphans`
-- App runs under [http://localhost:3001](http://localhost:3001)
+- App runs under [http://localhost:3000](http://localhost:3000)
 
 ## Prod Script
 
