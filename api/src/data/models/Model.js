@@ -56,4 +56,12 @@ export class Model {
     }
     return db.collection(this.collection).insertOne(data);
   }
+
+  _createCollection(db) {
+    return db.createCollection(this.collection);
+  }
+
+  _dropCollection(db) {
+    return db.dropCollection(this.collection);
+  }
 }

@@ -9,9 +9,6 @@ import { router as summary } from 'routes/summary-route';
 import { router as conversion } from 'routes/conversion-route';
 import { handler, inject404 } from 'routes/error-route';
 
-import { router as fireLoad } from 'routes/fire-load-route';
-import { router as fireStartup } from 'routes/fire-startup-route';
-
 export const routes = (app) => {
   app.use('/app/startup', startup);
   app.use('/app/account', account);
@@ -20,9 +17,6 @@ export const routes = (app) => {
   app.use('/app/search', search);
   app.use('/app/summary', summary);
   app.use('/app/conversion', conversion);
-
-  app.use('/app/fire/load', fireLoad);
-  app.use('/app/fire/startup', fireStartup);
 
   // catch 404 and forward to error handler
   app.use(inject404());

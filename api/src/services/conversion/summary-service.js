@@ -42,11 +42,13 @@ const buildEmptyGrid = (months, categories) => {
 // step 2: populate the grid with transaction data.
 const populateGrid = (grid, trans, months) => {
   trans.forEach((trans) => {
-    const row = grid[trans.category.id];
     const mth = _.split(trans.transMonth, '-');
     const idx = _.findIndex(months, ['seq', _.toNumber(mth[0] + mth[1])]);
-    row.amounts[idx] += trans.amount;
-    row.counts[idx] += 1;
+    const row = grid[trans.category.id];
+    if (row) {
+      row.amounts[idx] += trans.amount;
+      row.counts[idx] += 1;
+    }
   });
 };
 
