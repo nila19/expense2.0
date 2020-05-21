@@ -1,6 +1,7 @@
 'use strict';
 
 import { MONTH_TYPE } from 'config/constants';
+
 import { descriptionModel, monthModel, summaryModel } from 'data/models';
 
 export const addToLookups = async (db, tran) => {

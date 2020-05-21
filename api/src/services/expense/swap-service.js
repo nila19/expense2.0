@@ -2,6 +2,7 @@
 
 import { accountModel, transactionModel } from 'data/models';
 import { transactionService } from 'data/services';
+
 import { checkCityEditable } from 'utils/common-utils';
 
 export const swapExpenses = async ({ db }, { cityId, first, second }) => {

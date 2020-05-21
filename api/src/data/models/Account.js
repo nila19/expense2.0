@@ -1,7 +1,8 @@
 'use strict';
 
-import { COLLECTION } from 'config/constants';
 import { PIPE, STATE, publish } from 'bin/socket-handler';
+import { COLLECTION } from 'config/constants';
+
 import { Model } from 'data/models/Model';
 import { AccountType } from 'data/models/schema';
 

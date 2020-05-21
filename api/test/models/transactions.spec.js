@@ -4,12 +4,15 @@
 
 import _ from 'lodash';
 import moment from 'moment';
+
 import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
-import config from 'config/config';
+import { config } from 'config/config';
 import { ping } from 'config/mongodb-config';
+
 import { transactionModel } from 'data/models';
+
 import { doSearch } from 'services/search-service';
 
 should();
@@ -19,12 +22,11 @@ describe('models.transactions', () => {
   const cityId = 20140301;
   const acctId = 83;
   const billId = 95;
-  const transId = 6975;
   let db = null;
 
   before('get db connection', (done) => {
-    ping(null, (err, db1) => {
-      db = db1;
+    ping().then((_db) => {
+      db = _db;
       done();
     });
   });

@@ -1,21 +1,11 @@
 /* eslint no-magic-numbers: "off" */
 'use strict';
 
-import _ from 'lodash';
 import minimist from 'minimist';
 import dotenv from 'dotenv';
 
-// first step to load env variables from .env
-
-// commented out for enabling docker-compose
-const result = dotenv.config();
-// if (result.error) {
-//   throw result.error;
-// }
-
-// load all env variables into envs
-// const { parsed: envs } = result;
-// console.log(result.parsed);
+// load env variables from .env
+dotenv.config();
 
 const argv = minimist(process.argv.slice(2));
 
@@ -67,7 +57,7 @@ const regions = {
 
 const loadConfig = () => {
   const region = argv.region && regions[argv.region] ? argv.region : 'dev';
-  return _.assign({}, root, regions[region]);
+  return { ...root, ...regions[region] };
 };
 
-export default loadConfig();
+export const config = loadConfig();

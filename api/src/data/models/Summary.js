@@ -2,8 +2,9 @@
 
 import moment from 'moment';
 
-import config from 'config/config';
+import { config } from 'config/config';
 import { COLLECTION, FORMAT } from 'config/constants';
+
 import { Model } from 'data/models/Model';
 import { SummaryType } from 'data/models/schema';
 

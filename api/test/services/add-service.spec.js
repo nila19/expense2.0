@@ -4,11 +4,14 @@
 
 import _ from 'lodash';
 import moment from 'moment';
+
 import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
+
 import { accountModel, transactionModel } from 'data/models';
+
 import { addExpense } from 'services/expense/add-service';
 import { deleteExpense } from 'services/expense/delete-service';
 
@@ -42,8 +45,8 @@ describe('services.addService', () => {
   let db = null;
 
   before('get db connection', (done) => {
-    ping(null, (err, db1) => {
-      db = db1;
+    ping().then((_db) => {
+      db = _db;
       done();
     });
   });
@@ -62,7 +65,6 @@ describe('services.addService', () => {
         transDt: '2017-05-15',
         accounts: { from: { id: acctId }, to: { id: null } },
       };
-      let transId = 0;
       let acBalance = 0;
 
       before('fetch account balance', async () => {

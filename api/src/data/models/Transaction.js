@@ -3,8 +3,9 @@
 'use strict';
 
 import { PIPE, STATE, publish } from 'bin/socket-handler';
-import config from 'config/config';
+import { config } from 'config/config';
 import { COLLECTION } from 'config/constants';
+
 import { Model } from 'data/models/Model';
 import { TransactionType } from 'data/models/schema';
 

@@ -1,3 +1,5 @@
+'use strict';
+
 export const loadCities = async (req, resp) => {
   const { firebase } = req.app.locals;
   await _loadCities(firebase);

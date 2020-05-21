@@ -1,12 +1,15 @@
 'use strict';
 
 import { COLLECTION } from 'config/constants';
+
 import { sequenceModel, transactionModel } from 'data/models';
 import { billService, transactionService } from 'data/services';
+
 import { transferCash } from 'services/cash-service';
 import { addToLookups } from 'services/lookup-services';
-import { checkCityEditable, fetchAccounts } from 'utils/common-utils';
 import { buildTranBasic, buildTranAccountsNew, buildTranBillNew } from 'services/expense/expense-utils';
+
+import { checkCityEditable, fetchAccounts } from 'utils/common-utils';
 
 export const addExpense = async ({ db }, data) => {
   await checkCityEditable(db, data.cityId);

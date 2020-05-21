@@ -5,6 +5,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 
 import { FORMAT } from 'config/constants';
+
 import { buildBillName } from 'utils/common-utils';
 
 const blankAcct = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };

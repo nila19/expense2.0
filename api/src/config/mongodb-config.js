@@ -2,14 +2,21 @@
 
 import { MongoClient } from 'mongodb';
 
-import config from 'config/config';
+import { config } from 'config/config';
+
 import { executeBillClosure } from 'services/bill/bill-closer-service';
 
 let okToLog = true;
 let billClosed = false;
 
 export const connect = (app) => {
-  ping(app.locals.log, (err, db) => setDatabase(err, db, app));
+  const log = app.locals.log;
+  ping()
+    .then((db) => setDatabase(app, db, log))
+    .catch((err) => {
+      log.info('Error connecting to MongoDB - ' + config.dburl + ' ==> ' + err);
+      okToLog = true;
+    });
 
   // keep trying every x seconds.
   if (config.pulse.on) {
@@ -17,31 +24,21 @@ export const connect = (app) => {
   }
 };
 
-//TODO: convert to async/await
-export const ping = (log, next) => {
+export const ping = async () => {
   const client = new MongoClient(config.dburl, { useUnifiedTopology: true, useNewUrlParser: true });
-
-  client.connect((err) => {
-    if (okToLog && log && log.info) {
-      if (!err) {
-        log.info('Connected to :: ' + config.dburl);
-      } else {
-        log.info('Error connecting to DB - ' + config.dburl + ' ==> ' + err);
-      }
-    }
-    const db = client.db(config.dbName);
-    console.log('Created connection...');
-    next(err, db);
-  });
+  await client.connect();
+  return client.db(config.dbName);
 };
 
-const setDatabase = (err, db, app) => {
-  // if connection error, print next connect msg.
-  okToLog = Boolean(err);
+const setDatabase = (app, db, log) => {
   app.locals.db = db;
+  if (okToLog) {
+    log.info('Connected to MongoDB - ' + config.dburl);
+  }
+  okToLog = false;
   // ensure billCloser runs only one time for every server start.
-  if (!err && config.billCloser && !billClosed) {
-    executeBillClosure({ db: app.locals.db, log: app.locals.log });
+  if (config.billCloser && !billClosed) {
+    executeBillClosure({ db, log });
     billClosed = true;
   }
 };

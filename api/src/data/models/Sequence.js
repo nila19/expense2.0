@@ -1,6 +1,7 @@
 'use strict';
 
 import { COLLECTION } from 'config/constants';
+
 import { Model } from 'data/models/Model';
 import { SequenceType } from 'data/models/schema';
 

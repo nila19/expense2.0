@@ -6,6 +6,7 @@ import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
+
 import { billModel } from 'data/models';
 
 should();
@@ -13,13 +14,12 @@ use(require('chai-things'));
 
 describe('models.bills', () => {
   const cityId = 20140301;
-  const acctId = 83;
   const billId = 95;
   let db = null;
 
   before('get db connection', (done) => {
-    ping(null, (err, db1) => {
-      db = db1;
+    ping().then((_db) => {
+      db = _db;
       done();
     });
   });

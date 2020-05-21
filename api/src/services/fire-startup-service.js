@@ -2,7 +2,8 @@
 
 import _ from 'lodash';
 
-import config from 'config/config';
+import { config } from 'config/config';
+
 import { accountModel, cityModel, landmarkModel } from 'data/fire-models';
 
 export const connectToFirebase = async (firebase, log) => {

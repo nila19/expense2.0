@@ -1,8 +1,11 @@
 'use strict';
 
 import { MONTH_TYPE } from 'config/constants';
+
 import { monthModel } from 'data/models';
+
 import { buildSummary } from 'services/summary/summary-service';
+
 import { buildMonthsList } from 'utils/month-utils';
 
 export const buildChart = async ({ db, log, cityId }) => {

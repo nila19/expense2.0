@@ -3,7 +3,9 @@
 import _ from 'lodash';
 
 import { MONTH_TYPE } from 'config/constants';
+
 import { categoryModel, monthModel, transactionModel } from 'data/models';
+
 import { buildMonthsList } from 'utils/month-utils';
 
 export const buildSummary = async (parms) => {
