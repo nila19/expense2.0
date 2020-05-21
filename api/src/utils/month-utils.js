@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { format } from 'config/formats';
+import { FORMAT } from 'config/constants';
 
 // step 2.0 - build the months array structure.
 export const buildMonthsList = (dates) => {
@@ -16,16 +16,16 @@ export const buildMonthsList = (dates) => {
 // step 2.1 - build the initial months list.
 const buildMonths = (dates) => {
   return dates.map((date) => {
-    const month = moment(date, format.YYYYMMDD).startOf('month').format(format.YYYYMMDD);
+    const month = moment(date, FORMAT.YYYYMMDD).startOf('month').format(FORMAT.YYYYMMDD);
     return buildMonth(month);
   });
 };
 
 // step 2.2 - check if current month is in the list, if not add it.
 const addCurrentMonth = (months) => {
-  const seq = buildMonth(moment().format(format.YYYYMMDD)).seq;
+  const seq = buildMonth(moment().format(FORMAT.YYYYMMDD)).seq;
   if (!_.find(months, ['seq', seq])) {
-    const month = moment().startOf('month').format(format.YYYYMMDD);
+    const month = moment().startOf('month').format(FORMAT.YYYYMMDD);
     months.push(buildMonth(month));
   }
 };
@@ -48,13 +48,13 @@ export const buildMonth = (date, year = false) => {
   return {
     id: date,
     aggregate: year,
-    name: moment(date, format.YYYYMMDD).format(year ? format.YYYY : format.MMMYY),
-    seq: _.toNumber(moment(date, format.YYYYMMDD).format(format.YYYYMM)) + (year ? 1 : 0),
-    year: _.toNumber(moment(date, format.YYYYMMDD).format(format.YYYY)),
+    name: moment(date, FORMAT.YYYYMMDD).format(year ? FORMAT.YYYY : FORMAT.MMMYY),
+    seq: _.toNumber(moment(date, FORMAT.YYYYMMDD).format(FORMAT.YYYYMM)) + (year ? 1 : 0),
+    year: _.toNumber(moment(date, FORMAT.YYYYMMDD).format(FORMAT.YYYY)),
   };
 };
 
 const buildYear = (month) => {
-  const year = moment().year(month.year).endOf('year').startOf('day').format(format.YYYYMMDD);
+  const year = moment().year(month.year).endOf('year').startOf('day').format(FORMAT.YYYYMMDD);
   return buildMonth(year, true);
 };

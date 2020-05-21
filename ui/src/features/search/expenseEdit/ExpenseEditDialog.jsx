@@ -71,6 +71,7 @@ export const ExpenseEditForm = ({
   accountOptions,
   categoriesOptions,
   descriptions,
+  bills,
   setOpenEdit,
 }) => {
   const dispatch = useDispatch();
@@ -92,8 +93,9 @@ export const ExpenseEditForm = ({
           expense.category.name = category ? category.label : null;
         }
         if (expense.bill && expense.bill.id) {
-          const bill = _.find(billOptions, { key: expense.bill.id });
-          expense.bill.name = bill ? bill.label : null;
+          const bill = _.find(bills, { id: expense.bill.id });
+          const { id, name, billDt } = bill;
+          expense.bill = { id, name, billDt };
         }
         handleEditSave(expense);
       }}
@@ -219,6 +221,7 @@ export const ExpenseEditDialog = ({ openEdit, setOpenEdit }) => {
                   accountOptions={accountOptions}
                   categoriesOptions={categoriesOptions}
                   descriptions={descriptions}
+                  bills={bills}
                   setOpenEdit={setOpenEdit}
                 />
               </CardBody>

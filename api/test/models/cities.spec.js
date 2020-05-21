@@ -6,7 +6,8 @@ import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
-import { cityModel } from 'models';
+
+import { cityModel } from 'data/models';
 
 should();
 use(require('chai-things'));
@@ -15,14 +16,14 @@ describe('models.cities', () => {
   let db = null;
 
   before('get db connection', (done) => {
-    ping(null, (err, db1) => {
-      db = db1;
+    ping().then((_db) => {
+      db = _db;
       done();
     });
   });
   describe('findAllCities', () => {
     it('should fetch all cities', async () => {
-      const _cities = await cityModel.findAllCities(db);
+      const _cities = await cityModel.findAll(db);
       _cities.should.contain.some.with.property('active', true);
       _cities.should.contain.some.with.property('active', false);
     });

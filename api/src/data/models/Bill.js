@@ -1,12 +1,14 @@
 'use strict';
 
 import { PIPE, STATE, publish } from 'bin/socket-handler';
-import { Model } from 'models/Model';
-import { BillType } from 'models/schema';
+import { COLLECTION } from 'config/constants';
+
+import { Model } from 'data/models/Model';
+import { BillType } from 'data/models/schema';
 
 class BillModel extends Model {
   constructor() {
-    super('bills', BillType);
+    super(COLLECTION.BILL, BillType);
     this.schema = BillType;
   }
 

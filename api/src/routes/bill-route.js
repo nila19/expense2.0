@@ -1,10 +1,9 @@
 'use strict';
 
-import _ from 'lodash';
 import { Router } from 'express';
 
-import { inject404 } from 'routes/error-route';
 import { closeBill, payBill } from 'controllers/bill-controller';
+import { inject404 } from 'routes/error-route';
 
 const router = Router();
 

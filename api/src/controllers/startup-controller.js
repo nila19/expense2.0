@@ -3,7 +3,7 @@
 import _ from 'lodash';
 
 import {
-  doConnect as _doConnect,
+  connectToMongoDB,
   getAllCities as _getAllCities,
   getDefaultCity as _getDefaultCity,
   getCategories as _getCategories,
@@ -16,8 +16,8 @@ import {
 
 export const doConnect = async (req, resp) => {
   const { db, log } = req.app.locals;
-  const data = await _doConnect(db, log);
-  return resp.json(data);
+  const data = await connectToMongoDB(db, log);
+  return resp.json({ code: data.code, data: { ...data.data } });
 };
 
 export const getAllCities = async (req, resp) => {

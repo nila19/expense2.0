@@ -6,7 +6,8 @@ import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
-import { accountModel } from 'models';
+
+import { accountModel } from 'data/models';
 
 should();
 use(require('chai-things'));
@@ -17,8 +18,8 @@ describe('models.accounts', () => {
   let db = null;
 
   before('get db connection', (done) => {
-    ping(null, (err, db1) => {
-      db = db1;
+    ping().then((_db) => {
+      db = _db;
       done();
     });
   });
@@ -26,13 +27,6 @@ describe('models.accounts', () => {
     it('should fetch all active accounts = 9', async () => {
       const accts = await accountModel.findForCity(db, cityId);
       accts.should.all.have.property('active', true);
-    });
-  });
-  describe('findBillable', () => {
-    it('should fetch all active, billable accounts = 4', async () => {
-      const accts = await accountModel.findBillable(db, cityId);
-      accts.should.all.have.property('active', true);
-      accts.should.all.have.property('billed', true);
     });
   });
   describe('update', () => {

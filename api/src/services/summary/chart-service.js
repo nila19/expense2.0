@@ -1,14 +1,19 @@
 'use strict';
 
-import { transactionModel } from 'models';
+import { MONTH_TYPE } from 'config/constants';
+
+import { monthModel } from 'data/models';
+
 import { buildSummary } from 'services/summary/summary-service';
+
 import { buildMonthsList } from 'utils/month-utils';
 
-export const buildChart = async (parms) => {
-  const data = await transactionModel.findAllTransMonths(parms.db, parms.cityId);
+export const buildChart = async ({ db, log, cityId }) => {
+  const transMonths = await monthModel.findForCity(db, cityId, MONTH_TYPE.TRANS);
+  const data = transMonths.map((e) => e.id);
   const months = buildMonthsList(data);
-  const regular = await buildSummary({ ...parms, regular: true, adhoc: false });
-  const adhoc = await buildSummary({ ...parms, regular: false, adhoc: true });
+  const regular = await buildSummary({ db, log, cityId, regular: true, adhoc: false });
+  const adhoc = await buildSummary({ db, log, cityId, regular: false, adhoc: true });
   return loadChartData(months, regular.totalRow, adhoc.totalRow);
 };
 

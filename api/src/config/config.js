@@ -1,21 +1,11 @@
 /* eslint no-magic-numbers: "off" */
 'use strict';
 
-import _ from 'lodash';
 import minimist from 'minimist';
 import dotenv from 'dotenv';
 
-// first step to load env variables from .env
-
-// commented out for enabling docker-compose
-const result = dotenv.config();
-// if (result.error) {
-//   throw result.error;
-// }
-
-// load all env variables into envs
-// const { parsed: envs } = result;
-// console.log(result.parsed);
+// load env variables from .env
+dotenv.config();
 
 const argv = minimist(process.argv.slice(2));
 
@@ -23,9 +13,13 @@ const root = {
   port: process.env.PORT,
   dburl: process.env.MONGO_URL,
   dbName: process.env.DB_NAME,
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
   thinList: 200,
   pct75: 0.75,
   pct125: 1.25,
+  forecastMonths: 3,
   error: 1000,
   pulse: {
     on: true,
@@ -63,7 +57,7 @@ const regions = {
 
 const loadConfig = () => {
   const region = argv.region && regions[argv.region] ? argv.region : 'dev';
-  return _.assign({}, root, regions[region]);
+  return { ...root, ...regions[region] };
 };
 
-export default loadConfig();
+export const config = loadConfig();

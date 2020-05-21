@@ -1,38 +1,40 @@
 'use strict';
 
-import { accountModel, transactionModel } from 'models';
+import { accountModel, transactionModel } from 'data/models';
+import { transactionService } from 'data/services';
+
 import { checkCityEditable } from 'utils/common-utils';
 
-export const swapExpenses = async (parms, { cityId, first, second }) => {
-  const trans = {};
-  const accts = {};
+export const swapExpenses = async ({ db }, { cityId, first, second }) => {
+  await checkCityEditable(db, cityId);
+  const accounts = {};
   const balances = {};
-  await checkCityEditable(parms.db, cityId);
-  await loadBothTrans(parms, first, second, trans, accts, balances);
+  const trans = await loadBothTrans(db, first.id, second.id, accounts, balances);
 
   adjustAccountsSeq(trans);
   initializeBalances(trans, balances);
-  replayTransactions(trans, accts, balances);
-  await updateTransaction(parms, trans.first);
-  await updateTransaction(parms, trans.second);
+  replayTransactions(trans, accounts, balances);
+  await transactionService.updateBalances(db, trans.first);
+  await transactionService.updateBalances(db, trans.second);
 };
 
-const loadBothTrans = async (parms, first, second, trans, accts, balances) => {
-  trans.first = await fetchTran(parms, accts, balances, first.id);
-  trans.second = await fetchTran(parms, accts, balances, second.id);
+const loadBothTrans = async (db, firstId, secondId, accounts, balances) => {
+  const first = await fetchTran(db, accounts, balances, firstId);
+  const second = await fetchTran(db, accounts, balances, secondId);
+  return { first, second };
 };
 
-const fetchTran = async (parms, accts, balances, tranId) => {
-  const tran = await transactionModel.findById(parms.db, tranId);
-  await loadAcct(parms, accts, balances, tran.accounts.from.id);
-  await loadAcct(parms, accts, balances, tran.accounts.to.id);
+const fetchTran = async (db, accounts, balances, tranId) => {
+  const tran = await transactionModel.findById(db, tranId);
+  await loadAccount(db, accounts, balances, tran.accounts.from.id);
+  await loadAccount(db, accounts, balances, tran.accounts.to.id);
   return tran;
 };
 
-const loadAcct = async (parms, accts, balances, acctId) => {
-  const acct = await accountModel.findById(parms.db, acctId);
-  accts[acct.id] = acct;
-  balances[acct.id] = 0;
+const loadAccount = async (db, accounts, balances, acctId) => {
+  const account = await accountModel.findById(db, acctId);
+  accounts[account.id] = account;
+  balances[account.id] = 0;
 };
 
 // step 3.3: check seq of the 2 accounts & find out which is older.
@@ -77,37 +79,7 @@ const replayTransactions = (trans, accts, balances) => {
 };
 
 // step 3.6.1: replay the transactions.
-const replayTran = (accts, balances, tr) => {
-  balances[tr.accounts.from.id] -= accts[tr.accounts.from.id].cash ? tr.amount : tr.amount * -1;
-  balances[tr.accounts.to.id] += accts[tr.accounts.to.id].cash ? tr.amount : tr.amount * -1;
-};
-
-const updateTransaction = async (parms, tran) => {
-  if (!tran.accounts.from.id) {
-    await transactionModel.findOneAndUpdate(
-      parms.db,
-      { id: tran.id },
-      {
-        $set: {
-          'accounts.from.balanceBf': tran.accounts.from.balanceBf,
-          'accounts.from.balanceAf': tran.accounts.from.balanceAf,
-          seq: tran.seq,
-        },
-      }
-    );
-  }
-
-  if (!tran.accounts.to.id) {
-    await transactionModel.findOneAndUpdate(
-      parms.db,
-      { id: tran.id },
-      {
-        $set: {
-          'accounts.to.balanceBf': tran.accounts.to.balanceBf,
-          'accounts.to.balanceAf': tran.accounts.to.balanceAf,
-          seq: tran.seq,
-        },
-      }
-    );
-  }
+const replayTran = (accts, balances, tran) => {
+  balances[tran.accounts.from.id] -= accts[tran.accounts.from.id].cash ? tran.amount : tran.amount * -1;
+  balances[tran.accounts.to.id] += accts[tran.accounts.to.id].cash ? tran.amount : tran.amount * -1;
 };

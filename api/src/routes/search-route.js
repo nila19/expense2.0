@@ -2,8 +2,8 @@
 
 import { Router } from 'express';
 
-import { inject404 } from 'routes/error-route';
 import { doSearch } from 'controllers/search-controller';
+import { inject404 } from 'routes/error-route';
 
 const router = Router();
 

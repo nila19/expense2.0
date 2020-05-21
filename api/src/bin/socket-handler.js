@@ -19,7 +19,7 @@ export const onConnect = (_app) => {
 };
 
 export const publish = (pipe, data, state) => {
-  if (app && app.locals) {
-    app.locals.io.emit(pipe, { code: 0, state: state, data: data });
+  if (app?.locals) {
+    app.locals.io.emit(pipe, { code: 0, state, data });
   }
 };

@@ -3,11 +3,14 @@
 'use strict';
 
 import moment from 'moment';
+
 import { should, use, expect } from 'chai';
 import 'regenerator-runtime/runtime.js';
 
 import { ping } from 'config/mongodb-config';
-import { accountModel, billModel, transactionModel } from 'models';
+
+import { accountModel, billModel, transactionModel } from 'data/models';
+
 import { payBill } from 'services/bill/bill-pay-service';
 import { deleteExpense } from 'services/expense/delete-service';
 
@@ -46,8 +49,8 @@ describe('services.billPayService', () => {
   let db = null;
 
   before('get db connection', (done) => {
-    ping(null, (err, db1) => {
-      db = db1;
+    ping().then((_db) => {
+      db = _db;
       done();
     });
   });

@@ -4,7 +4,7 @@ import { createLogger, stdSerializers } from 'bunyan';
 // coloring console messages.
 import chalk from 'chalk';
 
-import config from 'config/config';
+import { config } from 'config/config';
 
 const logger = createLogger({
   name: 'ExpenseTracker',

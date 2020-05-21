@@ -1,11 +1,13 @@
 'use strict';
 
-import { Model } from 'models/Model';
-import { CategoryType } from 'models/schema';
+import { COLLECTION } from 'config/constants';
+
+import { Model } from 'data/models/Model';
+import { CategoryType } from 'data/models/schema';
 
 class CategoryModel extends Model {
   constructor() {
-    super('categories', CategoryType);
+    super(COLLECTION.CATEGORY, CategoryType);
     this.schema = CategoryType;
   }
 

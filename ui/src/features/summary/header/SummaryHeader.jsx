@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
 import { COLOR } from 'app/config';
+
 import { SummaryControl } from 'features/summary/header/SummaryControl';
 
 const tableStyles = makeStyles(styles);

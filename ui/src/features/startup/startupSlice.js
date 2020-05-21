@@ -7,6 +7,7 @@ import { setSelectedCity } from 'features/appGlobalSlice';
 import { loadAccounts } from 'features/dashboard/accounts/accountSlice';
 import { loadBills } from 'features/dashboard/bills/billTab/billTabSlice';
 import { loadExpenses } from 'features/search/expenses/expenseSlice';
+import { loadSummary } from 'features/summary/summarySlice';
 
 export const connectToBackend = createAsyncThunk('startup/connect', async (payload, thunkApi) => {
   const { data } = await axios().get(API.STARTUP.CONNECT);
@@ -26,6 +27,7 @@ export const loadAppDataForCity = (cityId, dispatch) => {
   dispatch(loadAccounts(payload));
   dispatch(loadBills(payload));
   dispatch(loadExpenses(payload));
+  dispatch(loadSummary(payload));
 };
 
 export const loadCities = createAsyncThunk('appGlobal/loadCities', async () => {

@@ -1,6 +1,7 @@
 'use strict';
 
-import { cityModel } from 'models';
+import { cityModel } from 'data/models';
+import { accountService } from 'data/services';
 
 export const checkCityEditable = async (db, id) => {
   const city = await cityModel.findById(db, id);
@@ -9,14 +10,18 @@ export const checkCityEditable = async (db, id) => {
   }
 };
 
-export const checkAccountsActive = (finImpact, from, to) => {
-  if (finImpact) {
-    if ((from && from.id && !from.active) || (to && to.id && !to.active)) {
-      throw new Error('Change invalid. Account(s) involved are not active...');
-    }
+export const checkAccountsActive = ({ from, to }) => {
+  if ((from?.id && !from.active) || (to?.id && !to.active)) {
+    throw new Error('Change invalid. Account(s) involved are not active...');
   }
 };
 
-export const buildBillName = (acct, bill) => {
-  return bill.id ? acct.name + ' : ' + bill.billDt + ' #' + bill.id : acct.name + ' #0';
+export const buildBillName = ({ name }, { id, billDt }) => {
+  return id ? name + ' : ' + billDt + ' #' + id : name + ' #0';
+};
+
+export const fetchAccounts = async (db, accounts) => {
+  const from = await accountService.findById(db, accounts.from?.id || 0);
+  const to = await accountService.findById(db, accounts.to?.id || 0);
+  return { from, to };
 };

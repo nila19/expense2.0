@@ -2,37 +2,37 @@
 
 import moment from 'moment';
 
-import { format } from 'config/formats';
-import { accountModel, sequenceModel, tallyHistoryModel, transactionModel } from 'models';
+import { FORMAT, COLLECTION } from 'config/constants';
+
+import { accountModel, sequenceModel, tallyHistoryModel } from 'data/models';
+import { accountService, transactionService } from 'data/services';
+
 import { checkCityEditable } from 'utils/common-utils';
 
-export const tallyAccount = async (parms, acctId) => {
-  const tallyDt = moment().format(format.YYYYMMDDHHmmss);
+export const tallyAccount = async ({ db }, acctId) => {
+  const tallyDt = moment().format(FORMAT.YYYYMMDDHHmmss);
 
-  const account = await accountModel.findById(parms.db, acctId);
-  await checkCityEditable(parms.db, account.cityId);
-  await accountModel.findOneAndUpdate(
-    parms.db,
-    { id: account.id },
-    { $set: { tallyBalance: account.balance, tallyDt: tallyDt } }
-  );
-  const seq = await sequenceModel.findOneAndUpdate(parms.db, { table: 'tallyhistories', cityId: account.cityId });
-  await tallyHistoryModel.insertOne(parms.db, buildTallyHistory(seq.value.seq, account, tallyDt));
-  const trans = await transactionModel.findForAcct(parms.db, account.cityId, account.id);
+  const account = await accountModel.findById(db, acctId);
+  await checkCityEditable(db, account.cityId);
 
-  for (const tran of trans) {
-    if (!tran.tallied) {
-      await transactionModel.findOneAndUpdate(parms.db, { id: tran.id }, { $set: { tallied: true, tallyDt: tallyDt } });
-    }
-  }
+  // update account with last tallied info
+  await accountService.updateTallyInfo(db, account, tallyDt);
+
+  // mark the un-tallied trans as tallied
+  await transactionService.updateTallyInfo(db, account, tallyDt);
+
+  // insert tally history record
+  const tallyRecord = await buildTallyRecord(db, account, tallyDt);
+  await tallyHistoryModel.insertOne(db, tallyRecord);
 };
 
-const buildTallyHistory = (seq, ac, tallyDt) => {
+const buildTallyRecord = async (db, account, tallyDt) => {
+  const seq = await sequenceModel.findNextSeq(db, account.cityId, COLLECTION.TALLY);
   return {
     id: seq,
-    account: { id: ac.id, name: ac.name },
-    cityId: ac.cityId,
+    account: { id: account.id, name: account.name },
+    cityId: account.cityId,
     tallyDt: tallyDt,
-    balance: ac.balance,
+    balance: account.balance,
   };
 };

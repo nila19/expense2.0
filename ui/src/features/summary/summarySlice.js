@@ -2,12 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { axios } from 'app/axios';
 import { API } from 'app/config';
+
 import { selectAppGlobal } from 'features/appGlobalSlice';
 
 export const loadSummary = createAsyncThunk('summary/loadSummary', async (payload = {}, thunkApi) => {
   const { selectedCity } = selectAppGlobal(thunkApi.getState());
-  const { forecast = false, regular = true, adhoc = true } = payload;
-  const { data } = await axios().post(API.SUMMARY.SUMMARY, { cityId: selectedCity, forecast, regular, adhoc });
+  let { forecast = false, regular = true, adhoc = true, cityId = null } = payload;
+  cityId = cityId || selectedCity;
+  const { data } = await axios().post(API.SUMMARY.SUMMARY, { cityId, forecast, regular, adhoc });
   return data.data;
 });
 
