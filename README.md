@@ -51,3 +51,7 @@ In the project directory, you can run:
 
 - Use folder `C:\Java\mongodb\dumps`
 - `mongorestore --db=expense 2020-05-05/expense`
+
+### Using local mongodb
+
+- modified to use mongodb running in host since the data volume is getting lost
