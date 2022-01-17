@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import { SnackbarProvider } from 'notistack';
 
@@ -15,11 +15,11 @@ import { COUNTS } from 'app/config';
 ReactDOM.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <Router>
+    <BrowserRouter>
       <SnackbarProvider maxSnack={COUNTS.MESSAGES}>
         <App />
       </SnackbarProvider>
-    </Router>
+    </BrowserRouter>
   </Provider>,
   // </React.StrictMode>,
   document.getElementById('root')

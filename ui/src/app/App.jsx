@@ -1,7 +1,11 @@
 import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
+
+import Dashboard from 'features/dashboard/Dashboard'
+import Search from 'features/search/Search'
+import Summary from 'features/summary/Summary'
 
 import _ from 'lodash';
 
@@ -14,37 +18,36 @@ import { MenuBar } from 'features/menu/MenuBar';
 import { selectStartup, STATE } from 'features/startup/startupSlice';
 
 // lazy loaded modules.
-const Dashboard = React.lazy(() => import('features/dashboard/Dashboard'));
-const Search = React.lazy(() => import('features/search/Search'));
-const Summary = React.lazy(() => import('features/summary/Summary'));
+// const Dashboard = React.lazy(() => import('features/dashboard/Dashboard'));
+// const Search = React.lazy(() => import('features/search/Search'));
+// const Summary = React.lazy(() => import('features/summary/Summary'));
 
-const WithSuspense = (props) => {
-  const loading = <Loading connected inprogress />;
-  return (
-    <DocumentTitle title={props.title}>
-      <Suspense fallback={loading}>{props.render()}</Suspense>
-    </DocumentTitle>
-  );
-};
+// const WithSuspense = (props) => {
+//   const loading = <Loading connected inprogress />;
+//   return (
+//     <DocumentTitle title={props.title}>
+//       <Suspense fallback={loading}>{props.render()}</Suspense>
+//     </DocumentTitle>
+//   );
+// };
 
 const FullApp = () => {
   return (
     <>
       <MenuBar />
-      <Switch>
-        <Route path={ROUTE.DASHBOARD}>
-          <WithSuspense title='Expense - Dashboard' render={() => <Dashboard />} />
-        </Route>
-        <Route path={ROUTE.SUMMARY}>
+      <Routes>
+        <Route path={ROUTE.DASHBOARD} element={<Dashboard />} />
+        <Route path={ROUTE.SUMMARY} element={<Summary />} />
+        <Route path={ROUTE.SEARCH} element={<Search />} />
+        {/* Removed lazy loading since it's not working with React-Router-6 */}
+        {/* <Route path={ROUTE.SUMMARY}>
           <WithSuspense title='Expense - Summary' render={() => <Summary />} />
         </Route>
         <Route path={ROUTE.SEARCH}>
           <WithSuspense title='Expense - Search' render={() => <Search />} />
-        </Route>
-        <Route path={ROUTE.BASE}>
-          <Redirect to={ROUTE.DASHBOARD} />
-        </Route>
-      </Switch>
+        </Route> */}
+        <Route path={ROUTE.BASE} element={<Dashboard />} />
+      </Routes>
     </>
   );
 };

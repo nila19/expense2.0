@@ -92,7 +92,7 @@ export const MenuBar = () => {
             <SearchIcon /> Search
           </Button>
         </Grid>
-        <Grid container item justify='flex-end' lg={6} spacing={2}>
+        <Grid container item justifyContent='flex-end' lg={6} spacing={2}>
           <Button
             disabled={!isDashboard}
             onClick={handleShowChartBlock}

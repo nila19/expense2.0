@@ -10,7 +10,11 @@ import { onConnect } from 'bin/socket-handler';
 import { config } from 'config/config';
 
 const server = createServer(app);
-const io = socketIo(server);
+const io = socketIo(server,{
+  cors: {
+    origin: ['http://localhost:3000', 'http://localhost:5000', 'http://localhost:80', 'http://localhost', 'http://localhost:8000']
+  }
+});
 
 const { port, blocked } = config;
 

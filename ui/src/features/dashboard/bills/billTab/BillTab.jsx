@@ -186,8 +186,8 @@ export const BillTab = ({ paid, closed }) => {
         count={filteredBills.length}
         rowsPerPage={rowsPerPage}
         page={rowsPerPage >= filteredBills.length ? 0 : page}
-        onChangePage={(e, newPage) => setPage(newPage)}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onPageChange={(e, newPage) => setPage(newPage)}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         ActionsComponent={(props) => (
           <PaginationActions {...props} section={PAGINATION_BLOCK.BILLS} totalAmt={totalAmt} />
         )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import _ from 'lodash';
 
@@ -109,7 +109,7 @@ const Summary = () => {
   };
 
   if (goToSearch) {
-    return <Redirect to={ROUTE.SEARCH} />;
+    return <Navigate to={ROUTE.SEARCH} />;
   }
 
   return (
