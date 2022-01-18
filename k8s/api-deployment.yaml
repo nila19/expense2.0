@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Mi
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  local:
+    path: /c/Java/k8s/logs
+    # type: Directory
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Mi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exp-api-cm
+data:
+  # MONGO_URL: "mongodb://host.docker.internal:27017"
+  MONGO_URL: "mongodb://admin:admin@10.105.8.201:27017/expense?authSource=admin&ssl=false"
+  # MONGO_URL: "mongodb://admin:admin@mongo-db-external.svc:27017"
+  # MONGO_URL: "mongodb://127.0.0.1:27017"
+  DB_NAME: expense
+  LOG_PATH: /logs
+  PORT: "8000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exp-api
+  labels:
+    app: exp-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exp-api
+  template:
+    metadata:
+      labels:
+        app: exp-api
+    spec:
+      terminationGracePeriodSeconds: 2
+      volumes:
+        # - name: logs
+        #   emptyDir: {}
+      # volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: logs-pvc
+      containers:
+      - name: exp-api
+        image: balavigneswaran/exp-api:2.1
+        ports:
+        - containerPort: 8000
+        # command: ['sh', '-c', 'echo "Hello" && sleep 3600']
+        command: ['npm', 'run', 'prod']
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 500m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+        volumeMounts:
+        - name: logs
+          mountPath: /logs
+        envFrom:
+        - configMapRef:
+            name: exp-api-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exp-api
+spec:
+  selector:
+    app: exp-api
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

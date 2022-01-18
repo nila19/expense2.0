@@ -5,7 +5,7 @@ services:
     build:
       context: ./ui
       dockerfile: app-ui.prod.Dockerfile
-    image: expense-ui-nginx
+    image: balavigneswaran/exp-ui:2.1
     ports:
       - 80:80
     stdin_open: true
@@ -15,7 +15,7 @@ services:
     build:
       context: ./api
       dockerfile: app-api.prod.Dockerfile
-    image: expense-api
+    image: balavigneswaran/exp-api:2.1
     environment:
       # - MONGO_URL=mongodb://mongodb-app:27017
       - MONGO_URL=mongodb://host.docker.internal:27017

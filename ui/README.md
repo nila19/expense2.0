@@ -26,3 +26,8 @@ In the project directory, you can run:
 - Run `npm start`
 - App runs under [http://localhost:3000](http://localhost:3000)
 - Use `Attach Chrome` under debug options
+
+## Build Docker image
+
+- Run `docker build -t balavigneswaran/exp-ui:2.1 -f app-ui.prod.Dockerfile .`
+- Run `docker push balavigneswaran/exp-ui:2.1`

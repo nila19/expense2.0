@@ -59,7 +59,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
     <div style={{ paddingBottom: '3px' }}>
       <Formik
         initialValues={initialValues(adjust)}
-        validationSchema={validationSchema()}
+        // validationSchema={validationSchema()}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           const category = values.category.id ? _.find(categories, { id: values.category.id }) : null;

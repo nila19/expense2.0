@@ -20,3 +20,8 @@ In the project directory, you can run:
 - Start `mongodb` in local machine
 - Uncomment the environment properties in `.env`
 - Run `Reify All` or `Reify One` debug options
+
+## Build Docker image
+
+- Run `docker build -t balavigneswaran/exp-api:2.1 -f app-api.prod.Dockerfile .`
+- Run `docker push balavigneswaran/exp-api:2.1`

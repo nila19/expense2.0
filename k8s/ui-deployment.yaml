@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exp-ui
+  labels:
+    app: exp-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exp-ui
+  template:
+    metadata:
+      labels:
+        app: exp-ui
+    spec:
+      terminationGracePeriodSeconds: 2
+      containers:
+      - name: exp-ui
+        image: balavigneswaran/exp-ui:2.1
+        ports:
+        - containerPort: 80
+        # command: ['sh', '-c', 'echo "Hello" && sleep 3600']
+        command: ['nginx', '-g', 'daemon off;']
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 500m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exp-ui
+spec:
+  selector:
+    app: exp-ui
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
