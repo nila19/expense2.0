@@ -23,5 +23,5 @@ In the project directory, you can run:
 
 ## Build Docker image
 
-- Run `docker build -t balavigneswaran/exp-api:2.1 -f app-api.prod.Dockerfile .`
-- Run `docker push balavigneswaran/exp-api:2.1`
+- Run `docker build -t balavigneswaran/exp-api:2.2 -f app-api.prod.Dockerfile .`
+- Run `docker push balavigneswaran/exp-api:2.2`

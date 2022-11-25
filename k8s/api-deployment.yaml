@@ -22,6 +22,7 @@ spec:
           operator: In
           values:
           - docker-desktop
+          - minikube
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -41,7 +42,8 @@ metadata:
   name: exp-api-cm
 data:
   # MONGO_URL: "mongodb://host.docker.internal:27017"
-  MONGO_URL: "mongodb://admin:admin@10.105.8.201:27017/expense?authSource=admin&ssl=false"
+  # MONGO_URL: "mongodb://admin:admin@10.105.8.201:27017/expense?authSource=admin&ssl=false"
+  MONGO_URL: "mongodb://localhost:27017/expense?readPreference=primary&ssl=false"
   # MONGO_URL: "mongodb://admin:admin@mongo-db-external.svc:27017"
   # MONGO_URL: "mongodb://127.0.0.1:27017"
   DB_NAME: expense
@@ -66,25 +68,26 @@ spec:
     spec:
       terminationGracePeriodSeconds: 2
       volumes:
-        # - name: logs
-        #   emptyDir: {}
+        - name: logs
+          emptyDir: {}
       # volumes:
-      - name: logs
-        persistentVolumeClaim:
-          claimName: logs-pvc
+      # - name: logs
+      #   persistentVolumeClaim:
+      #     claimName: logs-pvc
       containers:
       - name: exp-api
-        image: balavigneswaran/exp-api:2.1
+        image: balavigneswaran/exp-api:2.2
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         # command: ['sh', '-c', 'echo "Hello" && sleep 3600']
         command: ['npm', 'run', 'prod']
         resources:
           requests:
-            memory: 512Mi
+            memory: 256Mi
             cpu: 500m
           limits:
-            memory: 512Mi
+            memory: 256Mi
             cpu: 500m
         volumeMounts:
         - name: logs
