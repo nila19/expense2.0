@@ -39,7 +39,7 @@
     "react-swipeable-views": "^0.14.0",
     "recharts": "^2.1.8",
     "redux-logger": "^3.0.6",
-    "socket.io": "^4.4.1",
+    "socket.io": "^4.5.4",
     "socket.io-client": "^4.4.1",
     "typeface-roboto": "1.1.13",
     "yup": "^0.32.11"
