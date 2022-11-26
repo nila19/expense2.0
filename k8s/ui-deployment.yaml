@@ -37,6 +37,7 @@ metadata:
 spec:
   selector:
     app: exp-ui
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80
