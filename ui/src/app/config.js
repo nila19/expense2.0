@@ -1,6 +1,6 @@
 export const BACKEND = {
   BASE_URL: 'http://localhost:8000',
-  TIME_OUT: 2000,
+  TIME_OUT: 3000,
 };
 
 export const API = {

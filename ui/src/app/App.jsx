@@ -1,11 +1,10 @@
 import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import DocumentTitle from 'react-document-title';
+import { Route, Routes } from 'react-router-dom';
 
-import Dashboard from 'features/dashboard/Dashboard'
-import Search from 'features/search/Search'
-import Summary from 'features/summary/Summary'
+import Dashboard from 'features/dashboard/Dashboard';
+import Search from 'features/search/Search';
+import Summary from 'features/summary/Summary';
 
 import _ from 'lodash';
 
@@ -15,7 +14,7 @@ import { ROUTE } from 'app/config';
 import { Startup, Loading } from 'features/startup/Startup';
 import { MenuBar } from 'features/menu/MenuBar';
 
-import { selectStartup, STATE } from 'features/startup/startupSlice';
+import { selectStartup, selectStartupReload, STATE } from 'features/startup/startupSlice';
 
 // lazy loaded modules.
 // const Dashboard = React.lazy(() => import('features/dashboard/Dashboard'));
@@ -53,21 +52,20 @@ const FullApp = () => {
 };
 
 export const App = () => {
-  const { connection, loading } = useSelector(selectStartup);
-  const loadings = [loading.cities, loading.categories, loading.descriptions, loading.transMonths, loading.entryMonths];
+  const { connection } = useSelector(selectStartup);
+  const { reloadDashboard, loadingCompleted, loadingFailed } = useSelector(selectStartupReload);
 
-  const connected = connection === STATE.FULFILLED;
+  const connectionOK = connection === STATE.FULFILLED;
   const connectionFailed = connection === STATE.REJECTED;
-  const allLoaded = _.every(loadings, (e) => e === STATE.FULFILLED);
-  const anyFailed = _.some(loadings, (e) => e === STATE.REJECTED);
+  const loadingOK = reloadDashboard || loadingCompleted;
 
   let display = null;
-  if (connected && allLoaded) {
+  if (connectionOK && loadingOK) {
     display = <FullApp />;
-  } else if (connectionFailed || anyFailed) {
-    display = <Loading connected={connected} inprogress={false} />;
+  } else if (connectionFailed || loadingFailed) {
+    display = <Loading connected={connectionOK} inprogress={false} />;
   } else {
-    display = <Loading connected={connected} inprogress />;
+    display = <Loading connected={connectionOK} inprogress />;
   }
 
   return (

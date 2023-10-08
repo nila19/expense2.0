@@ -20,11 +20,12 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import EuroIcon from '@material-ui/icons/Euro';
 import AddIcon from '@material-ui/icons/Add';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
+import AutorenewIcon from '@material-ui/icons/Autorenew';
 
 import Button from 'components/CustomButtons/Button.js';
 
 import { ROUTE } from 'app/config';
-import { selectStartupData } from 'features/startup/startupSlice';
+import { selectStartup, selectStartupData, setReloadDashboard } from 'features/startup/startupSlice';
 import { selectAppGlobal, setSelectedCity, setAccountsExpanded, setShowChartBlock } from 'features/appGlobalSlice';
 import { loadChart } from 'features/dashboard/chart/chartSlice';
 
@@ -44,10 +45,11 @@ export const MenuBar = () => {
   const dispatch = useDispatch();
   const { selectedCity, accountsExpanded, showChartBlock } = useSelector(selectAppGlobal);
   const { cities } = useSelector(selectStartupData);
+  const { reloadDashboard } = useSelector(selectStartup);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const isDashboard = location.pathname === ROUTE.DASHBOARD;
+  const isDashboard = location.pathname === ROUTE.DASHBOARD || location.pathname === ROUTE.BASE;
 
   const handleCityClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -69,6 +71,10 @@ export const MenuBar = () => {
     if (!showChartBlock) {
       dispatch(loadChart(selectedCity));
     }
+  };
+
+  const handleReloadDashboard = () => {
+    dispatch(setReloadDashboard(selectedCity));
   };
 
   const city = selectedCity ? _.find(cities, { id: selectedCity }) : null;
@@ -93,6 +99,14 @@ export const MenuBar = () => {
           </Button>
         </Grid>
         <Grid container item justifyContent='flex-end' lg={6} spacing={2}>
+          <Button
+            disabled={!isDashboard}
+            onClick={handleReloadDashboard}
+            color={reloadDashboard ? 'warning' : 'primary'}
+            size='sm'
+          >
+            <AutorenewIcon />
+          </Button>
           <Button
             disabled={!isDashboard}
             onClick={handleShowChartBlock}

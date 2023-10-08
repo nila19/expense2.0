@@ -119,7 +119,10 @@ export const BillPayDialog = ({ openEdit, setOpenEdit }) => {
   const bill = useSelector(selectBillPay);
   const accounts = useSelector(selectAccounts);
   // only cash accounts can be used for bill pay.
-  const accountOptions = useMemo(() => buildAccountOptions(accounts.filter((e) => e.cash === true)), [accounts]);
+  const accountOptions = useMemo(
+    () => buildAccountOptions(accounts.filter((e) => e.cash === true && e.useForBillPay === true)),
+    [accounts]
+  );
 
   const handleEditCancel = () => {
     dispatch(resetBillPay());

@@ -33,7 +33,7 @@ export const ping = async () => {
 const setDatabase = (app, db, log) => {
   app.locals.db = db;
   if (okToLog) {
-    log.info('Connected to MongoDB - ' + config.dburl);
+    log.info('Connected to MongoDB - ' + config.dburl + '/' + config.dbName);
   }
   okToLog = false;
   // ensure billCloser runs only one time for every server start.

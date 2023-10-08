@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+import _ from 'lodash';
+
 import { axios } from 'app/axios';
 import { API } from 'app/config';
 
@@ -17,6 +19,21 @@ export const connectToBackend = createAsyncThunk('startup/connect', async (paylo
   }
   return data.code === 0;
 });
+
+export const setReloadDashboard = createAsyncThunk('startup/reloadDashboardData', async (payload, thunkApi) => {
+  reloadDashboardData(payload, thunkApi.dispatch);
+  return payload;
+});
+
+const reloadDashboardData = (cityId, dispatch) => {
+  const payload = { cityId: cityId };
+  dispatch(loadCategories(payload));
+  dispatch(loadDescriptions(payload));
+  dispatch(loadTransMonths(payload));
+  dispatch(loadEntryMonths(payload));
+  dispatch(loadAccounts(payload));
+  dispatch(loadBills(payload));
+};
 
 export const loadAppDataForCity = (cityId, dispatch) => {
   const payload = { cityId: cityId };
@@ -79,6 +96,7 @@ const startupSlice = createSlice({
       transMonths: STATE.NOT_STARTED,
       entryMonths: STATE.NOT_STARTED,
     },
+    reloadDashboard: false,
   },
   extraReducers: {
     [connectToBackend.pending]: (state) => {
@@ -99,6 +117,7 @@ const startupSlice = createSlice({
     [loadCities.fulfilled]: (state, action) => {
       state.data.cities = action.payload;
       state.loading.cities = STATE.FULFILLED;
+      resetReload(state);
     },
     [loadCategories.pending]: (state) => {
       state.loading.categories = STATE.PENDING;
@@ -109,6 +128,7 @@ const startupSlice = createSlice({
     [loadCategories.fulfilled]: (state, action) => {
       state.data.categories = action.payload;
       state.loading.categories = STATE.FULFILLED;
+      resetReload(state);
     },
     [loadDescriptions.pending]: (state) => {
       state.loading.descriptions = STATE.PENDING;
@@ -119,6 +139,7 @@ const startupSlice = createSlice({
     [loadDescriptions.fulfilled]: (state, action) => {
       state.data.descriptions = action.payload;
       state.loading.descriptions = STATE.FULFILLED;
+      resetReload(state);
     },
     [loadTransMonths.pending]: (state) => {
       state.loading.transMonths = STATE.PENDING;
@@ -129,6 +150,7 @@ const startupSlice = createSlice({
     [loadTransMonths.fulfilled]: (state, action) => {
       state.data.transMonths = action.payload;
       state.loading.transMonths = STATE.FULFILLED;
+      resetReload(state);
     },
     [loadEntryMonths.pending]: (state) => {
       state.loading.entryMonths = STATE.PENDING;
@@ -139,11 +161,43 @@ const startupSlice = createSlice({
     [loadEntryMonths.fulfilled]: (state, action) => {
       state.data.entryMonths = action.payload;
       state.loading.entryMonths = STATE.FULFILLED;
+      resetReload(state);
+    },
+    [setReloadDashboard.pending]: (state, action) => {
+      state.reloadDashboard = true;
+      console.log('Setting Reload to ' + state.reloadDashboard);
     },
   },
 });
 
+const resetReload = (state) => {
+  const allLoaded = allLoadingCompleted(state);
+  if (state.reloadDashboard && allLoaded) {
+    state.reloadDashboard = false;
+    console.log('Resetting Reload to ' + state.reloadDashboard);
+  }
+};
+
+export const allLoadingCompleted = (state) => {
+  const loading = state.loading;
+  const loadings = [loading.cities, loading.categories, loading.descriptions, loading.transMonths, loading.entryMonths];
+  return _.every(loadings, (e) => e === STATE.FULFILLED);
+};
+
+export const anyLoadingFailed = (state) => {
+  const loading = state.loading;
+  const loadings = [loading.cities, loading.categories, loading.descriptions, loading.transMonths, loading.entryMonths];
+  return _.some(loadings, (e) => e === STATE.REJECTED);
+};
+
 export const selectStartup = (state) => state.startup;
 export const selectStartupData = (state) => state.startup.data;
+export const selectStartupReload = (state) => {
+  return {
+    reloadDashboard: state.startup.reloadDashboard,
+    loadingCompleted: allLoadingCompleted(state.startup),
+    loadingFailed: anyLoadingFailed(state.startup),
+  };
+};
 
 export default startupSlice.reducer;

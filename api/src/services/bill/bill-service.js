@@ -13,7 +13,7 @@ import { buildBillName } from 'utils/common-utils';
 export const closeBill = async ({ db }, data) => {
   const bill = await billModel.findById(db, data.id);
   // close only if the billDt is in the past.
-  if (moment().isSameOrBefore(bill.billDt, 'day')) {
+  if (moment().isBefore(bill.billDt, 'day')) {
     throw new Error('Bill cannot be closed before bill date.');
   }
 
