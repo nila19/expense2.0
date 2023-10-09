@@ -26,6 +26,7 @@ const buildInput = (data) => {
     transDt: data.paidDt,
     adhoc: false,
     adjust: true,
+    billPay: { pay: true, billId: data.bill.id },
   };
 };
 

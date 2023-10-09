@@ -39,6 +39,8 @@ const NumberFormatCustom = (props) => {
     <NumberFormat
       thousandSeparator
       isNumericString
+      decimalScale={2}
+      fixedDecimalScale
       prefix=''
       {...other}
       autoComplete='off'

@@ -27,6 +27,7 @@ import Button from 'components/CustomButtons/Button.js';
 import { ROUTE } from 'app/config';
 import { selectStartup, selectStartupData, setReloadDashboard } from 'features/startup/startupSlice';
 import { selectAppGlobal, setSelectedCity, setAccountsExpanded, setShowChartBlock } from 'features/appGlobalSlice';
+import { resetFilters } from 'features/dashboard/dashboardGlobalSlice';
 import { loadChart } from 'features/dashboard/chart/chartSlice';
 
 const buildCityIcon = (currency) => {
@@ -91,10 +92,16 @@ export const MenuBar = () => {
           <Button component={RouterLink} to='/dashboard' color='primary' size='sm'>
             <DashboardIcon /> Dashboard
           </Button>
-          <Button component={RouterLink} to='/summary' color='success' size='sm'>
+          <Button
+            component={RouterLink}
+            to='/summary'
+            onClick={() => dispatch(resetFilters())}
+            color='success'
+            size='sm'
+          >
             <FilterNoneIcon /> Monthly Summary
           </Button>
-          <Button component={RouterLink} to='/search' color='rose' size='sm'>
+          <Button component={RouterLink} to='/search' onClick={() => dispatch(resetFilters())} color='rose' size='sm'>
             <SearchIcon /> Search
           </Button>
         </Grid>

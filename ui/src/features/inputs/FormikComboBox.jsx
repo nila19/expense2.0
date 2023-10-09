@@ -38,8 +38,8 @@ const ComboBox = (props) => {
         classes={{
           option: classes.option,
         }}
-        autoComplete
-        autoHighlight
+        // autoComplete
+        // autoHighlight
         autoSelect
         options={options}
         getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}

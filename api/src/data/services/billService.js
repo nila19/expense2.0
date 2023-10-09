@@ -11,3 +11,7 @@ export const closeBill = (db, id, amount) => {
 export const addPayment = (db, id, balance, payment) => {
   return billModel.findOneAndUpdate(db, { id }, { $set: { balance: balance }, $push: { payments: payment } });
 };
+
+export const deletePayment = (db, id, balance) => {
+  return billModel.findOneAndUpdate(db, { id }, { $inc: { balance: balance }, $pop: { payments: 1 } });
+};

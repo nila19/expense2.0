@@ -23,7 +23,7 @@ const initialValues = memoize((adjust) => ({
     from: { id: null },
     to: { id: null },
   },
-  category: { id: null, name: null, adjust: adjust },
+  category: { id: adjust ? 0 : null, name: null },
   description: null,
   amount: null,
   transDt: null,
@@ -31,15 +31,12 @@ const initialValues = memoize((adjust) => ({
 }));
 
 const validationSchema = memoize(() =>
-  Yup.object({
+  Yup.object().shape({
     category: Yup.object({
-      id: Yup.number()
-        .nullable()
-        .when('adjust', {
-          is: false,
-          then: Yup.number().required('Required'),
-          otherwise: Yup.number().notRequired(),
-        }),
+      id: Yup.number().when('adjust', {
+        is: false,
+        then: Yup.number().required('Required'),
+      }),
     }),
     description: Yup.string().required('Required').trim().min(2, 'Min length'),
     transDt: Yup.string().required('Required'),
@@ -59,7 +56,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
     <div style={{ paddingBottom: '3px' }}>
       <Formik
         initialValues={initialValues(adjust)}
-        // validationSchema={validationSchema()}
+        validationSchema={validationSchema()}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           const category = values.category.id ? _.find(categories, { id: values.category.id }) : null;

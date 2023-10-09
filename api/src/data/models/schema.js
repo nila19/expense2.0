@@ -68,6 +68,12 @@ export const TransactionType = joi.object({
   status: joi.boolean(),
   tallied: joi.boolean(),
   tallyDt: joi.string().allow(null),
+  billPay: joi
+    .object({
+      pay: joi.boolean(),
+      billId: joi.number().positive().allow(null),
+    })
+    .allow(null),
 });
 
 const PaymentType = joi.object({

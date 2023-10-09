@@ -37,6 +37,7 @@ export const buildTranBasic = (data) => {
     status: true,
     tallied: false,
     tallyDt: null,
+    billPay: data.billPay,
   };
   return tran;
 };

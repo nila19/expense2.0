@@ -19,6 +19,12 @@ export const deleteExpense = async ({ db, transId }) => {
   if (tran.bill?.id) {
     await billService.incrementBillAmt(db, tran.bill.id, -tran.amount);
   }
+
+  // reset bill when bill-pay transaction is deleted
+  if (tran.billPay?.pay) {
+    await billService.deletePayment(db, tran.billPay.billId, tran.amount);
+  }
+
   await transactionModel.deleteOne(db, { id: transId });
 
   // undo lookup / summary tables for old values

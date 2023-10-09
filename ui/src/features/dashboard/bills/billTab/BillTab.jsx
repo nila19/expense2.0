@@ -102,25 +102,26 @@ export const BillTab = ({ paid, closed }) => {
   const [rowsPerPage, setRowsPerPage] = useState(COUNTS.DASHBOARD_BILLS);
   const [openEdit, setOpenEdit] = useState(false);
 
-  useEffect(() => {
-    if (page !== 0) {
-      setPage(0);
-    }
-  }, [accountFilter]);
+  useEffect(
+    () => {
+      if (page !== 0) {
+        setPage(0);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [accountFilter]
+  );
 
   console.log('Rendering Bills.. ' + paid + ' : ' + closed);
-  const filteredBills = useMemo(() => filterAndSortBills(bills, closed, paid, accountFilter), [
-    bills,
-    closed,
-    paid,
-    accountFilter,
-  ]);
+  const filteredBills = useMemo(
+    () => filterAndSortBills(bills, closed, paid, accountFilter),
+    [bills, closed, paid, accountFilter]
+  );
   const totalAmt = useMemo(() => getTotalAmount(filteredBills), [filteredBills]);
-  const billsForPage = useMemo(() => getSliceForPage(filteredBills, page, rowsPerPage), [
-    filteredBills,
-    page,
-    rowsPerPage,
-  ]);
+  const billsForPage = useMemo(
+    () => getSliceForPage(filteredBills, page, rowsPerPage),
+    [filteredBills, page, rowsPerPage]
+  );
 
   const handleBillFilter = (id) => {
     dispatch(setBillFilter(billFilter === id ? null : id));

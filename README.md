@@ -40,6 +40,10 @@ In the project directory, you can run:
 - `docker-compose -f docker-compose.prod.yml up --build --remove-orphans`
 - App runs under [http://localhost:80](http://localhost:80)
 
+- `docker login --username=balavigneswaran --password= <pwd>`
+- `docker push balavigneswaran/exp-api:2.7`
+- `docker push balavigneswaran/exp-ui:2.7`
+
 ## Database
 
 ### Dump data from DB
