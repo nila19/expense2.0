@@ -57,7 +57,13 @@ export const FormikDatePicker = (props) => {
       {...props}
       {...field}
       error={touched && error && true}
-      onChange={(date) => helpers.setValue(moment(date).format(format.YYYYMMDD))}
+      onChange={(date) => {
+        const value = moment(date).format(format.YYYYMMDD);
+        helpers.setValue(value);
+        if (props.onFieldChange) {
+          props.onFieldChange(field.name, value);
+        }
+      }}
     />
   );
 };

@@ -16,7 +16,6 @@ const expenseEditSlice = createSlice({
   reducers: {
     editExpense: (state, action) => {
       let expense = _.cloneDeep(action.payload);
-      expense = _.set(expense, 'category.adjust', expense.adjust);
       expense = _.set(expense, 'bill.billed', expense.bill && expense.bill.id != null);
       return expense;
     },

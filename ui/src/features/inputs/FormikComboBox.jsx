@@ -69,7 +69,14 @@ export const FormikComboBox = (props) => {
       {...field}
       error={error && true}
       options={props.options}
-      onChange={(e, option) => helpers.setValue(option ? (option.key ? option.key : option) : null)}
+      value={props.value}
+      onChange={(e, option) => {
+        const value = option ? (option.key ? option.key : option) : null;
+        helpers.setValue(value);
+        if (props.onFieldChange) {
+          props.onFieldChange(field.name, value);
+        }
+      }}
     />
   );
 };
