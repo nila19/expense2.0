@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import memoize from 'memoize-one';
 
 import _ from 'lodash';
 
@@ -27,43 +25,14 @@ import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js'
 import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from 'features/inputs';
 import { buildCategoriesOptions, buildAccountOptions, buildBillOptions } from 'features/utils';
 
+import { editSchema } from 'features/utils';
+
 import { selectStartupData } from 'features/startup/startupSlice';
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 import { selectExpenseEdit, resetForm, saveEditExpense } from 'features/search/expenseEdit/expenseEditSlice';
 
 const useStyles = makeStyles(styles);
-
-const validationSchema = memoize(() =>
-  Yup.object({
-    category: Yup.object({
-      id: Yup.number()
-        .nullable()
-        .when('adjust', {
-          is: false,
-          then: Yup.number().required('Required'),
-          otherwise: Yup.number().notRequired(),
-        }),
-    }).nullable(),
-    bill: Yup.object({
-      id: Yup.number()
-        .nullable()
-        .when('billed', {
-          is: true,
-          then: Yup.number().required('Required'),
-          otherwise: Yup.number().notRequired(),
-        }),
-    }).nullable(),
-    description: Yup.string().required('Required').trim().min(2, 'Min length'),
-    transDt: Yup.string().required('Required'),
-    amount: Yup.number().required('Required').moreThan(0, 'Must be > 0'),
-    accounts: Yup.object({
-      from: Yup.object({
-        id: Yup.number().required('Required'),
-      }),
-    }),
-  })
-);
 
 export const ExpenseEditForm = ({
   expense,
@@ -84,7 +53,7 @@ export const ExpenseEditForm = ({
   return (
     <Formik
       initialValues={expense}
-      validationSchema={validationSchema()}
+      validationSchema={editSchema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
         let expense = _.cloneDeep(values);
@@ -100,7 +69,7 @@ export const ExpenseEditForm = ({
         handleEditSave(expense);
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, handleSubmit }) => (
         <Form>
           <GridContainer>
             <GridItem xs={12} sm={12}>
@@ -163,7 +132,7 @@ export const ExpenseEditForm = ({
             </GridItem>
             <GridItem xs={12} sm={12} md={2}>
               <div style={{ marginTop: '20px' }}>
-                <Button color='primary' type='submit' disabled={isSubmitting}>
+                <Button color='primary' type='button' disabled={isSubmitting} onClick={handleSubmit}>
                   <SaveIcon />
                 </Button>
               </div>

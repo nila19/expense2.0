@@ -1,8 +1,6 @@
 import React, { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import memoize from 'memoize-one';
 
 import _ from 'lodash';
 
@@ -13,6 +11,7 @@ import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';
 import Button from 'components/CustomButtons/Button.js';
 
+import { entrySchema } from 'features/utils';
 import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from 'features/inputs';
 
 import { selectEntry, resetEntry, addExpense } from 'features/dashboard/entry/entrySlice';
@@ -26,29 +25,9 @@ import {
   setAdhoc,
 } from 'features/dashboard/entry/entrySlice';
 
-const validationSchema = memoize(() =>
-  Yup.object().shape({
-    category: Yup.object({
-      id: Yup.number().when('adjust', {
-        is: false,
-        then: Yup.number().required('Required'),
-      }),
-    }),
-    description: Yup.string().required('Required').trim().min(2, 'Min length'),
-    transDt: Yup.string().required('Required'),
-    amount: Yup.number().required('Required').notOneOf([0]),
-    accounts: Yup.object({
-      from: Yup.object({
-        id: Yup.number().required('Required'),
-      }),
-    }),
-  })
-);
-
 export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions, categoriesOptions }) => {
   const dispatch = useDispatch();
 
-  // TODO
   const { accounts, category, description, amount, transDt, adhoc } = useSelector(selectEntry);
 
   const initialValues = (adjust) => ({
@@ -76,7 +55,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
     <div style={{ paddingBottom: '3px' }}>
       <Formik
         initialValues={initialValues(adjust)}
-        validationSchema={validationSchema()}
+        validationSchema={entrySchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           const category = values.category.id ? _.find(categories, { id: values.category.id }) : null;
@@ -86,7 +65,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
           dispatch(resetEntry());
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, handleSubmit }) => (
           <Form>
             <GridContainer>
               <GridItem xs={12} sm={12} md={4}>
@@ -94,7 +73,6 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                   name='accounts.from.id'
                   id='fromAcctId'
                   label='From Account'
-                  value={accounts.from.id}
                   onFieldChange={handleFrom}
                   component={FormikComboBox}
                   options={accountOptions}
@@ -106,7 +84,6 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                     name='accounts.to.id'
                     id='toAcctId'
                     label='To Account'
-                    value={accounts.to.id}
                     onFieldChange={handleTo}
                     component={FormikComboBox}
                     options={accountOptions}
@@ -116,7 +93,6 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                     name='category.id'
                     id='categoryId'
                     label='Category'
-                    value={category.id}
                     onFieldChange={handleCategory}
                     component={FormikComboBox}
                     options={categoriesOptions}
@@ -129,7 +105,6 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                   id='amount'
                   label='Amount'
                   labelWidth={60}
-                  value={amount}
                   onFieldChange={handleAmount}
                   component={FormikAmount}
                 />
@@ -142,7 +117,6 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                   name='description'
                   id='description'
                   label='Description'
-                  value={description}
                   onFieldChange={handleDesc}
                   component={FormikComboBox}
                   options={descriptions}
@@ -153,7 +127,6 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                   name='transDt'
                   id='transDt'
                   label='Date'
-                  value={transDt}
                   onFieldChange={handleTransDt}
                   component={FormikDatePicker}
                 />
@@ -165,7 +138,6 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                       name='adhoc'
                       id='adhoc'
                       title='Adhoc'
-                      //value={adhoc}
                       onFieldChange={handleAdhoc}
                       component={FormikCheckBox}
                     />
@@ -174,7 +146,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
               </GridItem>
               <GridItem xs={12} sm={12} md={2}>
                 <div style={{ marginTop: '23px' }}>
-                  <Button color='success' type='submit' disabled={isSubmitting}>
+                  <Button color='success' type='button' disabled={isSubmitting} onClick={handleSubmit}>
                     <AddIcon />
                   </Button>
                 </div>

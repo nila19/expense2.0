@@ -3,6 +3,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 import BigNumber from 'bignumber.js';
 import memoize from 'memoize-one';
+import * as Yup from 'yup';
 
 export const getSliceForPage = memoize((data, page, rowsPerPage) => {
   const start = page * rowsPerPage;
@@ -83,3 +84,43 @@ export const format = {
   AMOUNT_SYMBOL: '$ 0,0.00',
   AMOUNT_SYMBOL_2: '$ 0,0',
 };
+
+export const entrySchema = Yup.object().shape({
+  category: Yup.object({
+    id: Yup.number().when('adjust', {
+      is: false,
+      then: Yup.number().required('Required'),
+    }),
+  }),
+  description: Yup.string().required('Required').trim().min(2, 'Min length'),
+  transDt: Yup.string().required('Required'),
+  amount: Yup.number().required('Required').notOneOf([0]),
+  accounts: Yup.object({
+    from: Yup.object({
+      id: Yup.number().required('Required'),
+    }),
+  }),
+});
+
+export const editSchema = Yup.object({
+  category: Yup.object({
+    id: Yup.number().when('adjust', {
+      is: false,
+      then: Yup.number().required('Required'),
+    }),
+  }),
+  bill: Yup.object({
+    id: Yup.number().when('billed', {
+      is: true,
+      then: Yup.number().required('Required'),
+    }),
+  }),
+  description: Yup.string().required('Required').trim().min(2, 'Min length'),
+  transDt: Yup.string().required('Required'),
+  amount: Yup.number().required('Required').notOneOf([0]),
+  accounts: Yup.object({
+    from: Yup.object({
+      id: Yup.number().required('Required'),
+    }),
+  }),
+});
