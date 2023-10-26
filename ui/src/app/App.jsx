@@ -5,8 +5,9 @@ import { Route, Routes } from 'react-router-dom';
 import Dashboard from 'features/dashboard/Dashboard';
 import Search from 'features/search/Search';
 import Summary from 'features/summary/Summary';
+import Admin from 'features/admin/Admin';
 
-import _ from 'lodash';
+// import _ from 'lodash';
 
 import 'app/app.css';
 
@@ -38,6 +39,7 @@ const FullApp = () => {
         <Route path={ROUTE.DASHBOARD} element={<Dashboard />} />
         <Route path={ROUTE.SUMMARY} element={<Summary />} />
         <Route path={ROUTE.SEARCH} element={<Search />} />
+        <Route path={ROUTE.ADMIN} element={<Admin />} />
         {/* Removed lazy loading since it's not working with React-Router-6 */}
         {/* <Route path={ROUTE.SUMMARY}>
           <WithSuspense title='Expense - Summary' render={() => <Summary />} />

@@ -8,8 +8,8 @@ export const findForCity = async (db, cityId, open) => {
   return billModel.findForCity(db, cityId, open);
 };
 
-export const addBill = async (db) => {
-  return billModel.insertOne(db);
+export const addBill = async (db, bill) => {
+  return billModel.insertOne(db, bill);
 };
 
 export const incrementBillAmt = (db, id, amount) => {

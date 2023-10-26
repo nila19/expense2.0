@@ -3,6 +3,7 @@
 import _ from 'lodash';
 
 import { tallyAccount as _tallyAccount } from 'services/account/tally-service';
+import { findAll as _findAll, addAcct as _addAcct, modifyAcct as _modifyAcct } from 'services/account/account-service';
 
 export const tallyAccount = async (req, resp) => {
   const parms = buildParm(req);
@@ -10,6 +11,39 @@ export const tallyAccount = async (req, resp) => {
   try {
     await _tallyAccount(parms, acctId);
     return resp.json({ code: 0 });
+  } catch (error) {
+    parms.log.error(error);
+    return resp.status(500).send(error.message);
+  }
+};
+
+export const findAll = async (req, resp) => {
+  const parms = buildParm(req);
+  try {
+    const acct = await _findAll(parms, req.body);
+    return resp.json({ code: 0, data: acct });
+  } catch (error) {
+    parms.log.error(error);
+    return resp.status(500).send(error.message);
+  }
+};
+
+export const addAccount = async (req, resp) => {
+  const parms = buildParm(req);
+  try {
+    const acct = await _addAcct(parms, req.body);
+    return resp.json({ code: 0, data: acct });
+  } catch (error) {
+    parms.log.error(error);
+    return resp.status(500).send(error.message);
+  }
+};
+
+export const modifyAccount = async (req, resp) => {
+  const parms = buildParm(req);
+  try {
+    const acct = await _modifyAcct(parms, req.body);
+    return resp.json({ code: 0, data: acct });
   } catch (error) {
     parms.log.error(error);
     return resp.status(500).send(error.message);

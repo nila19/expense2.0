@@ -43,6 +43,17 @@ export const buildAdhocOptions = memoize(() => {
   return ['Y', 'N'].map((e) => ({ key: e, label: e }));
 });
 
+export const buildIconOptions = memoize(() => {
+  return ['savings', 'account_balance', 'credit_card', 'attach_money', 'museum'].map((e) => ({
+    key: e,
+    label: e,
+  }));
+});
+
+export const buildColorOptions = memoize(() => {
+  return ['red', 'blue', 'green'].map((e) => ({ key: e, label: e }));
+});
+
 export const prepareChartData = (chartData) => {
   const { labels, regulars, adhocs, totals } = chartData;
   return labels
@@ -123,4 +134,17 @@ export const editSchema = Yup.object({
       id: Yup.number().required('Required'),
     }),
   }),
+});
+
+export const acctSchema = Yup.object().shape({
+  name: Yup.string().required('Required').trim().min(2, 'Min length'),
+  cash: Yup.string().required('Required'),
+  billed: Yup.string().required('Required'),
+  icon: Yup.string().required('Required'),
+  color: Yup.string().required('Required'),
+  seq: Yup.number().required('Required'),
+  closingDay: Yup.number().required('Required'),
+  dueDay: Yup.number().required('Required'),
+  balance: Yup.number().required('Required'),
+  active: Yup.string().required('Required'),
 });

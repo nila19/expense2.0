@@ -33,7 +33,34 @@ export const findAll = async (db) => {
 };
 
 export const findForCity = async (db, cityId) => {
+  return accountModel.findForCity(db, cityId, true);
+};
+
+export const findAllForCity = async (db, cityId) => {
   return accountModel.findForCity(db, cityId);
+};
+
+export const addAcct = async (db, cityId, acct) => {
+  return accountModel.insertOne(db, { ...acct, cityId: cityId });
+};
+
+export const modifyAcct = (db, cityId, acct) => {
+  const filter = { cityId: cityId, id: acct.id };
+  const mod = {
+    $set: {
+      name: acct.name,
+      cash: acct.cash,
+      billed: acct.billed,
+      icon: acct.icon,
+      color: acct.color,
+      seq: acct.seq,
+      closingDay: acct.closingDay,
+      dueDay: acct.dueDay,
+      balance: acct.balance,
+      active: acct.active,
+    },
+  };
+  return accountModel.findOneAndUpdate(db, filter, mod);
 };
 
 const _injectLastBill = async (db, acct) => {
@@ -47,5 +74,3 @@ const _injectOpenBill = async (db, acct) => {
     acct.bills.open = await billService.findById(db, acct.bills.open.id);
   }
 };
-
-// export default { updateTallyInfo };

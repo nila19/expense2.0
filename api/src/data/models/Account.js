@@ -12,8 +12,10 @@ class AccountModel extends Model {
     this.schema = AccountType;
   }
 
-  findForCity(db, cityId) {
-    return this.find(db, { cityId: cityId, active: true }, { sort: { seq: 1 } });
+  findForCity(db, cityId, active) {
+    let filter = { cityId: cityId };
+    filter = active ? { ...filter, active: true } : filter;
+    return this.find(db, filter, { sort: { seq: 1 } });
   }
 
   findById(db, id) {

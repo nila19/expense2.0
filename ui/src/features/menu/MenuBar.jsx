@@ -21,6 +21,7 @@ import EuroIcon from '@material-ui/icons/Euro';
 import AddIcon from '@material-ui/icons/Add';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 import Button from 'components/CustomButtons/Button.js';
 
@@ -103,6 +104,9 @@ export const MenuBar = () => {
           </Button>
           <Button component={RouterLink} to='/search' onClick={() => dispatch(resetFilters())} color='rose' size='sm'>
             <SearchIcon /> Search
+          </Button>
+          <Button component={RouterLink} to='/admin' onClick={() => dispatch(resetFilters())} color='warning' size='sm'>
+            <SupervisorAccountIcon /> Admin
           </Button>
         </Grid>
         <Grid container item justifyContent='flex-end' lg={6} spacing={2}>

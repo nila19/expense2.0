@@ -15,7 +15,12 @@ export const API = {
     ACCOUNTS: '/app/startup/accounts',
     BILLS: '/app/startup/bills',
   },
-  ACCOUNT: { TALLY: '/app/account/tally' },
+  ACCOUNT: {
+    FIND_ALL: '/app/account/findAll',
+    ADD: '/app/account/add',
+    MODIFY: '/app/account/modify',
+    TALLY: '/app/account/tally',
+  },
   BILL: { CLOSE: '/app/bill/closeBill', PAY: '/app/bill/payBill' },
   EXPENSE: {
     ADD: '/app/expense/add',
@@ -35,6 +40,7 @@ export const ROUTE = {
   DASHBOARD: '/dashboard',
   SUMMARY: '/summary',
   SEARCH: '/search',
+  ADMIN: '/admin',
 };
 
 export const SOCKETS = {
@@ -48,6 +54,7 @@ export const COUNTS = {
   SEARCH_EXPENSES: 21,
   MESSAGES: 3,
   SUMMARY_COLS: 14,
+  ADMIN_ACCOUNTS: 10,
 };
 
 export const COLOR = {
