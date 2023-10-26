@@ -10,8 +10,8 @@ export const addAccount = createAsyncThunk('admin/addAccount', async (payload, t
   await axios().post(API.ACCOUNT.ADD, { cityId: selectedCity, ...payload }, { snackbar: 'Account addition' });
 });
 
-const addFormSlice = createSlice({
-  name: 'addForm',
+const addAccountSlice = createSlice({
+  name: 'addAccount',
   initialState: {
     name: null,
     cash: null,
@@ -34,7 +34,7 @@ const addFormSlice = createSlice({
   },
 });
 
-export const selectAddForm = (state) => state.admin.addForm;
+export const selectAddAccount = (state) => state.admin.addAccount;
 
-export const { setName, setCash } = addFormSlice.actions;
-export default addFormSlice.reducer;
+export const { setName, setCash } = addAccountSlice.actions;
+export default addAccountSlice.reducer;

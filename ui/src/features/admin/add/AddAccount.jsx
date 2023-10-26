@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 // import memoize from 'memoize-one';
 
@@ -19,9 +19,9 @@ import { FormikTextField } from 'features/inputs';
 import { FormikAmount, FormikCheckBox, FormikComboBox } from 'features/inputs';
 import { buildIconOptions, buildColorOptions } from 'features/utils';
 
-import { addAccount } from 'features/admin/form/addFormSlice';
+import { addAccount } from 'features/admin/add/addAccountSlice';
 
-export const AddForm = memo(() => {
+export const AddAccount = memo(() => {
   const dispatch = useDispatch();
 
   const iconOptions = useMemo(() => buildIconOptions(), []);

@@ -1,7 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import addFormReducer from 'features/admin/form/addFormSlice';
+import addAccountReducer from 'features/admin/add/addAccountSlice';
+import accountsReducer from 'features/admin/list/accountsSlice';
 
 export default combineReducers({
-  addForm: addFormReducer,
+  addAccount: addAccountReducer,
+  accounts: accountsReducer,
 });
