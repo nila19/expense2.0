@@ -5,7 +5,8 @@ import _ from 'lodash';
 import { config } from 'config/config';
 import { MONTH_TYPE } from 'config/constants';
 
-import { accountModel, billModel, categoryModel, cityModel, descriptionModel, monthModel } from 'data/models';
+import { categoryModel, cityModel, descriptionModel, monthModel } from 'data/models';
+import { accountService, billService } from 'data/services';
 
 import { buildMonthsList } from 'utils/month-utils';
 
@@ -14,7 +15,7 @@ export const connectToMongoDB = async (db, log) => {
     log.info('MongoDB connection not available...  => ' + config.dburl);
     return { code: config.error };
   }
-  const records = await accountModel.findAll(db);
+  const records = await accountService.findAll(db);
   return { code: 0, data: { mongoEnv: config.env, mongoCount: records.length } };
 };
 
@@ -48,9 +49,9 @@ export const getTransMonths = async (db, cityId) => {
 };
 
 export const getAccounts = async (db, cityId) => {
-  return await accountModel.findForCity(db, cityId);
+  return await accountService.findForCity(db, cityId);
 };
 
 export const getBills = async (db, cityId) => {
-  return await billModel.findForCity(db, cityId);
+  return await billService.findForCity(db, cityId);
 };

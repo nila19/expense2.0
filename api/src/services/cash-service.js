@@ -1,14 +1,13 @@
 'use strict';
 
-import { accountModel, transactionModel } from 'data/models';
 import { accountService, transactionService } from 'data/services';
 
 // transfer cash from one account to another
 export const transferCash = async ({ db, amount, from, to, seq }) => {
-  const fromAcct = await accountModel.findById(db, from.id);
+  const fromAcct = await accountService.findById(db, from.id);
   await updateAccount(db, fromAcct, amount * -1, seq);
 
-  const toAcct = await accountModel.findById(db, to.id);
+  const toAcct = await accountService.findById(db, to.id);
   await updateAccount(db, toAcct, amount, seq);
 };
 
@@ -27,7 +26,7 @@ const updateAccount = async (db, account, amount, seq) => {
 
 // step 2.1.1 : find all future trans post this trans & adjust the ac balances.
 const updateTranAcBalances = async (db, account, amount, seq) => {
-  const trans = await transactionModel.findForAcct(db, account.cityId, account.id);
+  const trans = await transactionService.findForAcct(db, account.cityId, account.id);
   for (const tran of trans) {
     // if seq is less, then it is an earlier transaction, ignore..
     if (tran.seq > seq) {

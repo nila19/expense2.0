@@ -2,7 +2,6 @@
 
 import numeral from 'numeral';
 
-import { transactionModel } from 'data/models';
 import { billService, transactionService } from 'data/services';
 
 import { transferCash } from 'services/cash-service';
@@ -13,7 +12,7 @@ import { checkCityEditable, checkAccountsActive, fetchAccounts } from 'utils/com
 
 export const modifyExpense = async ({ db }, data) => {
   data.amount = numeral(data.amount).value();
-  const oldTran = await transactionModel.findById(db, data.id);
+  const oldTran = await transactionService.findById(db, data.id);
 
   await checkCityEditable(db, oldTran.cityId);
   const accounts = await fetchAccounts(db, data.accounts);
@@ -119,7 +118,7 @@ const calcTransAcctBalance = async (db, tran, acct, cash) => {
   if (!acct.id) {
     return;
   }
-  const prev = await transactionModel.findPrevious(db, tran.cityId, acct.id, tran.seq);
+  const prev = await transactionService.findPrevious(db, tran.cityId, acct.id, tran.seq);
   if (acct.id === prev.accounts.from.id) {
     acct.balanceBf = prev.accounts.from.balanceAf;
   } else if (acct.id === prev.accounts.to.id) {

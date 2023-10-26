@@ -6,11 +6,11 @@ import moment from 'moment';
 import { config } from 'config/config';
 import { FORMAT } from 'config/constants';
 
-import { transactionModel } from 'data/models';
+import { transactionService } from 'data/services';
 
 export const doSearch = async (db, form) => {
   const filter = buildSearchFilter(form);
-  return await transactionModel.findForSearch(db, filter, form.allRecords);
+  return await transactionService.findForSearch(db, filter, form.allRecords);
 };
 
 const buildSearchFilter = (form) => {

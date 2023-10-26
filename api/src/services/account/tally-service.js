@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { FORMAT, COLLECTION } from 'config/constants';
 
-import { accountModel, sequenceModel, tallyHistoryModel } from 'data/models';
+import { sequenceModel, tallyHistoryModel } from 'data/models';
 import { accountService, transactionService } from 'data/services';
 
 import { checkCityEditable } from 'utils/common-utils';
@@ -12,7 +12,7 @@ import { checkCityEditable } from 'utils/common-utils';
 export const tallyAccount = async ({ db }, acctId) => {
   const tallyDt = moment().format(FORMAT.YYYYMMDDHHmmss);
 
-  const account = await accountModel.findById(db, acctId);
+  const account = await accountService.findById(db, acctId);
   await checkCityEditable(db, account.cityId);
 
   // update account with last tallied info

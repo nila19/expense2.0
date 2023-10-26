@@ -2,7 +2,8 @@
 
 import _ from 'lodash';
 
-import { billModel, cityModel } from 'data/models';
+import { cityModel } from 'data/models';
+import { billService } from 'data/services';
 
 import { closeBill } from 'services/bill/bill-service';
 
@@ -10,7 +11,7 @@ import { closeBill } from 'services/bill/bill-service';
 export const executeBillClosure = async (parms) => {
   const stats = { closed: 0 };
   const city = await cityModel.findDefault(parms.db);
-  const bills = await billModel.findForCityOpen(parms.db, city.id);
+  const bills = await billService.findForCity(parms.db, city.id, true);
 
   for (const bill of bills) {
     try {

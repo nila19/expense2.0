@@ -4,7 +4,8 @@ import _ from 'lodash';
 
 import { MONTH_TYPE } from 'config/constants';
 
-import { categoryModel, monthModel, transactionModel } from 'data/models';
+import { categoryModel, monthModel } from 'data/models';
+import { transactionService } from 'data/services';
 
 import { buildMonthsList } from 'utils/month-utils';
 
@@ -25,7 +26,7 @@ const getDataFromDB = async ({ db, log, cityId, regular, adhoc }) => {
   const months = transMonths.map((e) => e.id);
   data.months = buildMonthsList(months, log);
 
-  data.trans = await transactionModel.findForMonthlySummary(db, cityId, regular, adhoc);
+  data.trans = await transactionService.findForMonthlySummary(db, cityId, regular, adhoc);
   return data;
 };
 

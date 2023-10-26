@@ -5,7 +5,8 @@ import moment from 'moment';
 
 import { FORMAT, MONTH_TYPE } from 'config/constants';
 
-import { cityModel, monthModel, descriptionModel, transactionModel, summaryModel } from 'data/models';
+import { cityModel, monthModel, descriptionModel, summaryModel } from 'data/models';
+import { transactionService } from 'data/services';
 
 import { buildSummary } from 'services/conversion/summary-service';
 
@@ -72,7 +73,7 @@ const buildMapOfCounts = async (db) => {
   const cities = await cityModel.findAll(db);
   const promises = cities.map(async (city) => {
     const cityMap = { descriptions: {}, transMonths: {}, entryMonths: {} };
-    const trans = await transactionModel.findForCity(db, city.id);
+    const trans = await transactionService.findForCity(db, city.id);
     trans.forEach((tran) => {
       incrementCount(cityMap.descriptions, tran.description);
       incrementCount(cityMap.entryMonths, tran.entryMonth);
@@ -94,10 +95,10 @@ const incrementCount = (map, id) => {
 export const addYears = async (db) => {
   const cities = await cityModel.findAll(db);
   const p0 = cities.map(async (city) => {
-    const trans = await transactionModel.findForCity(db, city.id);
+    const trans = await transactionService.findForCity(db, city.id);
     const p1 = trans.map(async ({ id, entryMonth, transMonth }) => {
       const mod = { $set: { entryYear: year(entryMonth), transYear: year(transMonth) } };
-      await transactionModel.findOneAndUpdate(db, { id }, mod);
+      await transactionService.findOneAndUpdate(db, { id }, mod);
     });
     await Promise.all(p1);
     console.log('Processed city -> ' + city.id);

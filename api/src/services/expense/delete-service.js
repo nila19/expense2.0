@@ -1,7 +1,6 @@
 'use strict';
 
-import { transactionModel } from 'data/models';
-import { billService } from 'data/services';
+import { billService, transactionService } from 'data/services';
 
 import { transferCash } from 'services/cash-service';
 import { removeFromLookups } from 'services/lookup-services';
@@ -9,7 +8,7 @@ import { removeFromLookups } from 'services/lookup-services';
 import { checkCityEditable, checkAccountsActive, fetchAccounts } from 'utils/common-utils';
 
 export const deleteExpense = async ({ db, transId }) => {
-  const tran = await transactionModel.findById(db, transId);
+  const tran = await transactionService.findById(db, transId);
   await checkCityEditable(db, tran.cityId);
   const { from, to } = await fetchAccounts(db, tran.accounts);
   checkAccountsActive({ from, to });
@@ -25,7 +24,7 @@ export const deleteExpense = async ({ db, transId }) => {
     await billService.deletePayment(db, tran.billPay.billId, tran.amount);
   }
 
-  await transactionModel.deleteOne(db, { id: transId });
+  await transactionService.deleteTransaction(db, { id: transId });
 
   // undo lookup / summary tables for old values
   await removeFromLookups(db, tran);

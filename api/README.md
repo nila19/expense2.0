@@ -19,7 +19,8 @@ In the project directory, you can run:
 
 - Start `mongodb` in local machine
 - Uncomment the environment properties in `.env`
-- Run `Reify All` or `Reify One` debug options
+- Run `Launch via NPM` debug option
+<!-- - Run `Reify All` or `Reify One` debug options -->
 
 ## Build Docker image
 

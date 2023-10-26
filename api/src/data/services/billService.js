@@ -1,5 +1,17 @@
 import { billModel } from 'data/models';
 
+export const findById = async (db, id) => {
+  return billModel.findById(db, id);
+};
+
+export const findForCity = async (db, cityId, open) => {
+  return billModel.findForCity(db, cityId, open);
+};
+
+export const addBill = async (db) => {
+  return billModel.insertOne(db);
+};
+
 export const incrementBillAmt = (db, id, amount) => {
   return billModel.findOneAndUpdate(db, { id }, { $inc: { amount: amount, balance: amount } });
 };

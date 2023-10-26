@@ -5,27 +5,27 @@ import moment from 'moment';
 
 import { COLLECTION, FORMAT } from 'config/constants';
 
-import { accountModel, billModel, sequenceModel, transactionModel } from 'data/models';
-import { accountService, billService } from 'data/services';
+import { sequenceModel } from 'data/models';
+import { accountService, billService, transactionService } from 'data/services';
 
 import { buildBillName } from 'utils/common-utils';
 
 export const closeBill = async ({ db }, data) => {
-  const bill = await billModel.findById(db, data.id);
+  const bill = await billService.findById(db, data.id);
   // close only if the billDt is in the past.
   if (moment().isBefore(bill.billDt, 'day')) {
     throw new Error('Bill cannot be closed before bill date.');
   }
 
   await closeOldBill(db, bill);
-  const acct = await accountModel.findById(db, bill.account.id);
+  const acct = await accountService.findById(db, bill.account.id);
   await createNewBill(db, bill.cityId, acct);
 };
 
 // step 2.2: close each bill.
 const closeOldBill = async (db, bill) => {
-  const acct = await accountModel.findById(db, bill.account.id);
-  const trans = await transactionModel.findForBill(db, bill.cityId, bill.id);
+  const acct = await accountService.findById(db, bill.account.id);
+  const trans = await transactionService.findForBill(db, bill.cityId, bill.id);
   let totalAmt = 0;
   trans.forEach((tran) => (totalAmt += tran.amount));
   totalAmt = acct.cash ? totalAmt * -1 : totalAmt;
@@ -39,12 +39,12 @@ const closeOldBill = async (db, bill) => {
 const createNewBill = async (db, cityId, ac) => {
   // use default id of -1, if the bill obj is null.
   const billId = ac.bills && ac.bills.open ? ac.bills.open.id : -1;
-  const bill = await billModel.findById(db, billId);
+  const bill = await billService.findById(db, billId);
 
   if (isNewBillNeeded(ac, bill)) {
     const seq = await sequenceModel.findNextSeq(db, cityId, COLLECTION.BILL);
     const newBill = buildEmptyBill(cityId, ac, seq);
-    await billModel.insertOne(db, newBill);
+    await billService.addBill(db, newBill);
     await accountService.updateOpenBill(db, ac.id, { id: newBill.id, name: newBill.name });
   }
 };

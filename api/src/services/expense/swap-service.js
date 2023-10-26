@@ -1,7 +1,6 @@
 'use strict';
 
-import { accountModel, transactionModel } from 'data/models';
-import { transactionService } from 'data/services';
+import { accountService, transactionService } from 'data/services';
 
 import { checkCityEditable } from 'utils/common-utils';
 
@@ -25,14 +24,14 @@ const loadBothTrans = async (db, firstId, secondId, accounts, balances) => {
 };
 
 const fetchTran = async (db, accounts, balances, tranId) => {
-  const tran = await transactionModel.findById(db, tranId);
+  const tran = await transactionService.findById(db, tranId);
   await loadAccount(db, accounts, balances, tran.accounts.from.id);
   await loadAccount(db, accounts, balances, tran.accounts.to.id);
   return tran;
 };
 
 const loadAccount = async (db, accounts, balances, acctId) => {
-  const account = await accountModel.findById(db, acctId);
+  const account = await accountService.findById(db, acctId);
   accounts[account.id] = account;
   balances[account.id] = 0;
 };

@@ -12,14 +12,10 @@ class BillModel extends Model {
     this.schema = BillType;
   }
 
-  findForCity(db, cityId) {
-    const filter = { cityId: cityId };
+  findForCity(db, cityId, open) {
+    let filter = { cityId: cityId };
+    filter = open ? { ...filter, closed: false } : filter;
     return this.find(db, filter, { projection: { _id: 0 }, sort: { billDt: -1 } });
-  }
-
-  // used by billCloser
-  findForCityOpen(db, cityId) {
-    return this.find(db, { cityId: cityId, closed: false }, { projection: { _id: 0 }, sort: { billDt: -1 } });
   }
 
   findOneAndUpdate(db, filter, mod, options) {

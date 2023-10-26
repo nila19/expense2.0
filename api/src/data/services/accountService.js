@@ -1,4 +1,5 @@
-import { accountModel, billModel } from 'data/models';
+import { accountModel } from 'data/models';
+import { billService } from 'data/services';
 
 export const updateTallyInfo = (db, account, tallyDt) => {
   return accountModel.findOneAndUpdate(
@@ -27,15 +28,23 @@ export const findById = async (db, id) => {
   return acct;
 };
 
+export const findAll = async (db) => {
+  return accountModel.findAll(db);
+};
+
+export const findForCity = async (db, cityId) => {
+  return accountModel.findForCity(db, cityId);
+};
+
 const _injectLastBill = async (db, acct) => {
-  if (acct.billed && acct.bills.last?.id) {
-    acct.bills.last = await billModel.findById(db, acct.bills.last.id);
+  if (acct && acct.billed && acct.bills.last?.id) {
+    acct.bills.last = await billService.findById(db, acct.bills.last.id);
   }
 };
 
 const _injectOpenBill = async (db, acct) => {
-  if (acct.billed && acct.bills.open?.id) {
-    acct.bills.open = await billModel.findById(db, acct.bills.open.id);
+  if (acct && acct.billed && acct.bills.open?.id) {
+    acct.bills.open = await billService.findById(db, acct.bills.open.id);
   }
 };
 
