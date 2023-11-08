@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 
 import { BACKEND } from 'app/config';
 
-import { createAccount, updateAccount } from 'features/dashboard/accounts/accountSlice';
+import { createAccount, updateAccount } from 'features/accounts/accountSlice';
 import { createBill, updateBill } from 'features/dashboard/bills/billTab/billTabSlice';
 import { createExpense, updateExpense, dropExpense } from 'features/search/expenses/expenseSlice';
 

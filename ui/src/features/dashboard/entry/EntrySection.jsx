@@ -12,11 +12,11 @@ import { EntryTab } from 'features/dashboard/entry/EntryTab';
 import { buildCategoriesOptions, buildAccountOptions } from 'features/utils';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountSlice';
 
 export const EntrySection = memo(() => {
   const { categories, descriptions } = useSelector(selectStartupData);
-  const accounts = useSelector(selectAccounts);
+  const { accounts } = useSelector(selectAccounts);
 
   const accountOptions = useMemo(() => buildAccountOptions(accounts), [accounts]);
   const categoriesOptions = useMemo(() => buildCategoriesOptions(categories), [categories]);

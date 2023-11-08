@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import classnames from 'classnames';
@@ -27,12 +26,12 @@ import taskStyles from 'assets/jss/material-dashboard-react/components/tasksStyl
 
 import { COLOR } from 'app/config';
 import { PAGINATION_BLOCK } from 'app/constants';
-import { sortAccounts } from 'features/admin/list/accountUtils';
 import { ActionButton } from 'features/inputs';
 import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
 import { formatAmt, getSliceForPage } from 'features/utils';
 
-import { loadAccounts, modifyAccount, selectAccounts } from 'features/admin/list/accountsSlice';
+import { sortAccounts } from 'features/accounts/accountUtils';
+import { modifyAccount, selectAccounts } from 'features/accounts/accountSlice';
 
 const headers = [
   <TouchAppIcon style={{ fontSize: 18 }} />,
@@ -59,16 +58,12 @@ export const AccountsSection = ({ rowsPerPage, setRowsPerPage }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(loadAccounts());
-  }, [dispatch]);
-
-  const { data, loading } = useSelector(selectAccounts);
+  const { allAccounts, loading } = useSelector(selectAccounts);
 
   const [page, setPage] = useState(0);
   const [openEdit, setOpenEdit] = useState(false);
 
-  const acctsSorted = sortAccounts(data);
+  const acctsSorted = sortAccounts(allAccounts);
   const accountsForPage = getSliceForPage(acctsSorted, page, rowsPerPage);
 
   const handleChangeRowsPerPage = (event) => {

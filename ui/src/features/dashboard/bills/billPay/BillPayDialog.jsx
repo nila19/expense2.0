@@ -26,7 +26,7 @@ import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js'
 import { CustomTextField, FormikAmount, FormikComboBox, FormikDatePicker } from 'features/inputs';
 import { format, formatAmt, formatDate, buildAccountOptions } from 'features/utils';
 
-import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountSlice';
 import { selectBillPay, resetBillPay, savePayBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const useStyles = makeStyles(styles);
@@ -117,7 +117,7 @@ export const BillPayDialog = ({ openEdit, setOpenEdit }) => {
   const dispatch = useDispatch();
 
   const bill = useSelector(selectBillPay);
-  const accounts = useSelector(selectAccounts);
+  const { accounts } = useSelector(selectAccounts);
   // only cash accounts can be used for bill pay.
   const accountOptions = useMemo(
     () => buildAccountOptions(accounts.filter((e) => e.cash === true && e.useForBillPay === true)),

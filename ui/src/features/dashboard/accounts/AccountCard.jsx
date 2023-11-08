@@ -21,7 +21,7 @@ import { COLOR } from 'app/config';
 import { ActionButton } from 'features/inputs';
 
 import { selectDashboardGlobal, setAccountFilter } from 'features/dashboard/dashboardGlobalSlice';
-import { tallyAccount } from 'features/dashboard/accounts/accountSlice';
+import { tallyAccount } from 'features/accounts/accountSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 
 import { formatAmt } from 'features/utils';

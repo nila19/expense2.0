@@ -18,7 +18,7 @@ import { FormikAmount, FormikComboBox, FormikSwitch } from 'features/inputs';
 import { buildCategoriesOptions, buildAccountOptions, buildMonthOptions, buildAdhocOptions } from 'features/utils';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountSlice';
 import { selectExpenses, searchExpenses } from 'features/search/expenses/expenseSlice';
 
 const initialValues = memoize((summaryFilter) =>
@@ -43,7 +43,7 @@ export const SearchForm = memo(() => {
   const dispatch = useDispatch();
   const { summaryFilter } = useSelector(selectExpenses);
   const { categories, descriptions, transMonths, entryMonths } = useSelector(selectStartupData);
-  const accounts = useSelector(selectAccounts);
+  const { accounts } = useSelector(selectAccounts);
 
   const categoriesOptions = useMemo(() => buildCategoriesOptions(categories), [categories]);
   const accountOptions = useMemo(() => buildAccountOptions(accounts), [accounts]);

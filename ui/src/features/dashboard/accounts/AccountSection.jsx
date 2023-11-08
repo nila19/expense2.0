@@ -11,12 +11,12 @@ import { AccountCard } from 'features/dashboard/accounts/AccountCard';
 import { sliceAccounts } from 'features/dashboard/accounts/accountUtils';
 
 import { selectAppGlobal } from 'features/appGlobalSlice';
-import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
-import { sortAccounts } from 'features/admin/list/accountUtils';
+import { selectAccounts } from 'features/accounts/accountSlice';
+import { sortAccounts } from 'features/accounts/accountUtils';
 
 export const AccountSection = () => {
   const { accountsExpanded } = useSelector(selectAppGlobal);
-  const accounts = useSelector(selectAccounts);
+  const { accounts } = useSelector(selectAccounts);
   const sortedAccounts = sortAccounts(accounts);
 
   const slicedAccounts = useMemo(

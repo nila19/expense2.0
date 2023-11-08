@@ -19,7 +19,7 @@ import { FormikTextField } from 'features/inputs';
 import { FormikAmount, FormikCheckBox, FormikComboBox } from 'features/inputs';
 import { buildIconOptions, buildColorOptions } from 'features/utils';
 
-import { addAccount } from 'features/admin/add/addAccountSlice';
+import { addAccount } from 'features/accounts/accountSlice';
 
 export const AddAccount = memo(() => {
   const dispatch = useDispatch();

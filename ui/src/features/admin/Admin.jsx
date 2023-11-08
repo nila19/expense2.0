@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 
 import { COUNTS } from 'app/config';
-import { AddAccount } from 'features/admin/add/AddAccount';
-import { AccountsSection } from 'features/admin/list/AccountsSection';
+import { AddAccount } from 'features/admin/accounts/AddAccount';
+import { AccountsSection } from 'features/admin/accounts/AccountsSection';
 
 const Admin = () => {
   const [rowsPerPage, setRowsPerPage] = useState(COUNTS.ADMIN_ACCOUNTS);

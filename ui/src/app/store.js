@@ -6,7 +6,7 @@ import startupReducer from 'features/startup/startupSlice';
 import dashboardReducer from 'features/dashboard/dashboardReducer';
 import searchReducer from 'features/search/searchReducer';
 import summaryReducer from 'features/summary/summarySlice';
-import adminReducer from 'features/admin/adminReducer';
+import accountReducer from 'features/accounts/accountSlice';
 
 // disabling these 2 default middleware since they are causing slow down.
 const customizedMiddleware = getDefaultMiddleware({
@@ -21,9 +21,9 @@ export const store = configureStore({
     appGlobal: appGlobalReducer,
     startup: startupReducer,
     dashboard: dashboardReducer,
+    accounts: accountReducer,
     search: searchReducer,
     summary: summaryReducer,
-    admin: adminReducer,
   },
   middleware: [...customizedMiddleware],
 });
