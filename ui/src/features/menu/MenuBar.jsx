@@ -26,6 +26,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import Button from 'components/CustomButtons/Button.js';
 
 import { ROUTE } from 'app/config';
+import { ENV } from 'app/constants';
 import { selectStartup, selectStartupData, setReloadDashboard } from 'features/startup/startupSlice';
 import { selectAppGlobal, setSelectedCity, setAccountsExpanded, setShowChartBlock } from 'features/appGlobalSlice';
 import { resetFilters } from 'features/dashboard/dashboardGlobalSlice';
@@ -47,11 +48,12 @@ export const MenuBar = () => {
   const dispatch = useDispatch();
   const { selectedCity, accountsExpanded, showChartBlock } = useSelector(selectAppGlobal);
   const { cities } = useSelector(selectStartupData);
-  const { reloadDashboard } = useSelector(selectStartup);
+  const { reloadDashboard, env } = useSelector(selectStartup);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const isDashboard = location.pathname === ROUTE.DASHBOARD || location.pathname === ROUTE.BASE;
+  const isNonPROD = env !== ENV.PROD;
 
   const handleCityClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -110,6 +112,9 @@ export const MenuBar = () => {
           </Button>
         </Grid>
         <Grid container item justifyContent='flex-end' lg={6} spacing={2}>
+          <Button color={isNonPROD ? 'rose' : 'success'} size='sm'>
+            {env}
+          </Button>
           <Button
             disabled={!isDashboard}
             onClick={handleReloadDashboard}

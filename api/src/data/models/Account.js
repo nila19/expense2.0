@@ -28,6 +28,12 @@ class AccountModel extends Model {
     return promise;
   }
 
+  insertOne(db, data) {
+    const promise = super.insertOne(db, data);
+    this._publish(db, data.id, STATE.CREATED, promise);
+    return promise;
+  }
+
   async _publish(db, id, state, promise) {
     await promise;
     const acct = state === STATE.DELETED ? { id: id } : await this.findById(db, id);

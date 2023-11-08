@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 
 import { BACKEND } from 'app/config';
 
-import { updateAccount } from 'features/dashboard/accounts/accountSlice';
+import { createAccount, updateAccount } from 'features/dashboard/accounts/accountSlice';
 import { createBill, updateBill } from 'features/dashboard/bills/billTab/billTabSlice';
 import { createExpense, updateExpense, dropExpense } from 'features/search/expenses/expenseSlice';
 
@@ -20,10 +20,17 @@ export const STATE = {
   DELETED: 'DELETED',
 };
 
+// TODO - fix this
 export const startListening = (dispatch) => {
   socket.on(PIPE.ACCOUNT, (payload) => {
-    const { data } = payload;
-    dispatch(updateAccount(data));
+    const { state, data } = payload;
+    if (state === STATE.CREATED) {
+      dispatch(createAccount(data));
+    } else if (state === STATE.DELETED) {
+      // dispatch(dropExpense(data));
+    } else {
+      dispatch(updateAccount(data));
+    }
   });
   socket.on(PIPE.BILL, (payload) => {
     const { state, data } = payload;

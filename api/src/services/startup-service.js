@@ -16,7 +16,7 @@ export const connectToMongoDB = async (db, log) => {
     return { code: config.error };
   }
   const records = await accountService.findAll(db);
-  return { code: 0, data: { mongoEnv: config.env, mongoCount: records.length } };
+  return { code: 0, data: { env: config.env, mongoCount: records.length } };
 };
 
 export const getAllCities = async (db) => {

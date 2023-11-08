@@ -24,7 +24,16 @@ export const onError = (err, app) => {
 };
 
 export const onListening = (app) => {
-  app.locals.log.info('Listening on port => ' + app.get('port') + '; DB => ' + config.dburl + '/' + config.dbName);
+  app.locals.log.info(
+    'Listening on port => ' +
+      app.get('port') +
+      '; ENV => ' +
+      config.env +
+      '; DB => ' +
+      config.dburl +
+      '/' +
+      config.dbName
+  );
 };
 
 export const unCaught = (err, app) => {

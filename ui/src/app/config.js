@@ -54,7 +54,7 @@ export const COUNTS = {
   SEARCH_EXPENSES: 21,
   MESSAGES: 3,
   SUMMARY_COLS: 14,
-  ADMIN_ACCOUNTS: 25,
+  ADMIN_ACCOUNTS: 10,
 };
 
 export const COLOR = {

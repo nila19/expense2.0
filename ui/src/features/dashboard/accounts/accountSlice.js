@@ -18,6 +18,10 @@ const accountsSlice = createSlice({
   name: 'accounts',
   initialState: [],
   reducers: {
+    createAccount: (state, action) => {
+      // TODO - add based on seq?
+      state.push(action.payload);
+    },
     updateAccount: (state, action) => {
       const index = _.findIndex(state, { id: action.payload.id });
       if (index >= 0) {
@@ -34,5 +38,5 @@ const accountsSlice = createSlice({
 
 export const selectAccounts = (state) => state.dashboard.accounts;
 
-export const { updateAccount } = accountsSlice.actions;
+export const { createAccount, updateAccount } = accountsSlice.actions;
 export default accountsSlice.reducer;

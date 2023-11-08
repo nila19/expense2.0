@@ -12,12 +12,17 @@ import { sliceAccounts } from 'features/dashboard/accounts/accountUtils';
 
 import { selectAppGlobal } from 'features/appGlobalSlice';
 import { selectAccounts } from 'features/dashboard/accounts/accountSlice';
+import { sortAccounts } from 'features/admin/list/accountUtils';
 
 export const AccountSection = () => {
   const { accountsExpanded } = useSelector(selectAppGlobal);
   const accounts = useSelector(selectAccounts);
+  const sortedAccounts = sortAccounts(accounts);
 
-  const slicedAccounts = useMemo(() => sliceAccounts(accounts, accountsExpanded), [accounts, accountsExpanded]);
+  const slicedAccounts = useMemo(
+    () => sliceAccounts(sortedAccounts, accountsExpanded),
+    [sortedAccounts, accountsExpanded]
+  );
   const gridItemSize = _.round(12 / COUNTS.DASHBOARD_ACCOUNTS);
 
   return (

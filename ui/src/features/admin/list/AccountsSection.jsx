@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -26,6 +27,7 @@ import taskStyles from 'assets/jss/material-dashboard-react/components/tasksStyl
 
 import { COLOR } from 'app/config';
 import { PAGINATION_BLOCK } from 'app/constants';
+import { sortAccounts } from 'features/admin/list/accountUtils';
 import { ActionButton } from 'features/inputs';
 import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
 import { formatAmt, getSliceForPage } from 'features/utils';
@@ -66,11 +68,9 @@ export const AccountsSection = ({ rowsPerPage, setRowsPerPage }) => {
   const [page, setPage] = useState(0);
   const [openEdit, setOpenEdit] = useState(false);
 
-  console.log('Rendering Expense..');
+  const acctsSorted = sortAccounts(data);
+  const accountsForPage = getSliceForPage(acctsSorted, page, rowsPerPage);
 
-  const accountsForPage = useMemo(() => getSliceForPage(data, page, rowsPerPage), [data, page, rowsPerPage]);
-
-  // TODO - fix pagination issue
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -162,9 +162,9 @@ export const AccountsSection = ({ rowsPerPage, setRowsPerPage }) => {
           <CustomPagination
             component='div'
             rowsPerPageOptions={[rowsPerPage]}
-            count={data.length}
+            count={acctsSorted.length}
             rowsPerPage={rowsPerPage}
-            page={rowsPerPage >= data.length ? 0 : page}
+            page={rowsPerPage >= acctsSorted.length ? 0 : page}
             onPageChange={(e, newPage) => setPage(newPage)}
             onRowsPerPageChange={handleChangeRowsPerPage}
             ActionsComponent={(props) => (

@@ -1,6 +1,7 @@
 'use strict';
 
 import moment from 'moment';
+import numeral from 'numeral';
 
 import { COLLECTION, FORMAT } from 'config/constants';
 
@@ -26,6 +27,13 @@ export const modifyAcct = async ({ db }, data) => {
 };
 
 const buildAcct = async (db, data) => {
-  const seq = await sequenceModel.findNextSeq(db, data.cityId, COLLECTION.ACCOUNT);
-  return { ...data, id: seq, tallyBalance: 0, tallyDt: moment().format(FORMAT.YYYYMMDDHHmmss) };
+  const id = await sequenceModel.findNextSeq(db, data.cityId, COLLECTION.ACCOUNT);
+  return {
+    ...data,
+    id: id,
+    balance: numeral(data.balance).value(),
+    seq: numeral(data.seq).value(),
+    tallyBalance: 0,
+    tallyDt: moment().format(FORMAT.YYYYMMDDHHmmss),
+  };
 };

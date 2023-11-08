@@ -17,7 +17,7 @@ export const connectToBackend = createAsyncThunk('startup/connect', async (paylo
     thunkApi.dispatch(loadCities());
     thunkApi.dispatch(loadDefaultCity());
   }
-  return data.code === 0;
+  return data;
 });
 
 export const setReloadDashboard = createAsyncThunk('startup/reloadDashboardData', async (payload, thunkApi) => {
@@ -88,6 +88,7 @@ const startupSlice = createSlice({
   name: 'startup',
   initialState: {
     connection: STATE.NOT_STARTED,
+    env: null,
     data: { cities: [], categories: [], descriptions: [], transMonths: [], entryMonths: [] },
     loading: {
       cities: STATE.NOT_STARTED,
@@ -102,7 +103,8 @@ const startupSlice = createSlice({
     [connectToBackend.pending]: (state) => {
       state.connection = STATE.PENDING;
     },
-    [connectToBackend.fulfilled]: (state) => {
+    [connectToBackend.fulfilled]: (state, action) => {
+      state.env = action.payload.data.env;
       state.connection = STATE.FULFILLED;
     },
     [connectToBackend.rejected]: (state) => {
