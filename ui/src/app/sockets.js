@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 
 import { BACKEND } from 'app/config';
 
-import { createAccount, updateAccount } from 'features/accounts/accountSlice';
+import { insertAccount, updateAccount, dropAccount } from 'features/accounts/accountSlice';
 import { createBill, updateBill } from 'features/dashboard/bills/billTab/billTabSlice';
 import { createExpense, updateExpense, dropExpense } from 'features/search/expenses/expenseSlice';
 
@@ -25,9 +25,9 @@ export const startListening = (dispatch) => {
   socket.on(PIPE.ACCOUNT, (payload) => {
     const { state, data } = payload;
     if (state === STATE.CREATED) {
-      dispatch(createAccount(data));
+      dispatch(insertAccount(data));
     } else if (state === STATE.DELETED) {
-      // dispatch(dropExpense(data));
+      dispatch(dropAccount(data));
     } else {
       dispatch(updateAccount(data));
     }

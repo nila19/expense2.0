@@ -27,7 +27,7 @@ export const axios = (enqueueSnackbar) => {
       return response;
     },
     function (error) {
-      enqueueSnackbar((error.config.snackbar || 'API call') + ' failed. ' + error.message, { variant: 'error' });
+      enqueueSnackbar((error.config.snackbar || 'API call') + ' failed. ' + error.response.data, { variant: 'error' });
       return Promise.reject(error);
     }
   );

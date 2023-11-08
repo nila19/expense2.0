@@ -34,6 +34,12 @@ class AccountModel extends Model {
     return promise;
   }
 
+  deleteOne(db, filter) {
+    const promise = super.deleteOne(db, filter);
+    this._publish(db, filter.id, STATE.DELETED, promise);
+    return promise;
+  }
+
   async _publish(db, id, state, promise) {
     await promise;
     const acct = state === STATE.DELETED ? { id: id } : await this.findById(db, id);

@@ -3,7 +3,12 @@
 import _ from 'lodash';
 
 import { tallyAccount as _tallyAccount } from 'services/account/tally-service';
-import { findAll as _findAll, addAcct as _addAcct, modifyAcct as _modifyAcct } from 'services/account/account-service';
+import {
+  findAll as _findAll,
+  addAccount as _addAccount,
+  modifyAccount as _modifyAccount,
+  deleteAccount as _deleteAccount,
+} from 'services/account/account-service';
 
 export const tallyAccount = async (req, resp) => {
   const parms = buildParm(req);
@@ -31,7 +36,7 @@ export const findAll = async (req, resp) => {
 export const addAccount = async (req, resp) => {
   const parms = buildParm(req);
   try {
-    const acct = await _addAcct(parms, req.body);
+    const acct = await _addAccount(parms, req.body);
     return resp.json({ code: 0, data: acct });
   } catch (error) {
     parms.log.error(error);
@@ -42,7 +47,18 @@ export const addAccount = async (req, resp) => {
 export const modifyAccount = async (req, resp) => {
   const parms = buildParm(req);
   try {
-    const acct = await _modifyAcct(parms, req.body);
+    const acct = await _modifyAccount(parms, req.body);
+    return resp.json({ code: 0, data: acct });
+  } catch (error) {
+    parms.log.error(error);
+    return resp.status(500).send(error.message);
+  }
+};
+
+export const deleteAccount = async (req, resp) => {
+  const parms = buildParm(req);
+  try {
+    const acct = await _deleteAccount(parms, req.body);
     return resp.json({ code: 0, data: acct });
   } catch (error) {
     parms.log.error(error);

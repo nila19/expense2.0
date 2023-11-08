@@ -2,7 +2,7 @@
 
 import { Router } from 'express';
 
-import { findAll, addAccount, modifyAccount, tallyAccount } from 'controllers/account-controller';
+import { findAll, addAccount, modifyAccount, deleteAccount, tallyAccount } from 'controllers/account-controller';
 import { inject404 } from 'routes/error-route';
 
 const router = Router();
@@ -26,6 +26,10 @@ router.post('/add', function (req, res) {
 
 router.post('/modify', function (req, res) {
   modifyAccount(req, res);
+});
+
+router.post('/delete', function (req, res) {
+  deleteAccount(req, res);
 });
 
 router.post('/tally', function (req, res) {

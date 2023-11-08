@@ -26,11 +26,20 @@ export const modifyAccount = createAsyncThunk('accounts/modifyAccount', async (p
   await axios().post(API.ACCOUNT.MODIFY, payload, { snackbar: 'Account modification' });
 });
 
+export const deleteAccount = createAsyncThunk('accounts/deleteAccount', async (accountId, thunkApi) => {
+  const { selectedCity } = selectAppGlobal(thunkApi.getState());
+  await axios().post(API.ACCOUNT.DELETE, { id: accountId, cityId: selectedCity }, { snackbar: 'Account deletion' });
+});
+
 const replaceIfPresent = (list, item) => {
   const index = list ? _.findIndex(list, { id: item.id }) : -1;
   if (index >= 0) {
     list[index] = item;
   }
+};
+
+const removeIfPresent = (list, item) => {
+  return list.filter((e) => e.id !== item.id);
 };
 
 const accountsSlice = createSlice({
@@ -41,13 +50,17 @@ const accountsSlice = createSlice({
     accounts: [],
   },
   reducers: {
-    createAccount: (state, action) => {
+    insertAccount: (state, action) => {
       state.allAccounts.push(action.payload);
       state.accounts.push(action.payload);
     },
     updateAccount: (state, action) => {
       replaceIfPresent(state.allAccounts, action.payload);
       replaceIfPresent(state.accounts, action.payload);
+    },
+    dropAccount: (state, action) => {
+      state.allAccounts = removeIfPresent(state.allAccounts, action.payload);
+      state.accounts = removeIfPresent(state.accounts, action.payload);
     },
   },
   extraReducers: {
@@ -67,5 +80,5 @@ const accountsSlice = createSlice({
 
 export const selectAccounts = (state) => state.accounts;
 
-export const { createAccount, updateAccount } = accountsSlice.actions;
+export const { insertAccount, updateAccount, dropAccount } = accountsSlice.actions;
 export default accountsSlice.reducer;

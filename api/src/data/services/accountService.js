@@ -40,11 +40,11 @@ export const findAllForCity = async (db, cityId) => {
   return accountModel.findForCity(db, cityId);
 };
 
-export const addAcct = async (db, cityId, acct) => {
+export const addAccount = async (db, cityId, acct) => {
   return accountModel.insertOne(db, { ...acct, cityId: cityId });
 };
 
-export const modifyAcct = (db, cityId, acct) => {
+export const modifyAccount = (db, cityId, acct) => {
   const filter = { cityId: cityId, id: acct.id };
   const mod = {
     $set: {
@@ -61,6 +61,10 @@ export const modifyAcct = (db, cityId, acct) => {
     },
   };
   return accountModel.findOneAndUpdate(db, filter, mod);
+};
+
+export const deleteAccount = async (db, filter) => {
+  return accountModel.deleteOne(db, filter);
 };
 
 const _injectLastBill = async (db, acct) => {

@@ -19,6 +19,7 @@ export const API = {
     FIND_ALL: '/app/account/findAll',
     ADD: '/app/account/add',
     MODIFY: '/app/account/modify',
+    DELETE: '/app/account/delete',
     TALLY: '/app/account/tally',
   },
   BILL: { CLOSE: '/app/bill/closeBill', PAY: '/app/bill/payBill' },

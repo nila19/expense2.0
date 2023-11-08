@@ -1,7 +1,9 @@
 'use strict';
 
+import _ from 'lodash';
+
 import { cityModel } from 'data/models';
-import { accountService } from 'data/services';
+import { accountService, transactionService } from 'data/services';
 
 export const checkCityEditable = async (db, id) => {
   const city = await cityModel.findById(db, id);
@@ -13,6 +15,14 @@ export const checkCityEditable = async (db, id) => {
 export const checkAccountsActive = ({ from, to }) => {
   if ((from?.id && !from.active) || (to?.id && !to.active)) {
     throw new Error('Change invalid. Account(s) involved are not active...');
+  }
+};
+
+export const checkAccountDeletable = async (db, cityId, acctId) => {
+  const trans = await transactionService.findForAcct(db, cityId, acctId);
+  const size = _.size(trans);
+  if (size > 0) {
+    throw new Error('Account has transactions; Cannot be deleted.');
   }
 };
 

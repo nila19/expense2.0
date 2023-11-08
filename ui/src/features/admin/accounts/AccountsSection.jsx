@@ -14,6 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // @material-ui/icons
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import TouchAppIcon from '@material-ui/icons/TouchApp';
 
 import GridItem from 'components/Grid/GridItem.js';
@@ -31,7 +32,7 @@ import { CustomPagination, PaginationActions } from 'features/inputs/pagination'
 import { formatAmt, getSliceForPage } from 'features/utils';
 
 import { sortAccounts } from 'features/accounts/accountUtils';
-import { modifyAccount, selectAccounts } from 'features/accounts/accountSlice';
+import { modifyAccount, selectAccounts, deleteAccount } from 'features/accounts/accountSlice';
 
 const headers = [
   <TouchAppIcon style={{ fontSize: 18 }} />,
@@ -76,6 +77,10 @@ export const AccountsSection = ({ rowsPerPage, setRowsPerPage }) => {
     setOpenEdit(true);
   };
 
+  const handleDelete = (acct) => {
+    dispatch(deleteAccount(acct.id));
+  };
+
   return (
     <>
       <Card style={{ marginBottom: '10px' }}>
@@ -114,6 +119,12 @@ export const AccountsSection = ({ rowsPerPage, setRowsPerPage }) => {
                         color='warning'
                         onClick={() => handleEdit(acct)}
                         icon={<EditIcon fontSize='small' />}
+                      />
+                      <ActionButton
+                        title='Delete'
+                        color='rose'
+                        onClick={() => handleDelete(acct)}
+                        icon={<DeleteIcon fontSize='small' />}
                       />
                     </TableCell>
                     <TableCell className={tableCellClasses} style={cellStyle}>

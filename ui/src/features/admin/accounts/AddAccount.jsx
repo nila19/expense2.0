@@ -97,7 +97,7 @@ export const AddAccount = memo(() => {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
                       <div style={{ marginTop: '13px' }}>
-                        <Button color='rose' type='submit' disabled={isSubmitting}>
+                        <Button color='success' type='submit' disabled={isSubmitting}>
                           <AddIcon />
                         </Button>
                       </div>
