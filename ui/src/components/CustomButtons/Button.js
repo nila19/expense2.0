@@ -11,20 +11,8 @@ const useStyles = makeStyles(styles);
 
 function RegularButton(props, ref) {
   const classes = useStyles();
-  const {
-    color,
-    round,
-    children,
-    disabled,
-    simple,
-    size,
-    block,
-    link,
-    justIcon,
-    className,
-    muiClasses,
-    ...rest
-  } = props;
+  const { color, round, children, disabled, simple, size, block, link, justIcon, className, muiClasses, ...rest } =
+    props;
   const btnClasses = classNames({
     [classes.button]: true,
     [classes[size]]: size,
@@ -38,7 +26,7 @@ function RegularButton(props, ref) {
     [className]: className,
   });
   return (
-    <Button {...rest} ref={ref} classes={muiClasses} variant='contained' className={btnClasses}>
+    <Button {...rest} ref={ref} classes={muiClasses} className={btnClasses}>
       {children}
     </Button>
   );

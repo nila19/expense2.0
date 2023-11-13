@@ -38,6 +38,7 @@ In the project directory, you can run:
 
 - `docker-compose -f docker-compose.prod.yml up --build` or
 - `docker-compose -f docker-compose.prod.yml up --build --remove-orphans`
+<!-- - `docker-compose -f docker-compose.prod.yml up --build --network=host` -->
 - App runs under [http://localhost:80](http://localhost:80)
 
 - `docker login --username=balavigneswaran --password=<pwd>`

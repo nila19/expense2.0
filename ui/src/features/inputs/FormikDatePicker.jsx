@@ -10,8 +10,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import MomentUtils from '@date-io/moment';
-
 import { labelColor } from 'features/inputs/inputUtils';
 import { format } from 'features/utils';
 
