@@ -4,8 +4,11 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 ENV NODE_OPTIONS=--max_old_space_size=2048
 
-COPY package.json /app
-COPY package-lock.json /app
+COPY package*.json .
+# COPY package-lock.json /app
+# COPY ./node_modules /app
+RUN npm ci --force
+COPY . .
 RUN npm install
 
 COPY . /app

@@ -8,7 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 
-import NumberFormat from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 
 import { labelColor } from 'features/inputs/inputUtils';
 
@@ -36,7 +36,7 @@ const fieldStyles = makeStyles((theme) => ({
 const NumberFormatCustom = (props) => {
   const { inputRef, onChange, ...other } = props;
   return (
-    <NumberFormat
+    <NumericFormat
       thousandSeparator
       isNumericString
       decimalScale={2}

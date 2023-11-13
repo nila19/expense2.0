@@ -2,6 +2,8 @@ import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
 import Dashboard from 'features/dashboard/Dashboard';
 import Search from 'features/search/Search';
 import Summary from 'features/summary/Summary';
@@ -30,6 +32,8 @@ import { selectStartup, selectStartupReload, STATE } from 'features/startup/star
 //     </DocumentTitle>
 //   );
 // };
+
+const theme = createTheme();
 
 const FullApp = () => {
   return (
@@ -71,9 +75,9 @@ export const App = () => {
   }
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Startup />
       {display}
-    </>
+    </ThemeProvider>
   );
 };
