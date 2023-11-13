@@ -1,14 +1,14 @@
 import React, { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// @material-ui/core components
-import { Grid, Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+// @mui/material components
+import { Grid, Box } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
-// @material-ui/icons
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import BlockIcon from '@material-ui/icons/Block';
-import BeenhereIcon from '@material-ui/icons/Beenhere';
+// @mui/icons-material
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import BlockIcon from '@mui/icons-material/Block';
+import BeenhereIcon from '@mui/icons-material/Beenhere';
 
 // core components
 import Card from 'components/Card/Card.js';

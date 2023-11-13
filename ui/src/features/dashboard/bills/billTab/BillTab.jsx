@@ -4,20 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import moment from 'moment';
 
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
+import makeStyles from '@mui/styles/makeStyles';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 
-// @material-ui/icons
-import PaymentIcon from '@material-ui/icons/Payment';
-import DehazeIcon from '@material-ui/icons/Dehaze';
-import FilterTiltShiftIcon from '@material-ui/icons/FilterTiltShift';
-import TouchAppIcon from '@material-ui/icons/TouchApp';
-import MenuOpenIcon from '@material-ui/icons/MenuOpen';
+// @mui/icons-material
+import PaymentIcon from '@mui/icons-material/Payment';
+import DehazeIcon from '@mui/icons-material/Dehaze';
+import FilterTiltShiftIcon from '@mui/icons-material/FilterTiltShift';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 

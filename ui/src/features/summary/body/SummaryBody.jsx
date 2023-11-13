@@ -3,11 +3,10 @@ import { useDispatch } from 'react-redux';
 
 import _ from 'lodash';
 
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Tooltip from '@mui/material/Tooltip';
 
 import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
 

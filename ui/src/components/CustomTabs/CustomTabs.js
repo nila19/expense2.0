@@ -4,11 +4,10 @@ import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
 
-// material-ui components
-import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Badge from '@material-ui/core/Badge';
+import makeStyles from '@mui/styles/makeStyles';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Badge from '@mui/material/Badge';
 
 // core components
 import Card from 'components/Card/Card.js';
@@ -74,7 +73,8 @@ export default function CustomTabs(props) {
                 }}
                 style={{ padding: '3px', paddingRight: '5px', marginLeft: '5px', marginRight: '5px' }}
                 key={idx}
-                label={prop.tabName}
+                title={prop.tabName}
+                // label={prop.tabName}
                 {...icon}
               />
             );

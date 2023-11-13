@@ -2,9 +2,9 @@ import React from 'react';
 
 import _ from 'lodash';
 
-import { makeStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import makeStyles from '@mui/styles/makeStyles';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
 
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 

@@ -2,11 +2,13 @@ import React from 'react';
 import { useField } from 'formik';
 
 import moment from 'moment';
+import 'moment/locale/es';
 
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import MomentUtils from '@date-io/moment';
 
@@ -32,7 +34,7 @@ const CustomDatePicker = (props) => {
   const fieldClasses = fieldStyles();
   return (
     <div className={fieldClasses.dateRoot}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
         <DatePicker
           {...props}
           disableToolbar
@@ -44,7 +46,7 @@ const CustomDatePicker = (props) => {
           className={fieldClasses.dateField}
           InputLabelProps={{ shrink: true }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     </div>
   );
 };
@@ -55,13 +57,13 @@ export const FormikDatePicker = (props) => {
   return (
     <CustomDatePicker
       {...props}
-      {...field}
+      // {...field}
       error={touched && error && true}
       onChange={(date) => {
-        const value = moment(date).format(format.YYYYMMDD);
-        helpers.setValue(value);
+        const val = moment(date).format(format.YYYYMMDD);
+        helpers.setValue(moment(date));
         if (props.onFieldChange) {
-          props.onFieldChange(field.name, value);
+          props.onFieldChange(field.name, val);
         }
       }}
     />

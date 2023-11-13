@@ -4,15 +4,14 @@ import { Formik, Form, Field } from 'formik';
 
 import _ from 'lodash';
 
-// @material-ui/core
-import { makeStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
+import makeStyles from '@mui/styles/makeStyles';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 
-// @material-ui/icons
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import TransformIcon from '@material-ui/icons/Transform';
-import SaveIcon from '@material-ui/icons/Save';
+// @mui/icons-material
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import TransformIcon from '@mui/icons-material/Transform';
+import SaveIcon from '@mui/icons-material/Save';
 
 import Card from 'components/Card/Card.js';
 import CardHeader from 'components/Card/CardHeader.js';
@@ -53,7 +52,7 @@ export const ExpenseEditForm = ({
   return (
     <Formik
       initialValues={expense}
-      validationSchema={editSchema}
+      // validationSchema={editSchema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
         let expense = _.cloneDeep(values);

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useField } from 'formik';
 
-// @material-ui/core components
-import Switch from '@material-ui/core/Switch';
-import Tooltip from '@material-ui/core/Tooltip';
+// @mui/material components
+import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
 
 const CustomSwitch = ({ title, ...props }) => {
   return (

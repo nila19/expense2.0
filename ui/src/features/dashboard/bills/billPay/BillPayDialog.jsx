@@ -6,14 +6,13 @@ import memoize from 'memoize-one';
 
 import moment from 'moment';
 
-// @material-ui/core
-import { makeStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
+import makeStyles from '@mui/styles/makeStyles';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 
-// @material-ui/icons
-import SaveIcon from '@material-ui/icons/Save';
-import CreditCardIcon from '@material-ui/icons/CreditCard';
+// @mui/icons-material
+import SaveIcon from '@mui/icons-material/Save';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 import Card from 'components/Card/Card.js';
 import CardHeader from 'components/Card/CardHeader.js';

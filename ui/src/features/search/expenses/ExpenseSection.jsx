@@ -4,26 +4,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import moment from 'moment';
 
-// @material-ui/core
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import makeStyles from '@mui/styles/makeStyles';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import CircularProgress from '@mui/material/CircularProgress';
 
-// @material-ui/icons
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import TransformIcon from '@material-ui/icons/Transform';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
-import KeyboardTabIcon from '@material-ui/icons/KeyboardTab';
-import TouchAppIcon from '@material-ui/icons/TouchApp';
-import FlagIcon from '@material-ui/icons/Flag';
+// @mui/icons-material
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import TransformIcon from '@mui/icons-material/Transform';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
+import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+import FlagIcon from '@mui/icons-material/Flag';
 
 import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';

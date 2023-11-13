@@ -4,11 +4,13 @@ import { useSnackbar } from 'notistack';
 
 import 'typeface-roboto';
 
-import Typography from '@material-ui/core/Typography';
-import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@mui/material/Typography';
+import { lighten } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
+import LinearProgress from '@mui/material/LinearProgress';
 
-import ErrorIcon from '@material-ui/icons/Error';
+import ErrorIcon from '@mui/icons-material/Error';
 
 import SnackbarContent from 'components/Snackbar/SnackbarContent.js';
 

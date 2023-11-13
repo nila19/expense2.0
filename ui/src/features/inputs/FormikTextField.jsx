@@ -1,9 +1,8 @@
 import React from 'react';
 import { useField } from 'formik';
 
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
 
 import { labelColor } from 'features/inputs/inputUtils';
 

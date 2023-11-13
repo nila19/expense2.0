@@ -5,8 +5,8 @@ import { Formik, Form, Field } from 'formik';
 
 // import _ from 'lodash';
 
-// @material-ui/icons
-import AddIcon from '@material-ui/icons/Add';
+// @mui/icons-material
+import AddIcon from '@mui/icons-material/Add';
 
 import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';

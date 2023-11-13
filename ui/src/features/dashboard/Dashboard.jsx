@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 
 import { COUNTS } from 'app/config';
 import { EXPENSE_BLOCK } from 'app/constants';

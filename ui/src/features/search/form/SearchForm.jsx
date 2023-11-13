@@ -5,8 +5,8 @@ import memoize from 'memoize-one';
 
 import _ from 'lodash';
 
-// @material-ui/icons
-import SearchIcon from '@material-ui/icons/Search';
+// @mui/icons-material
+import SearchIcon from '@mui/icons-material/Search';
 
 import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';

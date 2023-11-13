@@ -2,9 +2,8 @@ import React, { forwardRef } from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 
-// material-ui components
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
 
 import styles from 'assets/jss/material-dashboard-react/components/buttonStyle.js';
 
@@ -39,7 +38,7 @@ function RegularButton(props, ref) {
     [className]: className,
   });
   return (
-    <Button {...rest} ref={ref} classes={muiClasses} className={btnClasses}>
+    <Button {...rest} ref={ref} classes={muiClasses} variant='contained' className={btnClasses}>
       {children}
     </Button>
   );

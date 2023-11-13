@@ -4,24 +4,24 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import _ from 'lodash';
 
-// @material-ui/core components
-import Grid from '@material-ui/core/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+// @mui/material components
+import Grid from '@mui/material/Grid';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-// @material-ui/icons
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import FilterNoneIcon from '@material-ui/icons/FilterNone';
-import SearchIcon from '@material-ui/icons/Search';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import EuroIcon from '@material-ui/icons/Euro';
-import AddIcon from '@material-ui/icons/Add';
-import LocationCityIcon from '@material-ui/icons/LocationCity';
-import AutorenewIcon from '@material-ui/icons/Autorenew';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+// @mui/icons-material
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import FilterNoneIcon from '@mui/icons-material/FilterNone';
+import SearchIcon from '@mui/icons-material/Search';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import EuroIcon from '@mui/icons-material/Euro';
+import AddIcon from '@mui/icons-material/Add';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 
 import Button from 'components/CustomButtons/Button.js';
 

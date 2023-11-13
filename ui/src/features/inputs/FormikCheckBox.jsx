@@ -1,13 +1,12 @@
 import React from 'react';
 import { useField } from 'formik';
 
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
+import Checkbox from '@mui/material/Checkbox';
+import Tooltip from '@mui/material/Tooltip';
 
-// @material-ui/icons
-import CheckIcon from '@material-ui/icons/Check';
+// @mui/icons-material
+import CheckIcon from '@mui/icons-material/Check';
 
 import styles from 'assets/jss/material-dashboard-react/checkboxAdnRadioStyle.js';
 

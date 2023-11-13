@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 
 import { COUNTS } from 'app/config';
 import { AddAccount } from 'features/admin/accounts/AddAccount';

@@ -2,21 +2,21 @@ import React from 'react';
 
 import memoize from 'memoize-one';
 
-// @material-ui/icons
-import HomeIcon from '@material-ui/icons/Home';
-import PowerIcon from '@material-ui/icons/Power';
-import SchoolIcon from '@material-ui/icons/School';
-import WifiIcon from '@material-ui/icons/Wifi';
-import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
-import LocalMallIcon from '@material-ui/icons/LocalMall';
-import RestaurantIcon from '@material-ui/icons/Restaurant';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import LocalMoviesIcon from '@material-ui/icons/LocalMovies';
-import FlightIcon from '@material-ui/icons/Flight';
-import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
-import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
-import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
-import CategoryIcon from '@material-ui/icons/Category';
+// @mui/icons-material
+import HomeIcon from '@mui/icons-material/Home';
+import PowerIcon from '@mui/icons-material/Power';
+import SchoolIcon from '@mui/icons-material/School';
+import WifiIcon from '@mui/icons-material/Wifi';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
+import FlightIcon from '@mui/icons-material/Flight';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import CategoryIcon from '@mui/icons-material/Category';
 
 const iconMap = {
   home: HomeIcon,

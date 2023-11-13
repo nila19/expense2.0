@@ -1,14 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
+import makeStyles from '@mui/styles/makeStyles';
+import IconButton from '@mui/material/IconButton';
 
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 import { COLOR } from 'app/config';
 import { PAGINATION_BLOCK } from 'app/constants';
@@ -67,7 +67,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
         style={{ padding: '4px 12px' }}
         disabled={page === 0}
         aria-label='first page'
-      >
+        size="large">
         <FirstPageIcon />
       </IconButton>
       <IconButton
@@ -75,7 +75,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
         style={{ padding: '4px 12px' }}
         disabled={page === 0}
         aria-label='previous page'
-      >
+        size="large">
         <KeyboardArrowLeftIcon />
       </IconButton>
       <IconButton
@@ -83,7 +83,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
         style={{ padding: '4px 12px' }}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label='next page'
-      >
+        size="large">
         <KeyboardArrowRightIcon />
       </IconButton>
       <IconButton
@@ -91,7 +91,7 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
         style={{ padding: '4px 12px' }}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label='last page'
-      >
+        size="large">
         <LastPageIcon />
       </IconButton>
     </div>

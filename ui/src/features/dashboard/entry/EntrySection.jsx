@@ -1,9 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-// @material-ui/icons
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import TransformIcon from '@material-ui/icons/Transform';
+// @mui/icons-material
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import TransformIcon from '@mui/icons-material/Transform';
 
 import Tabs from 'components/CustomTabs/CustomTabs.js';
 

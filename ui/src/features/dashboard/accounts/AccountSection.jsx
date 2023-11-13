@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 
 import _ from 'lodash';
 
-// @material-ui/core components
-import Grid from '@material-ui/core/Grid';
+// @mui/material components
+import Grid from '@mui/material/Grid';
 
 import { COUNTS } from 'app/config';
 import { AccountCard } from 'features/dashboard/accounts/AccountCard';

@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-// @material-ui/icons
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import HistoryIcon from '@material-ui/icons/History';
-import DonutLargeIcon from '@material-ui/icons/DonutLarge';
+// @mui/icons-material
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import HistoryIcon from '@mui/icons-material/History';
+import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 
 import Tabs from 'components/CustomTabs/CustomTabs.js';
 

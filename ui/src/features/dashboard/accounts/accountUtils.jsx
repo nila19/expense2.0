@@ -4,12 +4,12 @@ import _ from 'lodash';
 import moment from 'moment';
 import memoize from 'memoize-one';
 
-// @material-ui/icons
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import CreditCardIcon from '@material-ui/icons/CreditCard';
-import MuseumIcon from '@material-ui/icons/Museum';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import SubtitlesIcon from '@material-ui/icons/Subtitles';
+// @mui/icons-material
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import MuseumIcon from '@mui/icons-material/Museum';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
 
 import { COUNTS } from 'app/config';
 import { format, formatAmt, formatDate } from 'features/utils';
