@@ -1,21 +1,21 @@
-import React, { useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 
 // @mui/icons-material
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import TouchAppIcon from "@mui/icons-material/TouchApp";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
 
-import { COUNTS, COLOR } from "app/config";
-import { formatAmt } from "features/utils";
+import { COUNTS, COLOR } from 'app/config';
+import { formatAmt } from 'features/utils';
 
-import { AppIcon } from "components/app/AppIcon";
+import { AppIcon } from 'components/app/AppIcon';
 
-import { sortAccounts } from "features/accounts/accountUtils";
-import { modifyAccount, selectAccounts, deleteAccount } from "features/accounts/accountSlice";
-import { buildAccountColor } from "features/dashboard/accounts/accountUtils";
+import { sortAccounts } from 'features/accounts/accountUtils';
+import { modifyAccount, selectAccounts, deleteAccount } from 'features/accounts/accountSlice';
+import { buildAccountColor } from 'features/dashboard/accounts/accountUtils';
 
 export const AccountsTab = () => {
   const dispatch = useDispatch();
@@ -46,122 +46,122 @@ export const AccountsTab = () => {
 
     return [
       {
-        field: "actions",
-        type: "actions",
+        field: 'actions',
+        type: 'actions',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 1,
-        renderHeader: () => <TouchAppIcon fontSize="small" />,
+        renderHeader: () => <TouchAppIcon fontSize='small' />,
         getActions: ({ row }) => [
           <GridActionsCellItem
-            icon={<EditIcon fontSize="small" />}
-            label="Edit"
-            color="warning"
+            icon={<EditIcon fontSize='small' />}
+            label='Edit'
+            color='warning'
             onClick={() => handleEdit(row)}
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon fontSize="small" />}
-            label="Delete"
-            color="error"
+            icon={<DeleteIcon fontSize='small' />}
+            label='Delete'
+            color='error'
             onClick={() => handleDelete(row)}
           />,
         ],
       },
       {
-        field: "id",
+        field: 'id',
         sortable: false,
         flex: 0.5,
-        type: "number",
-        headerAlign: "center",
-        align: "center",
-        headerName: "ID",
+        type: 'number',
+        headerAlign: 'center',
+        align: 'center',
+        headerName: 'ID',
       },
       {
-        field: "name",
+        field: 'name',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 2,
-        headerName: "NAME",
+        headerName: 'NAME',
       },
       {
-        field: "cash",
+        field: 'cash',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 0.5,
-        headerName: "CASH",
-        valueFormatter: ({ value }) => (value ? "Y" : ""),
+        headerName: 'CASH',
+        valueFormatter: ({ value }) => (value ? 'Y' : ''),
       },
       {
-        field: "billed",
+        field: 'billed',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 0.5,
-        headerName: "BILLED",
-        valueFormatter: ({ value }) => (value ? "Y" : ""),
+        headerName: 'BILLED',
+        valueFormatter: ({ value }) => (value ? 'Y' : ''),
       },
       {
-        field: "active",
+        field: 'active',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 0.5,
-        headerName: "ACTIVE",
-        valueFormatter: ({ value }) => (value ? "Y" : ""),
+        headerName: 'ACTIVE',
+        valueFormatter: ({ value }) => (value ? 'Y' : ''),
       },
       {
-        field: "icon",
+        field: 'icon',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 1,
-        headerName: "ICON",
+        headerName: 'ICON',
         renderCell: ({ row }) => {
           return <AppIcon icon={row.icon} color={buildAccountColor(row.color)} />;
         },
       },
       {
-        field: "color",
+        field: 'color',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 0.5,
-        headerName: "COLOR",
+        headerName: 'COLOR',
       },
       {
-        field: "seq",
+        field: 'seq',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 0.5,
-        headerName: "SEQ",
+        headerName: 'SEQ',
       },
       {
-        field: "closingDay",
+        field: 'closingDay',
         sortable: false,
-        headerAlign: "center",
+        headerAlign: 'center',
         flex: 0.5,
-        type: "number",
-        headerName: "CLOSING DAY",
+        type: 'number',
+        headerName: 'CLOSING DAY',
       },
       {
-        field: "dueDay",
+        field: 'dueDay',
         sortable: false,
-        headerAlign: "center",
+        headerAlign: 'center',
         flex: 0.5,
-        type: "number",
-        headerName: "DUE DAY",
+        type: 'number',
+        headerName: 'DUE DAY',
       },
       {
-        field: "balance",
+        field: 'balance',
         sortable: false,
-        headerAlign: "center",
+        headerAlign: 'center',
         flex: 1,
-        type: "number",
-        headerName: "BALANCE",
+        type: 'number',
+        headerName: 'BALANCE',
         valueFormatter: ({ value }) => formatAmt(value, false),
       },
     ];
@@ -181,9 +181,9 @@ export const AccountsTab = () => {
         rowHeight={35}
         sx={{
           fontSize: 12,
-          "& .MuiDataGrid-columnHeaders": {
+          '& .MuiDataGrid-columnHeaders': {
             color: COLOR.RED,
-            fontWeight: "normal",
+            fontWeight: 'normal',
           },
         }}
       />

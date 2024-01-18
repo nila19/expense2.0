@@ -1,11 +1,11 @@
-import _ from "lodash";
-import moment from "moment";
-import numeral from "numeral";
-import BigNumber from "bignumber.js";
-import memoize from "memoize-one";
-import * as Yup from "yup";
+import _ from 'lodash';
+import moment from 'moment';
+import numeral from 'numeral';
+import BigNumber from 'bignumber.js';
+import memoize from 'memoize-one';
+import * as Yup from 'yup';
 
-import { FORMATS } from "app/constants";
+import { FORMATS } from 'app/constants';
 
 export const getSliceForPage = memoize((data, page, rowsPerPage) => {
   const start = page * rowsPerPage;
@@ -19,43 +19,43 @@ export const getTotalAmount = memoize((list) => {
 });
 
 export const buildCategoriesOptions = memoize((categories) => {
-  console.log("Building categories options");
+  console.log('Building categories options');
   return categories.map((e) => ({ key: e.id, label: e.name }));
 });
 
 export const buildAccountOptions = memoize((accounts) => {
-  console.log("Building accounts options");
+  console.log('Building accounts options');
   return accounts.map((e) => ({ key: e.id, label: e.name }));
 });
 
 export const buildBillOptions = memoize((bills, accountId) => {
-  console.log("Building bills options");
+  console.log('Building bills options');
   const filteredBills = _.filter(bills, (e) => e.account.id === accountId);
   return filteredBills.map((e) => ({
     key: e.id,
-    label: e.account.name + " : " + e.billDt + " #" + e.id,
+    label: e.account.name + ' : ' + e.billDt + ' #' + e.id,
   }));
 });
 
 export const buildMonthOptions = memoize((months) => {
-  console.log("Building months options");
+  console.log('Building months options');
   return months.map((e) => ({ key: e.id, label: e.name }));
 });
 
 export const buildAdhocOptions = memoize(() => {
-  console.log("Building adhoc options");
-  return ["Y", "N"].map((e) => ({ key: e, label: e }));
+  console.log('Building adhoc options');
+  return ['Y', 'N'].map((e) => ({ key: e, label: e }));
 });
 
 export const buildIconOptions = memoize(() => {
-  return ["savings", "account_balance", "credit_card", "attach_money", "museum"].map((e) => ({
+  return ['savings', 'account_balance', 'credit_card', 'attach_money', 'museum'].map((e) => ({
     key: e,
     label: e,
   }));
 });
 
 export const buildColorOptions = memoize(() => {
-  return ["red", "blue", "green"].map((e) => ({ key: e, label: e }));
+  return ['red', 'blue', 'green'].map((e) => ({ key: e, label: e }));
 });
 
 export const prepareChartData = (chartData) => {
@@ -86,60 +86,60 @@ export const formatAmt = memoize((amount, symbol, noDecimal) => {
 
 export const formatDate = memoize((date, fmt) => {
   if (_.isEmpty(date)) {
-    return "";
+    return '';
   }
   return moment(date, FORMATS.YYYYMMDD).format(fmt || FORMATS.DDMMMYYYY);
 });
 
 export const entrySchema = Yup.object().shape({
   category: Yup.object({
-    id: Yup.number().when("adjust", {
+    id: Yup.number().when('adjust', {
       is: false,
-      then: Yup.number().required("Required"),
+      then: Yup.number().required('Required'),
     }),
   }),
-  description: Yup.string().required("Required").trim().min(2, "Min length"),
-  transDt: Yup.string().required("Required"),
-  amount: Yup.number().required("Required").notOneOf([0]),
+  description: Yup.string().required('Required').trim().min(2, 'Min length'),
+  transDt: Yup.string().required('Required'),
+  amount: Yup.number().required('Required').notOneOf([0]),
   accounts: Yup.object({
     from: Yup.object({
-      id: Yup.number().required("Required"),
+      id: Yup.number().required('Required'),
     }),
   }),
 });
 
 export const editSchema = Yup.object({
   category: Yup.object({
-    id: Yup.number().when("adjust", {
+    id: Yup.number().when('adjust', {
       is: false,
-      then: Yup.number().required("Required"),
+      then: Yup.number().required('Required'),
     }),
   }),
   bill: Yup.object({
-    id: Yup.number().when("billed", {
+    id: Yup.number().when('billed', {
       is: true,
-      then: Yup.number().required("Required"),
+      then: Yup.number().required('Required'),
     }),
   }),
-  description: Yup.string().required("Required").trim().min(2, "Min length"),
-  transDt: Yup.string().required("Required"),
-  amount: Yup.number().required("Required").notOneOf([0]),
+  description: Yup.string().required('Required').trim().min(2, 'Min length'),
+  transDt: Yup.string().required('Required'),
+  amount: Yup.number().required('Required').notOneOf([0]),
   accounts: Yup.object({
     from: Yup.object({
-      id: Yup.number().required("Required"),
+      id: Yup.number().required('Required'),
     }),
   }),
 });
 
 export const acctSchema = Yup.object().shape({
-  name: Yup.string().required("Required").trim().min(2, "Min length"),
-  cash: Yup.string().required("Required"),
-  billed: Yup.string().required("Required"),
-  icon: Yup.string().required("Required"),
-  color: Yup.string().required("Required"),
-  seq: Yup.number().required("Required"),
-  closingDay: Yup.number().required("Required"),
-  dueDay: Yup.number().required("Required"),
-  balance: Yup.number().required("Required"),
-  active: Yup.string().required("Required"),
+  name: Yup.string().required('Required').trim().min(2, 'Min length'),
+  cash: Yup.string().required('Required'),
+  billed: Yup.string().required('Required'),
+  icon: Yup.string().required('Required'),
+  color: Yup.string().required('Required'),
+  seq: Yup.number().required('Required'),
+  closingDay: Yup.number().required('Required'),
+  dueDay: Yup.number().required('Required'),
+  balance: Yup.number().required('Required'),
+  active: Yup.string().required('Required'),
 });

@@ -1,14 +1,14 @@
-import React, { useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
-import { EXPENSE_BLOCK } from "app/constants";
-import { COUNTS } from "app/config";
+import { EXPENSE_BLOCK } from 'app/constants';
+import { COUNTS } from 'app/config';
 
-import { AppSection } from "components/app/AppSection";
+import { AppSection } from 'components/app/AppSection';
 
-import { ExpenseTab } from "features/search/expenses/ExpenseTab";
-import { selectExpenses } from "features/search/expenses/expenseSlice";
-import { selectAppGlobal } from "features/appGlobalSlice";
+import { ExpenseTab } from 'features/search/expenses/ExpenseTab';
+import { selectExpenses } from 'features/search/expenses/expenseSlice';
+import { selectAppGlobal } from 'features/appGlobalSlice';
 
 export const ExpenseSection = ({ section }) => {
   const { data, searchResults } = useSelector(selectExpenses);
@@ -32,8 +32,8 @@ export const ExpenseSection = ({ section }) => {
 
   return (
     <AppSection
-      title="EXPENSES"
-      headerColor="info"
+      title='EXPENSES'
+      headerColor='info'
       content=<ExpenseTab expenses={expenses} rowsPerPage={rowsPerPage} />
     />
   );

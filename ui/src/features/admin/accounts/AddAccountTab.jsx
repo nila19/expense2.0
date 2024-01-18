@@ -1,22 +1,20 @@
-import React, { memo, useMemo } from "react";
-import { useDispatch } from "react-redux";
-import { Formik, Form, Field } from "formik";
+import React, { memo, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
 // import memoize from 'memoize-one';
 
-// import _ from 'lodash';
+import { Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
-import { Grid } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import MDButton from 'components/MDButton';
+import MDTypography from 'components/MDTypography';
 
-import MDButton from "components/MDButton";
-import MDTypography from "components/MDTypography";
+import { acctSchema } from 'features/utils';
+import { FormikTextField } from 'features/inputs';
+import { FormikAmount, FormikCheckBox, FormikComboBox } from 'features/inputs';
+import { buildIconOptions, buildColorOptions } from 'features/utils';
 
-import { acctSchema } from "features/utils";
-import { FormikTextField } from "features/inputs";
-import { FormikAmount, FormikCheckBox, FormikComboBox } from "features/inputs";
-import { buildIconOptions, buildColorOptions } from "features/utils";
-
-import { addAccount } from "features/accounts/accountSlice";
+import { addAccount } from 'features/accounts/accountSlice';
 
 export const AddAccountTab = memo(() => {
   const dispatch = useDispatch();
@@ -42,7 +40,7 @@ export const AddAccountTab = memo(() => {
       initialValues={initialValues()}
       validationSchema={acctSchema}
       onSubmit={(values, { setSubmitting }) => {
-        console.log("Submitting");
+        console.log('Submitting');
         setSubmitting(false);
         dispatch(addAccount(values));
       }}
@@ -53,77 +51,54 @@ export const AddAccountTab = memo(() => {
             <Grid item xs={12} sm={12} md={5}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={5}>
-                  <Field name="name" id="name" label="Account Name" component={FormikTextField} />
+                  <Field name='name' id='name' label='Account Name' component={FormikTextField} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={4}>
-                  <Field
-                    name="icon"
-                    id="icon"
-                    label="Icon"
-                    component={FormikComboBox}
-                    options={iconOptions}
-                  />
+                  <Field name='icon' id='icon' label='Icon' component={FormikComboBox} options={iconOptions} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
-                  <Field
-                    name="color"
-                    id="color"
-                    label="Color"
-                    component={FormikComboBox}
-                    options={colorOptions}
-                  />
+                  <Field name='color' id='color' label='Color' component={FormikComboBox} options={colorOptions} />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={2}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={4}>
-                  <MDTypography variant="body2" fontWeight="light">
+                  <MDTypography variant='body2' fontWeight='light'>
                     Cash
                   </MDTypography>
-                  <Field name="cash" id="cash" label="Cash" component={FormikCheckBox} />
+                  <Field name='cash' id='cash' label='Cash' component={FormikCheckBox} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={4}>
-                  <MDTypography variant="body2" fontWeight="light">
+                  <MDTypography variant='body2' fontWeight='light'>
                     Billed
                   </MDTypography>
-                  <Field name="billed" id="billed" label="Billed" component={FormikCheckBox} />
+                  <Field name='billed' id='billed' label='Billed' component={FormikCheckBox} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={4}>
-                  <MDTypography variant="body2" fontWeight="light">
+                  <MDTypography variant='body2' fontWeight='light'>
                     Active
                   </MDTypography>
-                  <Field name="active" id="active" label="Active" component={FormikCheckBox} />
+                  <Field name='active' id='active' label='Active' component={FormikCheckBox} />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={5}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={2}>
-                  <Field name="seq" id="seq" label="Seq" component={FormikTextField} />
+                  <Field name='seq' id='seq' label='Seq' component={FormikTextField} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={2}>
-                  <Field
-                    name="closingDay"
-                    id="closingDay"
-                    label="Closing Day"
-                    component={FormikTextField}
-                  />
+                  <Field name='closingDay' id='closingDay' label='Closing Day' component={FormikTextField} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={2}>
-                  <Field name="dueDay" id="dueDay" label="Due Day" component={FormikTextField} />
+                  <Field name='dueDay' id='dueDay' label='Due Day' component={FormikTextField} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
-                  <Field name="balance" id="balance" label="Balance" component={FormikAmount} />
+                  <Field name='balance' id='balance' label='Balance' component={FormikAmount} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
-                  <MDButton
-                    color="success"
-                    type="submit"
-                    variant="gradient"
-                    size="large"
-                    disabled={isSubmitting}
-                  >
+                  <MDButton color='success' type='submit' variant='gradient' size='large' disabled={isSubmitting}>
                     <AddIcon />
                   </MDButton>
                 </Grid>

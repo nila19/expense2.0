@@ -1,31 +1,27 @@
-import React, { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import memoize from "memoize-one";
+import React, { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import memoize from 'memoize-one';
 
-import moment from "moment";
+import moment from 'moment';
 
-import { Grid } from "@mui/material";
+import { Grid } from '@mui/material';
 
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import SaveIcon from "@mui/icons-material/Save";
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import SaveIcon from '@mui/icons-material/Save';
 
-import MDButton from "components/MDButton";
+import MDButton from 'components/MDButton';
 
-import { AppCard } from "components/app/AppCard";
+import { AppCard } from 'components/app/AppCard';
 
-import { ICONS, FORMATS } from "app/constants";
-import { CustomTextField, FormikAmount, FormikComboBox, FormikDatePicker } from "features/inputs";
-import { formatAmt, formatDate, buildAccountOptions } from "features/utils";
+import { ICONS, FORMATS } from 'app/constants';
+import { CustomTextField, FormikAmount, FormikComboBox, FormikDatePicker } from 'features/inputs';
+import { formatAmt, formatDate, buildAccountOptions } from 'features/utils';
 
-import { selectAccounts } from "features/accounts/accountSlice";
-import {
-  selectBillPay,
-  resetBillPay,
-  savePayBill,
-} from "features/dashboard/bills/billPay/billPaySlice";
+import { selectAccounts } from 'features/accounts/accountSlice';
+import { selectBillPay, resetBillPay, savePayBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const initialValues = memoize((bill) => ({
   bill: bill,
@@ -36,12 +32,9 @@ const initialValues = memoize((bill) => ({
 
 const validationSchema = memoize((bill) =>
   Yup.object({
-    paidDt: Yup.string().required("Required"),
-    paidAmt: Yup.number()
-      .required("Required")
-      .moreThan(0, "Must be > 0")
-      .max(bill.amount, "Must be < Bill Amt"),
-    account: Yup.object({ id: Yup.number().required("Required") }),
+    paidDt: Yup.string().required('Required'),
+    paidAmt: Yup.number().required('Required').moreThan(0, 'Must be > 0').max(bill.amount, 'Must be < Bill Amt'),
+    account: Yup.object({ id: Yup.number().required('Required') }),
   })
 );
 
@@ -66,56 +59,41 @@ const BillPayForm = ({ bill, accountOptions, setOpenEdit }) => {
         <Form>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={12}>
-              <CustomTextField disabled id="acct" label="Account" value={bill.account.name} />
+              <CustomTextField disabled id='acct' label='Account' value={bill.account.name} />
             </Grid>
             <Grid item xs={12} sm={12} marginTop={2}>
-              <CustomTextField disabled id="bill" label="Bill" value={bill.name} />
+              <CustomTextField disabled id='bill' label='Bill' value={bill.name} />
             </Grid>
             <Grid item xs={12} sm={4} marginTop={2}>
-              <CustomTextField
-                disabled
-                id="billAmount"
-                label="Bill Amount"
-                value={formatAmt(bill.amount, true)}
-              />
+              <CustomTextField disabled id='billAmount' label='Bill Amount' value={formatAmt(bill.amount, true)} />
             </Grid>
             <Grid item xs={12} sm={4} marginTop={2}>
-              <CustomTextField
-                disabled
-                id="billBalance"
-                label="Bill Balance"
-                value={formatAmt(bill.balance, true)}
-              />
+              <CustomTextField disabled id='billBalance' label='Bill Balance' value={formatAmt(bill.balance, true)} />
             </Grid>
             <Grid item xs={12} sm={4} marginTop={2}>
-              <CustomTextField
-                disabled
-                id="dueDate"
-                label="Due Date"
-                value={formatDate(bill.dueDt)}
-              />
+              <CustomTextField disabled id='dueDate' label='Due Date' value={formatDate(bill.dueDt)} />
             </Grid>
             <Grid item xs={12} sm={12} marginTop={2}>
               <Field
-                name="account.id"
-                id="accountId"
-                label="Pay From"
+                name='account.id'
+                id='accountId'
+                label='Pay From'
                 component={FormikComboBox}
                 options={accountOptions}
               />
             </Grid>
             <Grid item xs={12} sm={12} md={4} marginTop={2}>
-              <Field name="paidAmt" id="paidAmt" label="Payment Amount" component={FormikAmount} />
+              <Field name='paidAmt' id='paidAmt' label='Payment Amount' component={FormikAmount} />
             </Grid>
             <Grid item xs={12} sm={12} md={4} marginTop={2}>
-              <Field name="paidDt" id="paidDt" label="Payment Date" component={FormikDatePicker} />
+              <Field name='paidDt' id='paidDt' label='Payment Date' component={FormikDatePicker} />
             </Grid>
             <Grid item xs={12} sm={12} md={4} marginTop={2}>
               <MDButton
-                color="primary"
-                type="button"
-                variant="gradient"
-                size="large"
+                color='primary'
+                type='button'
+                variant='gradient'
+                size='large'
                 disabled={isSubmitting}
                 onClick={handleSubmit}
               >
@@ -145,21 +123,14 @@ export const BillPayDialog = ({ openEdit, setOpenEdit }) => {
     setOpenEdit(false);
   };
 
-  const body = (
-    <BillPayForm bill={bill} accountOptions={accountOptions} setOpenEdit={setOpenEdit} />
-  );
+  const body = <BillPayForm bill={bill} accountOptions={accountOptions} setOpenEdit={setOpenEdit} />;
 
   return (
     <>
       {bill && openEdit && (
-        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={"180px"}>
-          <DialogContent style={{ padding: "0px" }}>
-            <AppCard
-              color="primary"
-              titleIcon={ICONS.CreditCardIcon}
-              title="PAY BILL"
-              body={body}
-            />
+        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={'180px'}>
+          <DialogContent style={{ padding: '0px' }}>
+            <AppCard color='primary' titleIcon={ICONS.CreditCardIcon} title='PAY BILL' body={body} />
           </DialogContent>
         </Dialog>
       )}

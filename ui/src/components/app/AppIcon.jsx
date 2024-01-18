@@ -1,34 +1,34 @@
-import React from "react";
+import React from 'react';
 
-import memoize from "memoize-one";
+import memoize from 'memoize-one';
 
 // @mui/icons-material
-import HomeIcon from "@mui/icons-material/Home";
-import PowerIcon from "@mui/icons-material/Power";
-import SchoolIcon from "@mui/icons-material/School";
-import WifiIcon from "@mui/icons-material/Wifi";
-import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
-import FlightIcon from "@mui/icons-material/Flight";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
-import CategoryIcon from "@mui/icons-material/Category";
+import HomeIcon from '@mui/icons-material/Home';
+import PowerIcon from '@mui/icons-material/Power';
+import SchoolIcon from '@mui/icons-material/School';
+import WifiIcon from '@mui/icons-material/Wifi';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
+import FlightIcon from '@mui/icons-material/Flight';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import CategoryIcon from '@mui/icons-material/Category';
 
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import HistoryIcon from "@mui/icons-material/History";
-import DonutLargeIcon from "@mui/icons-material/DonutLarge";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import TransformIcon from "@mui/icons-material/Transform";
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import HistoryIcon from '@mui/icons-material/History';
+import DonutLargeIcon from '@mui/icons-material/DonutLarge';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import TransformIcon from '@mui/icons-material/Transform';
 
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import MuseumIcon from "@mui/icons-material/Museum";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import SubtitlesIcon from "@mui/icons-material/Subtitles";
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import MuseumIcon from '@mui/icons-material/Museum';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
 
 const iconMap = {
   home: HomeIcon,
@@ -58,13 +58,13 @@ const iconMap = {
 };
 
 export const AppIcon = memoize(({ icon, clickable, color, fontSize }) => {
-  const cursor = clickable ? "pointer" : "auto";
+  const cursor = clickable ? 'pointer' : 'auto';
   const AppIcon = iconMap[icon] ? iconMap[icon] : SubtitlesIcon;
   return (
     <AppIcon
-      fontSize={fontSize ? fontSize : "small"}
-      color={color ? color : "primary"}
-      style={{ top: "1px", cursor: cursor }}
+      fontSize={fontSize ? fontSize : 'small'}
+      color={color ? color : 'primary'}
+      style={{ top: '1px', cursor: cursor }}
     />
   );
 });

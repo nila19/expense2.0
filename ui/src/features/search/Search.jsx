@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import { Grid } from "@mui/material";
+import { Grid } from '@mui/material';
 
-import { EXPENSE_BLOCK } from "app/constants";
+import { EXPENSE_BLOCK } from 'app/constants';
 
-import { ExpenseSection } from "features/search/expenses/ExpenseSection";
-import { SearchSection } from "features/search/form/SearchSection";
+import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
+import { SearchSection } from 'features/search/form/SearchSection';
 
 const Search = () => {
   return (

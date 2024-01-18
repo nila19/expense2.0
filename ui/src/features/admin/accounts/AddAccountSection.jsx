@@ -1,9 +1,9 @@
-import React, { memo } from "react";
+import React, { memo } from 'react';
 
-import { AppSection } from "components/app/AppSection";
+import { AppSection } from 'components/app/AppSection';
 
-import { AddAccountTab } from "features/admin/accounts/AddAccountTab";
+import { AddAccountTab } from 'features/admin/accounts/AddAccountTab';
 
 export const AddAccountSection = memo(() => {
-  return <AppSection title="ADD ACCOUNT" headerColor="success" content=<AddAccountTab /> />;
+  return <AppSection title='ADD ACCOUNT' headerColor='success' content=<AddAccountTab /> />;
 });

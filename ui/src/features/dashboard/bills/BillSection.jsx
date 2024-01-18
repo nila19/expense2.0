@@ -1,13 +1,13 @@
-import React, { useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
-import { AppSection } from "components/app/AppSection";
+import { AppSection } from 'components/app/AppSection';
 
-import { BILLS_TAB, ICONS } from "app/constants";
-import { BillTab } from "features/dashboard/bills/billTab/BillTab";
-import { hasBillsToClose, hasBillsToPay } from "features/dashboard/bills/billUtils";
+import { BILLS_TAB, ICONS } from 'app/constants';
+import { BillTab } from 'features/dashboard/bills/billTab/BillTab';
+import { hasBillsToClose, hasBillsToPay } from 'features/dashboard/bills/billUtils';
 
-import { selectBills } from "features/dashboard/bills/billTab/billTabSlice";
+import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 
 export const BillSection = () => {
   const bills = useSelector(selectBills);
@@ -17,8 +17,8 @@ export const BillSection = () => {
 
   return (
     <AppSection
-      title="BILLS"
-      headerColor="primary"
+      title='BILLS'
+      headerColor='primary'
       tabs={[
         {
           tabName: BILLS_TAB.UNPAID,

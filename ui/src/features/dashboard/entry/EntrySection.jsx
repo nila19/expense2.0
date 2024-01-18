@@ -1,14 +1,14 @@
-import React, { memo, useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { memo, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
-import { AppSection } from "components/app/AppSection";
+import { AppSection } from 'components/app/AppSection';
 
-import { ENTRY_TAB, ICONS } from "app/constants";
-import { EntryTab } from "features/dashboard/entry/EntryTab";
-import { buildCategoriesOptions, buildAccountOptions } from "features/utils";
+import { ENTRY_TAB, ICONS } from 'app/constants';
+import { EntryTab } from 'features/dashboard/entry/EntryTab';
+import { buildCategoriesOptions, buildAccountOptions } from 'features/utils';
 
-import { selectStartupData } from "features/startup/startupSlice";
-import { selectAccounts } from "features/accounts/accountSlice";
+import { selectStartupData } from 'features/startup/startupSlice';
+import { selectAccounts } from 'features/accounts/accountSlice';
 
 export const EntrySection = memo(() => {
   const { categories, descriptions } = useSelector(selectStartupData);
@@ -21,8 +21,8 @@ export const EntrySection = memo(() => {
 
   return (
     <AppSection
-      title="ADD"
-      headerColor="success"
+      title='ADD'
+      headerColor='success'
       tabs={[
         {
           tabName: ENTRY_TAB.EXPENSE,

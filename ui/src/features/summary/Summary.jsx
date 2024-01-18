@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { SummarySection } from "features/summary/SummarySection";
+import { SummarySection } from 'features/summary/SummarySection';
 
 const Summary = () => {
   return <SummarySection />;

@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
 
-import { SummaryHeader } from "features/summary/header/SummaryHeader";
-import { SummaryBody } from "features/summary/body/SummaryBody";
+import { SummaryHeader } from 'features/summary/header/SummaryHeader';
+import { SummaryBody } from 'features/summary/body/SummaryBody';
 
 export const SummaryTab = ({
   page,
@@ -25,8 +25,6 @@ export const SummaryTab = ({
           changePage={changePage}
           monthsForPage={monthsForPage}
         />
-        {/* </TableHead>
-      <TableBody> */}
         <SummaryBody
           page={page}
           monthsForPage={monthsForPage}

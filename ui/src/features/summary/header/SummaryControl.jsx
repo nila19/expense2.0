@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import IconButton from "@mui/material/IconButton";
+import IconButton from '@mui/material/IconButton';
 
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import { Grid } from "@mui/material";
+import { Grid } from '@mui/material';
 
-import { CustomCheckBox } from "features/inputs";
+import { CustomCheckBox } from 'features/inputs';
 
-import { loadSummary } from "features/summary/summarySlice";
+import { loadSummary } from 'features/summary/summarySlice';
 
 export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
   const dispatch = useDispatch();
@@ -36,40 +36,23 @@ export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
   return (
     <Grid container spacing={2} marginTop={0}>
       <Grid item xs={12} sm={12} md={2}>
-        <CustomCheckBox
-          id="forecast"
-          title="Forecast"
-          checked={forecast}
-          onClick={toggleForecast}
-        />
+        <CustomCheckBox id='forecast' title='Forecast' checked={forecast} onClick={toggleForecast} />
       </Grid>
       <Grid item xs={12} sm={12} md={2}>
-        <CustomCheckBox
-          id="regular"
-          title="Regular"
-          disabled={!adhoc}
-          checked={regular}
-          onClick={toggleRegular}
-        />
+        <CustomCheckBox id='regular' title='Regular' disabled={!adhoc} checked={regular} onClick={toggleRegular} />
       </Grid>
       <Grid item xs={12} sm={12} md={2}>
-        <CustomCheckBox
-          id="adhoc"
-          title="Adhoc"
-          disabled={!regular}
-          checked={adhoc}
-          onClick={toggleAdhoc}
-        />
+        <CustomCheckBox id='adhoc' title='Adhoc' disabled={!regular} checked={adhoc} onClick={toggleAdhoc} />
       </Grid>
       <Grid item xs={12} sm={12} md={2}></Grid>
       <Grid item xs={12} sm={12} md={2}>
-        <IconButton size="small" disabled={!hasPrevious} onClick={() => changePage(-1)}>
-          <ArrowBackIcon fontSize="inherit" />
+        <IconButton size='small' disabled={!hasPrevious} onClick={() => changePage(-1)}>
+          <ArrowBackIcon fontSize='inherit' />
         </IconButton>
       </Grid>
       <Grid item xs={12} sm={12} md={2}>
-        <IconButton size="small" disabled={!hasNext} onClick={() => changePage(+1)}>
-          <ArrowForwardIcon fontSize="inherit" />
+        <IconButton size='small' disabled={!hasNext} onClick={() => changePage(+1)}>
+          <ArrowForwardIcon fontSize='inherit' />
         </IconButton>
       </Grid>
     </Grid>
