@@ -1,32 +1,32 @@
-import React from "react";
-import { useField } from "formik";
+import React from 'react';
+import { useField } from 'formik';
 
-import moment from "moment";
-import "moment/locale/es";
+import moment from 'moment';
+import 'moment/locale/es';
 
-import makeStyles from "@mui/styles/makeStyles";
+import makeStyles from '@mui/styles/makeStyles';
 
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import { FORMATS } from "app/constants";
+import { FORMATS } from 'app/constants';
 
-import { labelColor } from "features/inputs/inputUtils";
+import { labelColor } from 'features/inputs/inputUtils';
 
 const fieldStyles = makeStyles(() => ({
   dateRoot: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     // marginTop: "2px",
   },
   dateField: {
     ...labelColor,
-    marginTop: "22px",
-    "& input": {
+    marginTop: '22px',
+    '& input': {
       fontSize: 12,
-      paddingTop: "17px",
-      paddingBottom: "17px",
+      paddingTop: '17px',
+      paddingBottom: '17px',
     },
   },
 }));
@@ -40,10 +40,10 @@ const CustomDatePicker = (props) => {
           {...props}
           disableToolbar
           autoOk
-          variant="inline"
-          inputVariant="outlined"
-          format="MM/DD/YYYY"
-          margin="normal"
+          variant='inline'
+          inputVariant='outlined'
+          format='MM/DD/YYYY'
+          margin='normal'
           className={fieldClasses.dateField}
           InputLabelProps={{ shrink: true }}
         />
@@ -58,7 +58,7 @@ export const FormikDatePicker = (props) => {
   return (
     <CustomDatePicker
       {...props}
-      // {...field}
+      {...field}
       error={touched && error && true}
       onChange={(date) => {
         const val = moment(date).format(FORMATS.YYYYMMDD);

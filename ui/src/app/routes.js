@@ -20,33 +20,33 @@
   10. The `component` key is used to store the component of its route.
 */
 
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Material Dashboard 2 React layouts
-import Dashboard from "features/dashboard/Dashboard";
-import Search from "features/search/Search";
-import Summary from "features/summary/Summary";
-import Admin from "features/admin/Admin";
+import Dashboard from 'features/dashboard/Dashboard';
+import Search from 'features/search/Search';
+import Summary from 'features/summary/Summary';
+import Admin from 'features/admin/Admin';
 
 const routes = [
   {
-    key: "dashboard",
-    route: "/dashboard",
+    key: 'dashboard',
+    route: '/dashboard',
     component: <Dashboard />,
   },
   {
-    key: "summary",
-    route: "/summary",
+    key: 'summary',
+    route: '/summary',
     component: <Summary />,
   },
   {
-    key: "search",
-    route: "/search",
+    key: 'search',
+    route: '/search',
     component: <Search />,
   },
   {
-    key: "admin",
-    route: "/admin",
+    key: 'admin',
+    route: '/admin',
     component: <Admin />,
   },
 ];
@@ -59,6 +59,6 @@ const buildRoutes = (routes) =>
 export const AppRoutes = () => (
   <Routes>
     {buildRoutes(routes)}
-    <Route path="*" element={<Navigate to="/dashboard" />} />
+    <Route path='*' element={<Navigate to='/dashboard' />} />
   </Routes>
 );

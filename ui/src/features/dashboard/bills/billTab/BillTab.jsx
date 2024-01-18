@@ -1,26 +1,26 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import moment from "moment";
+import moment from 'moment';
 
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 
 // @mui/icons-material
-import PaymentIcon from "@mui/icons-material/Payment";
-import DehazeIcon from "@mui/icons-material/Dehaze";
-import FilterTiltShiftIcon from "@mui/icons-material/FilterTiltShift";
-import TouchAppIcon from "@mui/icons-material/TouchApp";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import PaymentIcon from '@mui/icons-material/Payment';
+import DehazeIcon from '@mui/icons-material/Dehaze';
+import FilterTiltShiftIcon from '@mui/icons-material/FilterTiltShift';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
-import { COUNTS, COLOR } from "app/config";
+import { COUNTS, COLOR } from 'app/config';
 
-import { BillPayDialog } from "features/dashboard/bills/billPay/BillPayDialog";
-import { formatAmt, formatDate } from "features/utils";
-import { filterAndSortBills } from "features/dashboard/bills/billUtils";
+import { BillPayDialog } from 'features/dashboard/bills/billPay/BillPayDialog';
+import { formatAmt, formatDate } from 'features/utils';
+import { filterAndSortBills } from 'features/dashboard/bills/billUtils';
 
-import { selectDashboardGlobal, setBillFilter } from "features/dashboard/dashboardGlobalSlice";
-import { selectBills, closeBill } from "features/dashboard/bills/billTab/billTabSlice";
-import { payBill } from "features/dashboard/bills/billPay/billPaySlice";
+import { selectDashboardGlobal, setBillFilter } from 'features/dashboard/dashboardGlobalSlice';
+import { selectBills, closeBill } from 'features/dashboard/bills/billTab/billTabSlice';
+import { payBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const buildBillActions = (bill, dispatch, setOpenEdit) => {
   const handleBillClose = (id) => {
@@ -35,12 +35,12 @@ const buildBillActions = (bill, dispatch, setOpenEdit) => {
   const actions = [];
 
   // if bill is not closed & billDt is in the past, display CloseBill button
-  if (!bill.closed && moment().isAfter(bill.billDt, "day")) {
+  if (!bill.closed && moment().isAfter(bill.billDt, 'day')) {
     actions.push(
       <GridActionsCellItem
-        icon={<FilterTiltShiftIcon fontSize="small" />}
-        label="Close Bill"
-        color="primary"
+        icon={<FilterTiltShiftIcon fontSize='small' />}
+        label='Close Bill'
+        color='primary'
         onClick={() => handleBillClose(bill.id)}
       />
     );
@@ -50,9 +50,9 @@ const buildBillActions = (bill, dispatch, setOpenEdit) => {
   if (bill.closed && bill.balance > 0) {
     actions.push(
       <GridActionsCellItem
-        icon={<PaymentIcon fontSize="small" />}
-        label="Pay Bill"
-        color="primary"
+        icon={<PaymentIcon fontSize='small' />}
+        label='Pay Bill'
+        color='primary'
         onClick={() => handleBillPay(bill)}
       />
     );
@@ -101,7 +101,7 @@ export const BillTab = ({ paid, closed }) => {
     [accountFilter]
   );
 
-  console.log("Rendering Bills.. " + paid + " : " + closed);
+  console.log('Rendering Bills.. ' + paid + ' : ' + closed);
   const filteredBills = useMemo(
     () => filterAndSortBills(bills, closed, paid, accountFilter),
     [bills, closed, paid, accountFilter]
@@ -114,76 +114,76 @@ export const BillTab = ({ paid, closed }) => {
 
     return [
       {
-        field: "selection",
-        type: "actions",
+        field: 'selection',
+        type: 'actions',
         sortable: false,
-        headerAlign: "center",
-        align: "center",
+        headerAlign: 'center',
+        align: 'center',
         flex: 1,
-        renderHeader: () => <MenuOpenIcon fontSize="small" />,
+        renderHeader: () => <MenuOpenIcon fontSize='small' />,
         getActions: ({ row }) => [
           <GridActionsCellItem
-            icon={<DehazeIcon fontSize="small" />}
-            label="Filter Expenses"
-            color={row.id === billFilter ? "warning" : "primary"}
+            icon={<DehazeIcon fontSize='small' />}
+            label='Filter Expenses'
+            color={row.id === billFilter ? 'warning' : 'primary'}
             onClick={() => handleBillFilter(row.id)}
           />,
         ],
       },
-      { field: "id", sortable: false, width: 100, headerName: "ID" },
+      { field: 'id', sortable: false, width: 100, headerName: 'ID' },
       {
-        field: "acctName",
+        field: 'acctName',
         sortable: false,
-        align: "left",
+        align: 'left',
         flex: 2,
-        headerName: "ACCOUNT",
+        headerName: 'ACCOUNT',
         valueGetter: ({ row }) => row.account.name,
       },
       {
-        field: "billDt",
+        field: 'billDt',
         sortable: false,
         flex: 1.5,
-        headerName: "BILL DATE",
+        headerName: 'BILL DATE',
         valueFormatter: ({ value }) => formatDate(value),
       },
       {
-        field: "dueDt",
+        field: 'dueDt',
         sortable: false,
         flex: 1.5,
-        headerName: "DUE DATE",
+        headerName: 'DUE DATE',
         valueFormatter: ({ value }) => formatDate(value),
       },
       {
-        field: "amount",
+        field: 'amount',
         sortable: false,
         flex: 1.5,
-        headerName: "BILL AMT",
-        type: "number",
+        headerName: 'BILL AMT',
+        type: 'number',
         valueFormatter: ({ value }) => formatAmt(value, true),
       },
       {
-        field: "balance",
+        field: 'balance',
         sortable: false,
         flex: 1.5,
-        headerName: "BALANCE",
-        type: "number",
+        headerName: 'BALANCE',
+        type: 'number',
         valueFormatter: ({ value }) => formatAmt(value, true),
       },
       {
-        field: "paidDt",
+        field: 'paidDt',
         sortable: false,
         flex: 1.5,
-        headerName: "PAID DATE",
+        headerName: 'PAID DATE',
         valueGetter: ({ row }) => getPaidDate(row),
         valueFormatter: ({ value }) => formatDate(value),
       },
       {
-        field: "payment",
-        type: "actions",
+        field: 'payment',
+        type: 'actions',
         sortable: false,
-        headerAlign: "center",
+        headerAlign: 'center',
         flex: 1.5,
-        renderHeader: () => <TouchAppIcon fontSize="small" />,
+        renderHeader: () => <TouchAppIcon fontSize='small' />,
         getActions: ({ row }) => buildBillActions(row, dispatch, setOpenEdit),
       },
     ];
@@ -206,9 +206,12 @@ export const BillTab = ({ paid, closed }) => {
         rowHeight={35}
         sx={{
           fontSize: 12,
-          "& .MuiDataGrid-columnHeaders": {
+          '& .MuiDataGrid-columnHeaders': {
             color: COLOR.RED,
-            fontWeight: "normal",
+            fontWeight: 'normal',
+          },
+          '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+            display: 'none',
           },
         }}
       />

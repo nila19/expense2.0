@@ -13,7 +13,8 @@ RUN npm config delete proxy
 RUN npm config delete http-proxy
 RUN npm config delete https-proxy
 # RUN npm ci --force --noproxy registry.npmjs.org
-RUN npm ci --force
+# RUN npm ci --force
+RUN npm install -f
 
 COPY . /app
 RUN npm run build

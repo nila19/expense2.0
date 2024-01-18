@@ -1,26 +1,26 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 // react-router components
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-import moment from "moment";
+import moment from 'moment';
 
 // @mui material components
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 // Material Dashboard 2 React themes
-import theme from "assets/theme";
+import theme from 'assets/theme';
 
-import { AppRoutes } from "app/routes";
+import { AppRoutes } from 'app/routes';
 
-import "app/app.css";
+import 'app/app.css';
 
-import { Startup, Loading } from "features/startup/Startup";
-import { MenuBar } from "features/menu/MenuBar";
+import { Startup, Loading } from 'features/startup/Startup';
+import { MenuBar } from 'features/menu/MenuBar';
 
-import { selectStartup, selectStartupReload, STATE } from "features/startup/startupSlice";
+import { selectStartup, selectStartupReload, STATE } from 'features/startup/startupSlice';
 
 const FullApp = () => {
   const { pathname } = useLocation();
@@ -44,7 +44,7 @@ export const App = () => {
   const { connection } = useSelector(selectStartup);
   const { reloadDashboard, loadingCompleted, loadingFailed } = useSelector(selectStartupReload);
 
-  moment.locale("en");
+  moment.locale('en');
 
   const connectionOK = connection === STATE.FULFILLED;
   const connectionFailed = connection === STATE.REJECTED;
