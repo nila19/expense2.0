@@ -1,18 +1,13 @@
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
 
-// @mui/icons-material
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import HistoryIcon from '@mui/icons-material/History';
-import DonutLargeIcon from '@mui/icons-material/DonutLarge';
+import { AppSection } from "components/app/AppSection";
 
-import Tabs from 'components/CustomTabs/CustomTabs.js';
+import { BILLS_TAB, ICONS } from "app/constants";
+import { BillTab } from "features/dashboard/bills/billTab/BillTab";
+import { hasBillsToClose, hasBillsToPay } from "features/dashboard/bills/billUtils";
 
-import { BILLS_TAB } from 'app/constants';
-import { BillTab } from 'features/dashboard/bills/billTab/BillTab';
-import { hasBillsToClose, hasBillsToPay } from 'features/dashboard/bills/billUtils';
-
-import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
+import { selectBills } from "features/dashboard/bills/billTab/billTabSlice";
 
 export const BillSection = () => {
   const bills = useSelector(selectBills);
@@ -21,25 +16,25 @@ export const BillSection = () => {
   const billsToClose = useMemo(() => hasBillsToClose(bills), [bills]);
 
   return (
-    <Tabs
-      title='BILLS'
-      headerColor='primary'
+    <AppSection
+      title="BILLS"
+      headerColor="primary"
       tabs={[
         {
           tabName: BILLS_TAB.UNPAID,
-          tabIcon: NotificationsActiveIcon,
+          tabIcon: ICONS.NotificationsActiveIcon,
           tabContent: <BillTab closed paid={false} />,
           badge: billsToPay,
         },
         {
           tabName: BILLS_TAB.PAID,
-          tabIcon: HistoryIcon,
+          tabIcon: ICONS.HistoryIcon,
           tabContent: <BillTab closed paid />,
           badge: false,
         },
         {
           tabName: BILLS_TAB.OPEN,
-          tabIcon: DonutLargeIcon,
+          tabIcon: ICONS.DonutLargeIcon,
           tabContent: <BillTab closed={false} />,
           badge: billsToClose,
         },

@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React from "react";
 
-import { Grid } from '@mui/material';
+import { Grid } from "@mui/material";
 
-import { COUNTS } from 'app/config';
-import { EXPENSE_BLOCK } from 'app/constants';
-import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
-import { SearchForm } from 'features/search/form/SearchForm';
+import { EXPENSE_BLOCK } from "app/constants";
+
+import { ExpenseSection } from "features/search/expenses/ExpenseSection";
+import { SearchSection } from "features/search/form/SearchSection";
 
 const Search = () => {
-  const [rowsPerPage, setRowsPerPage] = useState(COUNTS.SEARCH_EXPENSES);
-
   return (
     <>
-      <SearchForm />
-      <Grid container spacing={2} alignItems='flex-start' style={{ marginTop: -20 }}>
+      <Grid container spacing={2}>
         <Grid item lg={12}>
-          <ExpenseSection section={EXPENSE_BLOCK.SEARCH} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
+          <SearchSection />
+        </Grid>
+        <Grid item lg={12}>
+          <ExpenseSection section={EXPENSE_BLOCK.SEARCH} />
         </Grid>
       </Grid>
     </>

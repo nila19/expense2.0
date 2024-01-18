@@ -1,21 +1,20 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import makeStyles from '@mui/styles/makeStyles';
-import IconButton from '@mui/material/IconButton';
+import makeStyles from "@mui/styles/makeStyles";
+import IconButton from "@mui/material/IconButton";
 
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
-import { COLOR } from 'app/config';
-import { PAGINATION_BLOCK } from 'app/constants';
-import { ActionButton } from 'features/inputs';
-import { formatAmt } from 'features/utils';
+import { PAGINATION_BLOCK } from "app/constants";
+import { ActionButton } from "features/inputs";
+import { formatAmt } from "features/utils";
 
-import { selectDashboardGlobal, resetFilters } from 'features/dashboard/dashboardGlobalSlice';
+import { selectDashboardGlobal, resetFilters } from "features/dashboard/dashboardGlobalSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +23,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt, onPageChange }) => {
+export const PaginationActions = ({
+  section,
+  count,
+  page,
+  rowsPerPage,
+  totalAmt,
+  onPageChange,
+}) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -32,7 +38,8 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
 
   // for bills list, only consider accountFilter
   // for expenses list, consider both accountFilter & billFilter
-  const filterEnabled = section === PAGINATION_BLOCK.BILLS ? accountFilter : accountFilter || billFilter;
+  const filterEnabled =
+    section === PAGINATION_BLOCK.BILLS ? accountFilter : accountFilter || billFilter;
 
   const handleFirstPageButtonClick = (event) => {
     onPageChange(event, 0);
@@ -52,46 +59,50 @@ export const PaginationActions = ({ section, count, page, rowsPerPage, totalAmt,
 
   return (
     <div className={classes.root}>
-      <span style={{ color: COLOR.ROSE, fontSize: 12, paddingLeft: 20, paddingRight: 20 }}>
+      <span style={{ color: "primary", fontSize: 12, paddingLeft: 20, paddingRight: 20 }}>
         {formatAmt(totalAmt, true)}
       </span>
       <ActionButton
-        title='Clear Expense Filters'
-        color='rose'
+        title="Clear Expense Filters"
+        color="primary"
         disabled={!filterEnabled}
         onClick={() => dispatch(resetFilters())}
-        icon={filterEnabled ? <FilterListIcon fontSize='small' /> : ''}
+        icon={filterEnabled ? <FilterListIcon fontSize="small" /> : ""}
       />
       <IconButton
         onClick={handleFirstPageButtonClick}
-        style={{ padding: '4px 12px' }}
+        style={{ padding: "4px 12px" }}
         disabled={page === 0}
-        aria-label='first page'
-        size="large">
+        aria-label="first page"
+        size="large"
+      >
         <FirstPageIcon />
       </IconButton>
       <IconButton
         onClick={handleBackButtonClick}
-        style={{ padding: '4px 12px' }}
+        style={{ padding: "4px 12px" }}
         disabled={page === 0}
-        aria-label='previous page'
-        size="large">
+        aria-label="previous page"
+        size="large"
+      >
         <KeyboardArrowLeftIcon />
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
-        style={{ padding: '4px 12px' }}
+        style={{ padding: "4px 12px" }}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label='next page'
-        size="large">
+        aria-label="next page"
+        size="large"
+      >
         <KeyboardArrowRightIcon />
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
-        style={{ padding: '4px 12px' }}
+        style={{ padding: "4px 12px" }}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label='last page'
-        size="large">
+        aria-label="last page"
+        size="large"
+      >
         <LastPageIcon />
       </IconButton>
     </div>

@@ -1,25 +1,25 @@
-import React, { memo, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
+import React, { memo, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { Formik, Form, Field } from "formik";
 // import memoize from 'memoize-one';
 
 // import _ from 'lodash';
 
 // @mui/icons-material
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 
-import GridItem from 'components/Grid/GridItem.js';
-import GridContainer from 'components/Grid/GridContainer.js';
-import Button from 'components/CustomButtons/Button.js';
-import Card from 'components/Card/Card.js';
-import CardBody from 'components/Card/CardBody.js';
+import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "components/Grid/GridContainer.js";
+import Button from "components/CustomButtons/Button.js";
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
 
-import { acctSchema } from 'features/utils';
-import { FormikTextField } from 'features/inputs';
-import { FormikAmount, FormikCheckBox, FormikComboBox } from 'features/inputs';
-import { buildIconOptions, buildColorOptions } from 'features/utils';
+import { acctSchema } from "features/utils";
+import { FormikTextField } from "features/inputs";
+import { FormikAmount, FormikCheckBox, FormikComboBox } from "features/inputs";
+import { buildIconOptions, buildColorOptions } from "features/utils";
 
-import { addAccount } from 'features/accounts/accountSlice';
+import { addAccount } from "features/accounts/accountSlice";
 
 export const AddAccount = memo(() => {
   const dispatch = useDispatch();
@@ -45,59 +45,88 @@ export const AddAccount = memo(() => {
       initialValues={initialValues()}
       validationSchema={acctSchema}
       onSubmit={(values, { setSubmitting }) => {
-        console.log('Submitting');
+        console.log("Submitting");
         setSubmitting(false);
         dispatch(addAccount(values));
       }}
     >
       {({ isSubmitting }) => (
         <Form>
-          <Card style={{ marginBottom: '20px' }}>
-            <CardBody style={{ padding: '10px 10px' }}>
+          <Card style={{ marginBottom: "20px" }}>
+            <CardBody style={{ padding: "10px 10px" }}>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={5}>
                   <GridContainer>
-                    <GridItem xs={12} sm={12} md={5} style={{ marginTop: '10px' }}>
-                      <Field name='name' id='name' label='Account Name' component={FormikTextField} />
+                    <GridItem xs={12} sm={12} md={5} style={{ marginTop: "10px" }}>
+                      <Field
+                        name="name"
+                        id="name"
+                        label="Account Name"
+                        component={FormikTextField}
+                      />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={4}>
-                      <Field name='icon' id='icon' label='Icon' component={FormikComboBox} options={iconOptions} />
+                      <Field
+                        name="icon"
+                        id="icon"
+                        label="Icon"
+                        component={FormikComboBox}
+                        options={iconOptions}
+                      />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
-                      <Field name='color' id='color' label='Color' component={FormikComboBox} options={colorOptions} />
+                      <Field
+                        name="color"
+                        id="color"
+                        label="Color"
+                        component={FormikComboBox}
+                        options={colorOptions}
+                      />
                     </GridItem>
                   </GridContainer>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={2} style={{ marginTop: '20px' }}>
+                <GridItem xs={12} sm={12} md={2} style={{ marginTop: "20px" }}>
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={4}>
-                      Cash <Field name='cash' id='cash' label='Cash' component={FormikCheckBox} />
+                      Cash <Field name="cash" id="cash" label="Cash" component={FormikCheckBox} />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={4}>
-                      Billed <Field name='billed' id='billed' label='Billed' component={FormikCheckBox} />
+                      Billed{" "}
+                      <Field name="billed" id="billed" label="Billed" component={FormikCheckBox} />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={4}>
-                      Active <Field name='active' id='active' label='Active' component={FormikCheckBox} />
+                      Active{" "}
+                      <Field name="active" id="active" label="Active" component={FormikCheckBox} />
                     </GridItem>
                   </GridContainer>
                 </GridItem>
                 <GridItem xs={12} sm={12} md={5}>
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={2}>
-                      <Field name='seq' id='seq' label='Seq' component={FormikTextField} />
+                      <Field name="seq" id="seq" label="Seq" component={FormikTextField} />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={2}>
-                      <Field name='closingDay' id='closingDay' label='Closing Day' component={FormikTextField} />
+                      <Field
+                        name="closingDay"
+                        id="closingDay"
+                        label="Closing Day"
+                        component={FormikTextField}
+                      />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={2}>
-                      <Field name='dueDay' id='dueDay' label='Due Day' component={FormikTextField} />
+                      <Field
+                        name="dueDay"
+                        id="dueDay"
+                        label="Due Day"
+                        component={FormikTextField}
+                      />
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={3} style={{ marginTop: '-10px' }}>
-                      <Field name='balance' id='balance' label='Balance' labelWidth={60} component={FormikAmount} />
+                    <GridItem xs={12} sm={12} md={3} style={{ marginTop: "-10px" }}>
+                      <Field name="balance" id="balance" label="Balance" component={FormikAmount} />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
-                      <div style={{ marginTop: '13px' }}>
-                        <Button color='success' type='submit' disabled={isSubmitting}>
+                      <div style={{ marginTop: "13px" }}>
+                        <Button color="success" type="submit" disabled={isSubmitting}>
                           <AddIcon />
                         </Button>
                       </div>

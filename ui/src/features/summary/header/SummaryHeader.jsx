@@ -1,24 +1,23 @@
-import React from 'react';
+import React from "react";
 
-import _ from 'lodash';
+import _ from "lodash";
 
-import makeStyles from '@mui/styles/makeStyles';
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
+import makeStyles from "@mui/styles/makeStyles";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
 
-import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
+import { COLOR } from "app/config";
 
-import { COLOR } from 'app/config';
-
-import { SummaryControl } from 'features/summary/header/SummaryControl';
-
-const tableStyles = makeStyles(styles);
+import { SummaryControl } from "features/summary/header/SummaryControl";
 
 const useStyles = makeStyles(() => ({
   label: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLOR.ORANGE,
+  },
+  tableRow: {
+    marginTop: "0px",
   },
 }));
 
@@ -29,7 +28,7 @@ const MonthNames = ({ monthsForPage }) => {
     <>
       {monthsForPage &&
         monthsForPage.map((e) => (
-          <TableCell key={e.id} style={{ marginTop: '10px', textAlign: 'center' }}>
+          <TableCell key={e.id} style={{ textAlign: "center" }}>
             <span className={classes.label}>{_.toUpper(e.name)}</span>
           </TableCell>
         ))}
@@ -38,7 +37,7 @@ const MonthNames = ({ monthsForPage }) => {
 };
 
 export const SummaryHeader = ({ monthsForPage, ...controlProps }) => {
-  const classes = tableStyles();
+  const classes = useStyles();
 
   return (
     <TableRow className={classes.tableRow}>

@@ -1,45 +1,54 @@
-import React, { useState } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
-import _ from 'lodash';
+import _ from "lodash";
 
 // @mui/material components
-import Grid from '@mui/material/Grid';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import Grid from "@mui/material/Grid";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 // @mui/icons-material
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import FilterNoneIcon from '@mui/icons-material/FilterNone';
-import SearchIcon from '@mui/icons-material/Search';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import EuroIcon from '@mui/icons-material/Euro';
-import AddIcon from '@mui/icons-material/Add';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FilterNoneIcon from "@mui/icons-material/FilterNone";
+import SearchIcon from "@mui/icons-material/Search";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import EuroIcon from "@mui/icons-material/Euro";
+import AddIcon from "@mui/icons-material/Add";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 
-import Button from 'components/CustomButtons/Button.js';
+import MDButton from "components/MDButton";
 
-import { ROUTE } from 'app/config';
-import { ENV } from 'app/constants';
-import { selectStartup, selectStartupData, setReloadDashboard } from 'features/startup/startupSlice';
-import { selectAppGlobal, setSelectedCity, setAccountsExpanded, setShowChartBlock } from 'features/appGlobalSlice';
-import { resetFilters } from 'features/dashboard/dashboardGlobalSlice';
-import { loadChart } from 'features/dashboard/chart/chartSlice';
+import { ROUTE } from "app/config";
+import { ENV } from "app/constants";
+import {
+  selectStartup,
+  selectStartupData,
+  setReloadDashboard,
+} from "features/startup/startupSlice";
+import {
+  selectAppGlobal,
+  setSelectedCity,
+  setAccountsExpanded,
+  setShowChartBlock,
+} from "features/appGlobalSlice";
+import { resetFilters } from "features/dashboard/dashboardGlobalSlice";
+import { loadChart } from "features/dashboard/chart/chartSlice";
 
 const buildCityIcon = (currency) => {
   switch (currency) {
-    case 'USD':
+    case "USD":
       return <AttachMoneyIcon />;
-    case 'INR':
+    case "INR":
       return <EuroIcon />;
     default:
-      return '';
+      return "";
   }
 };
 
@@ -89,65 +98,104 @@ export const MenuBar = () => {
   ));
 
   return (
-    <div style={{ marginLeft: '13px', marginTop: '8px' }}>
+    <div style={{ marginLeft: "13px", marginTop: "8px" }}>
       <Grid container spacing={2}>
         <Grid container item lg={6} spacing={2}>
-          <Button component={RouterLink} to='/dashboard' color='primary' size='sm'>
-            <DashboardIcon /> Dashboard
-          </Button>
-          <Button
+          <MDButton
             component={RouterLink}
-            to='/summary'
-            onClick={() => dispatch(resetFilters())}
-            color='success'
-            size='sm'
+            to="/dashboard"
+            color="primary"
+            variant="text"
+            size="medium"
+            startIcon={<DashboardIcon />}
           >
-            <FilterNoneIcon /> Monthly Summary
-          </Button>
-          <Button component={RouterLink} to='/search' onClick={() => dispatch(resetFilters())} color='rose' size='sm'>
-            <SearchIcon /> Search
-          </Button>
-          <Button component={RouterLink} to='/admin' onClick={() => dispatch(resetFilters())} color='warning' size='sm'>
-            <SupervisorAccountIcon /> Admin
-          </Button>
+            Dashboard
+          </MDButton>
+          <MDButton
+            component={RouterLink}
+            to="/summary"
+            onClick={() => dispatch(resetFilters())}
+            color="warning"
+            variant="text"
+            size="medium"
+            startIcon={<FilterNoneIcon />}
+          >
+            Monthly Summary
+          </MDButton>
+          <MDButton
+            component={RouterLink}
+            to="/search"
+            onClick={() => dispatch(resetFilters())}
+            color="info"
+            variant="text"
+            size="medium"
+            startIcon={<SearchIcon />}
+          >
+            Search
+          </MDButton>
+          <MDButton
+            component={RouterLink}
+            to="/admin"
+            onClick={() => dispatch(resetFilters())}
+            color="success"
+            variant="text"
+            size="medium"
+            startIcon={<SupervisorAccountIcon />}
+          >
+            Admin
+          </MDButton>
         </Grid>
-        <Grid container item justifyContent='flex-end' lg={6} spacing={2}>
-          <Button color={isNonPROD ? 'rose' : 'success'} size='sm'>
+        <Grid container item justifyContent="flex-end" lg={6} spacing={2}>
+          <MDButton variant="text" color={isNonPROD ? "warning" : "success"} size="large">
             {env}
-          </Button>
-          <Button
+          </MDButton>
+          <MDButton
             disabled={!isDashboard}
             onClick={handleReloadDashboard}
-            color={reloadDashboard ? 'warning' : 'primary'}
-            size='sm'
+            color={reloadDashboard ? "warning" : "error"}
+            iconOnly={true}
+            variant="text"
+            size="large"
           >
             <AutorenewIcon />
-          </Button>
-          <Button
+          </MDButton>
+          <MDButton
             disabled={!isDashboard}
             onClick={handleShowChartBlock}
-            color={showChartBlock ? 'success' : 'warning'}
-            size='sm'
+            color={showChartBlock ? "success" : "warning"}
+            size="large"
+            iconOnly={true}
+            variant="text"
           >
             {showChartBlock ? <AddIcon /> : <BarChartIcon />}
-          </Button>
-          <Button disabled={!isDashboard} onClick={handleAccountExpansion} color='primary' size='sm'>
+          </MDButton>
+          <MDButton
+            disabled={!isDashboard}
+            onClick={handleAccountExpansion}
+            color="info"
+            size="large"
+            iconOnly={true}
+            variant="text"
+          >
             {accountsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </Button>
+          </MDButton>
           {city && (
-            <Button
+            <MDButton
               disabled={!isDashboard}
               onClick={handleCityClick}
-              color='primary'
-              size='sm'
+              color="secondary"
+              iconOnly={true}
+              variant="text"
+              size="large"
               style={{ minWidth: 120 }}
+              startIcon={<LocationCityIcon />}
             >
-              <LocationCityIcon /> {city.name}
-            </Button>
+              {city.name}
+            </MDButton>
           )}
           {city && (
             <Menu
-              id='simple-menu'
+              id="simple-menu"
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
@@ -157,9 +205,9 @@ export const MenuBar = () => {
             </Menu>
           )}
           {city && (
-            <Button justIcon simple disabled color='success' size='sm'>
+            <MDButton iconOnly={true} variant="text" color="success" size="large">
               {buildCityIcon(city.currency)}
-            </Button>
+            </MDButton>
           )}
         </Grid>
       </Grid>

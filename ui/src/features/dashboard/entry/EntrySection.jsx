@@ -1,18 +1,14 @@
-import React, { memo, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { memo, useMemo } from "react";
+import { useSelector } from "react-redux";
 
-// @mui/icons-material
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import TransformIcon from '@mui/icons-material/Transform';
+import { AppSection } from "components/app/AppSection";
 
-import Tabs from 'components/CustomTabs/CustomTabs.js';
+import { ENTRY_TAB, ICONS } from "app/constants";
+import { EntryTab } from "features/dashboard/entry/EntryTab";
+import { buildCategoriesOptions, buildAccountOptions } from "features/utils";
 
-import { ENTRY_TAB } from 'app/constants';
-import { EntryTab } from 'features/dashboard/entry/EntryTab';
-import { buildCategoriesOptions, buildAccountOptions } from 'features/utils';
-
-import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/accounts/accountSlice';
+import { selectStartupData } from "features/startup/startupSlice";
+import { selectAccounts } from "features/accounts/accountSlice";
 
 export const EntrySection = memo(() => {
   const { categories, descriptions } = useSelector(selectStartupData);
@@ -22,22 +18,23 @@ export const EntrySection = memo(() => {
   const categoriesOptions = useMemo(() => buildCategoriesOptions(categories), [categories]);
 
   const options = { descriptions, categories, accountOptions, categoriesOptions };
-  console.log('Rendering Entry Section.. ');
 
   return (
-    <Tabs
-      title='ADD'
-      headerColor='success'
+    <AppSection
+      title="ADD"
+      headerColor="success"
       tabs={[
         {
           tabName: ENTRY_TAB.EXPENSE,
-          tabIcon: AddShoppingCartIcon,
+          tabIcon: ICONS.AddShoppingCartIcon,
           tabContent: <EntryTab adjust={false} {...options} />,
+          badge: false,
         },
         {
           tabName: ENTRY_TAB.ADJUSTMENT,
-          tabIcon: TransformIcon,
+          tabIcon: ICONS.TransformIcon,
           tabContent: <EntryTab adjust {...options} />,
+          badge: false,
         },
       ]}
     />

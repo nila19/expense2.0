@@ -1,53 +1,28 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import classnames from 'classnames';
-import moment from 'moment';
+import moment from "moment";
 
-import makeStyles from '@mui/styles/makeStyles';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 
 // @mui/icons-material
-import PaymentIcon from '@mui/icons-material/Payment';
-import DehazeIcon from '@mui/icons-material/Dehaze';
-import FilterTiltShiftIcon from '@mui/icons-material/FilterTiltShift';
-import TouchAppIcon from '@mui/icons-material/TouchApp';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import PaymentIcon from "@mui/icons-material/Payment";
+import DehazeIcon from "@mui/icons-material/Dehaze";
+import FilterTiltShiftIcon from "@mui/icons-material/FilterTiltShift";
+import TouchAppIcon from "@mui/icons-material/TouchApp";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 
-import styles from 'assets/jss/material-dashboard-react/components/tasksStyle.js';
+import { COUNTS, COLOR } from "app/config";
 
-import { COUNTS, COLOR } from 'app/config';
-import { PAGINATION_BLOCK } from 'app/constants';
-import { ActionButton } from 'features/inputs';
-import { CustomPagination, PaginationActions } from 'features/inputs/pagination';
-import { BillPayDialog } from 'features/dashboard/bills/billPay/BillPayDialog';
-import { formatAmt, formatDate, getSliceForPage, getTotalAmount } from 'features/utils';
-import { filterAndSortBills } from 'features/dashboard/bills/billUtils';
+import { BillPayDialog } from "features/dashboard/bills/billPay/BillPayDialog";
+import { formatAmt, formatDate } from "features/utils";
+import { filterAndSortBills } from "features/dashboard/bills/billUtils";
 
-import { selectDashboardGlobal, setBillFilter } from 'features/dashboard/dashboardGlobalSlice';
-import { selectBills, closeBill } from 'features/dashboard/bills/billTab/billTabSlice';
-import { payBill } from 'features/dashboard/bills/billPay/billPaySlice';
+import { selectDashboardGlobal, setBillFilter } from "features/dashboard/dashboardGlobalSlice";
+import { selectBills, closeBill } from "features/dashboard/bills/billTab/billTabSlice";
+import { payBill } from "features/dashboard/bills/billPay/billPaySlice";
 
-const headers = [
-  <MenuOpenIcon style={{ fontSize: 18 }} />,
-  'ID',
-  'ACCOUNT',
-  'BILL DATE',
-  'BILL AMT',
-  'BALANCE',
-  'DUE DATE',
-  <TouchAppIcon style={{ fontSize: 18 }} />,
-];
-const cellStyle = { textAlign: 'center', padding: '5px 8px', fontSize: 12 };
-const useStyles = makeStyles(styles);
-
-const BillAction = ({ bill, setOpenEdit }) => {
-  const dispatch = useDispatch();
-
+const buildBillActions = (bill, dispatch, setOpenEdit) => {
   const handleBillClose = (id) => {
     dispatch(closeBill(id));
   };
@@ -57,49 +32,64 @@ const BillAction = ({ bill, setOpenEdit }) => {
     setOpenEdit(true);
   };
 
+  const actions = [];
+
   // if bill is not closed & billDt is in the past, display CloseBill button
-  if (!bill.closed && moment().isAfter(bill.billDt, 'day')) {
-    return (
-      <ActionButton
-        title='Close Bill'
-        color='primary'
+  if (!bill.closed && moment().isAfter(bill.billDt, "day")) {
+    actions.push(
+      <GridActionsCellItem
+        icon={<FilterTiltShiftIcon fontSize="small" />}
+        label="Close Bill"
+        color="primary"
         onClick={() => handleBillClose(bill.id)}
-        icon={<FilterTiltShiftIcon fontSize='small' />}
       />
     );
   }
 
   // if bill is closed & has a balance, display PayBill button
   if (bill.closed && bill.balance > 0) {
-    return (
-      <ActionButton
-        title='Pay Bill'
-        color='primary'
+    actions.push(
+      <GridActionsCellItem
+        icon={<PaymentIcon fontSize="small" />}
+        label="Pay Bill"
+        color="primary"
         onClick={() => handleBillPay(bill)}
-        icon={<PaymentIcon fontSize='small' />}
       />
     );
   }
 
+  return actions;
+};
+
+const getPaidDate = (bill) => {
   // if bill is closed & has a payment, display paid date.
   if (bill.closed && bill.payments && bill.payments.length > 0) {
-    return formatDate(bill.payments[0].transDt);
+    return bill.payments[0].transDt;
   }
+  return null;
+};
 
-  return '';
+const buildColVisibilityModel = (paid, closed) => {
+  const paidDt = paid === true && closed === true;
+  return {
+    paidDt: paidDt,
+    payment: !paidDt,
+  };
 };
 
 export const BillTab = ({ paid, closed }) => {
-  const classes = useStyles();
-  const tableCellClasses = classnames(classes.tableCell);
-
   const dispatch = useDispatch();
   const { accountFilter, billFilter } = useSelector(selectDashboardGlobal);
   const bills = useSelector(selectBills);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(COUNTS.DASHBOARD_BILLS);
   const [openEdit, setOpenEdit] = useState(false);
+
+  // TODO - implement custom pagination
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: COUNTS.DASHBOARD_BILLS,
+    page: 0,
+  });
 
   useEffect(
     () => {
@@ -111,86 +101,116 @@ export const BillTab = ({ paid, closed }) => {
     [accountFilter]
   );
 
-  console.log('Rendering Bills.. ' + paid + ' : ' + closed);
+  console.log("Rendering Bills.. " + paid + " : " + closed);
   const filteredBills = useMemo(
     () => filterAndSortBills(bills, closed, paid, accountFilter),
     [bills, closed, paid, accountFilter]
   );
-  const totalAmt = useMemo(() => getTotalAmount(filteredBills), [filteredBills]);
-  const billsForPage = useMemo(
-    () => getSliceForPage(filteredBills, page, rowsPerPage),
-    [filteredBills, page, rowsPerPage]
-  );
 
-  const handleBillFilter = (id) => {
-    dispatch(setBillFilter(billFilter === id ? null : id));
-  };
+  const columnDefs = useMemo(() => {
+    const handleBillFilter = (id) => {
+      dispatch(setBillFilter(billFilter === id ? null : id));
+    };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    return [
+      {
+        field: "selection",
+        type: "actions",
+        sortable: false,
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        renderHeader: () => <MenuOpenIcon fontSize="small" />,
+        getActions: ({ row }) => [
+          <GridActionsCellItem
+            icon={<DehazeIcon fontSize="small" />}
+            label="Filter Expenses"
+            color={row.id === billFilter ? "warning" : "primary"}
+            onClick={() => handleBillFilter(row.id)}
+          />,
+        ],
+      },
+      { field: "id", sortable: false, width: 100, headerName: "ID" },
+      {
+        field: "acctName",
+        sortable: false,
+        align: "left",
+        flex: 2,
+        headerName: "ACCOUNT",
+        valueGetter: ({ row }) => row.account.name,
+      },
+      {
+        field: "billDt",
+        sortable: false,
+        flex: 1.5,
+        headerName: "BILL DATE",
+        valueFormatter: ({ value }) => formatDate(value),
+      },
+      {
+        field: "dueDt",
+        sortable: false,
+        flex: 1.5,
+        headerName: "DUE DATE",
+        valueFormatter: ({ value }) => formatDate(value),
+      },
+      {
+        field: "amount",
+        sortable: false,
+        flex: 1.5,
+        headerName: "BILL AMT",
+        type: "number",
+        valueFormatter: ({ value }) => formatAmt(value, true),
+      },
+      {
+        field: "balance",
+        sortable: false,
+        flex: 1.5,
+        headerName: "BALANCE",
+        type: "number",
+        valueFormatter: ({ value }) => formatAmt(value, true),
+      },
+      {
+        field: "paidDt",
+        sortable: false,
+        flex: 1.5,
+        headerName: "PAID DATE",
+        valueGetter: ({ row }) => getPaidDate(row),
+        valueFormatter: ({ value }) => formatDate(value),
+      },
+      {
+        field: "payment",
+        type: "actions",
+        sortable: false,
+        headerAlign: "center",
+        flex: 1.5,
+        renderHeader: () => <TouchAppIcon fontSize="small" />,
+        getActions: ({ row }) => buildBillActions(row, dispatch, setOpenEdit),
+      },
+    ];
+  }, [billFilter, dispatch, setOpenEdit]);
+
+  const colVisibilityModel = buildColVisibilityModel(paid, closed);
 
   return (
     <>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow className={classes.tableRow}>
-            {headers &&
-              headers.map((value, idx) => (
-                <TableCell key={idx} style={{ ...cellStyle, color: COLOR.ROSE }}>
-                  {value}
-                </TableCell>
-              ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {billsForPage.map((bill) => (
-            <TableRow key={bill.id} className={classes.tableRow} hover>
-              <TableCell className={tableCellClasses} style={cellStyle}>
-                <ActionButton
-                  title='Filter Expenses'
-                  color={bill.id === billFilter ? 'warning' : 'primary'}
-                  onClick={() => handleBillFilter(bill.id)}
-                  icon={<DehazeIcon fontSize='small' />}
-                />
-              </TableCell>
-              <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
-                {bill.id}
-              </TableCell>
-              <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'left' }}>
-                {bill.account.name}
-              </TableCell>
-              <TableCell className={tableCellClasses} style={cellStyle}>
-                {formatDate(bill.billDt)}
-              </TableCell>
-              <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                {formatAmt(bill.amount, true)}
-              </TableCell>
-              <TableCell className={tableCellClasses} style={{ ...cellStyle, textAlign: 'right' }}>
-                {formatAmt(bill.balance, true)}
-              </TableCell>
-              <TableCell className={tableCellClasses} style={cellStyle}>
-                {formatDate(bill.dueDt)}
-              </TableCell>
-              <TableCell className={tableCellClasses} style={cellStyle}>
-                <BillAction bill={bill} setOpenEdit={setOpenEdit} />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <CustomPagination
-        component='div'
-        rowsPerPageOptions={[rowsPerPage]}
-        count={filteredBills.length}
-        rowsPerPage={rowsPerPage}
-        page={rowsPerPage >= filteredBills.length ? 0 : page}
-        onPageChange={(e, newPage) => setPage(newPage)}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        ActionsComponent={(props) => (
-          <PaginationActions {...props} section={PAGINATION_BLOCK.BILLS} totalAmt={totalAmt} />
-        )}
+      <DataGrid
+        rows={filteredBills}
+        columns={columnDefs}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[COUNTS.DASHBOARD_BILLS]}
+        columnVisibilityModel={colVisibilityModel}
+        disableColumnFilter
+        disableColumnMenu
+        columnHeaderHeight={45}
+        rowHeight={35}
+        sx={{
+          fontSize: 12,
+          "& .MuiDataGrid-columnHeaders": {
+            color: COLOR.RED,
+            fontWeight: "normal",
+          },
+        }}
       />
       <BillPayDialog openEdit={openEdit} setOpenEdit={setOpenEdit} />
     </>

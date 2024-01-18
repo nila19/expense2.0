@@ -1,39 +1,35 @@
-import React, { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
+import React, { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Formik, Form, Field } from "formik";
 
-import _ from 'lodash';
+import _ from "lodash";
 
-import makeStyles from '@mui/styles/makeStyles';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+import { Grid } from "@mui/material";
 
-// @mui/icons-material
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import TransformIcon from '@mui/icons-material/Transform';
-import SaveIcon from '@mui/icons-material/Save';
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import SaveIcon from "@mui/icons-material/Save";
 
-import Card from 'components/Card/Card.js';
-import CardHeader from 'components/Card/CardHeader.js';
-import CardBody from 'components/Card/CardBody.js';
-import GridItem from 'components/Grid/GridItem.js';
-import GridContainer from 'components/Grid/GridContainer.js';
-import Button from 'components/CustomButtons/Button.js';
-import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
+import MDButton from "components/MDButton";
 
-import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from 'features/inputs';
-import { buildCategoriesOptions, buildAccountOptions, buildBillOptions } from 'features/utils';
+import { AppCard } from "components/app/AppCard";
 
-import { editSchema } from 'features/utils';
+import { ICONS } from "app/constants";
+import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from "features/inputs";
+import { buildCategoriesOptions, buildAccountOptions, buildBillOptions } from "features/utils";
 
-import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/accounts/accountSlice';
-import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
-import { selectExpenseEdit, resetForm, saveEditExpense } from 'features/search/expenseEdit/expenseEditSlice';
+import { editSchema } from "features/utils";
 
-const useStyles = makeStyles(styles);
+import { selectStartupData } from "features/startup/startupSlice";
+import { selectAccounts } from "features/accounts/accountSlice";
+import { selectBills } from "features/dashboard/bills/billTab/billTabSlice";
+import {
+  selectExpenseEdit,
+  resetForm,
+  saveEditExpense,
+} from "features/search/expenseEdit/expenseEditSlice";
 
-export const ExpenseEditForm = ({
+const ExpenseEditForm = ({
   expense,
   billOptions,
   accountOptions,
@@ -70,73 +66,80 @@ export const ExpenseEditForm = ({
     >
       {({ isSubmitting, handleSubmit }) => (
         <Form>
-          <GridContainer>
-            <GridItem xs={12} sm={12}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={12}>
               <Field
-                name='accounts.from.id'
-                id='fromAcctId'
-                label='From Account'
+                name="accounts.from.id"
+                id="fromAcctId"
+                label="From Account"
                 component={FormikComboBox}
                 options={accountOptions}
               />
-            </GridItem>
+            </Grid>
             {expense.bill && expense.bill.id && (
-              <GridItem xs={12} sm={12}>
-                <Field name='bill.id' id='billId' label='Bill' component={FormikComboBox} options={billOptions} />
-              </GridItem>
+              <Grid item xs={12} sm={12} marginTop={1}>
+                <Field
+                  name="bill.id"
+                  id="billId"
+                  label="Bill"
+                  component={FormikComboBox}
+                  options={billOptions}
+                />
+              </Grid>
             )}
-            <GridItem xs={12} sm={12}>
+            <Grid item xs={12} sm={12} marginTop={1}>
               {expense.adjust ? (
                 <Field
-                  name='accounts.to.id'
-                  id='toAcctId'
-                  label='To Account'
+                  name="accounts.to.id"
+                  id="toAcctId"
+                  label="To Account"
                   component={FormikComboBox}
                   options={accountOptions}
                 />
               ) : (
                 <Field
-                  name='category.id'
-                  id='categoryId'
-                  label='Category'
+                  name="category.id"
+                  id="categoryId"
+                  label="Category"
                   component={FormikComboBox}
                   options={categoriesOptions}
                 />
               )}
-            </GridItem>
-            <GridItem xs={12} sm={12}>
+            </Grid>
+            <Grid item xs={12} sm={12} marginTop={1}>
               <Field
                 freeSolo
-                name='description'
-                id='description'
-                label='Description'
+                name="description"
+                id="description"
+                label="Description"
                 component={FormikComboBox}
                 options={descriptions}
               />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={4}>
-              <div style={{ marginLeft: '-8px' }}>
-                <Field name='amount' id='amount' label='Amount' labelWidth={60} component={FormikAmount} />
-              </div>
-            </GridItem>
-            <GridItem xs={12} sm={12} md={3}>
-              <Field name='transDt' id='transDt' label='Date' component={FormikDatePicker} />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={2}>
+            </Grid>
+            <Grid item xs={12} sm={12} md={4} marginTop={1}>
+              <Field name="amount" id="amount" label="Amount" component={FormikAmount} />
+            </Grid>
+            <Grid item xs={12} sm={12} md={3} marginTop={1}>
+              <Field name="transDt" id="transDt" label="Date" component={FormikDatePicker} />
+            </Grid>
+            <Grid item xs={12} sm={12} md={2} marginTop={1}>
               {!expense.adjust && (
-                <div style={{ marginTop: '30px' }}>
-                  <Field name='adhoc' id='adhoc' title='Adhoc' component={FormikCheckBox} />
-                </div>
+                <Field name="adhoc" id="adhoc" title="Adhoc" component={FormikCheckBox} />
               )}
-            </GridItem>
-            <GridItem xs={12} sm={12} md={2}>
-              <div style={{ marginTop: '20px' }}>
-                <Button color='primary' type='button' disabled={isSubmitting} onClick={handleSubmit}>
-                  <SaveIcon />
-                </Button>
-              </div>
-            </GridItem>
-          </GridContainer>
+            </Grid>
+            <Grid item xs={12} sm={12} md={2} marginTop={1}>
+              <MDButton
+                color="primary"
+                type="button"
+                variant="gradient"
+                size="large"
+                disabled={isSubmitting}
+                onClick={handleSubmit}
+              >
+                <SaveIcon />
+              </MDButton>
+            </Grid>
+          </Grid>
         </Form>
       )}
     </Formik>
@@ -144,8 +147,6 @@ export const ExpenseEditForm = ({
 };
 
 export const ExpenseEditDialog = ({ openEdit, setOpenEdit }) => {
-  const classes = useStyles();
-
   const dispatch = useDispatch();
   const { categories, descriptions } = useSelector(selectStartupData);
   const { accounts } = useSelector(selectAccounts);
@@ -155,45 +156,38 @@ export const ExpenseEditDialog = ({ openEdit, setOpenEdit }) => {
   const categoriesOptions = useMemo(() => buildCategoriesOptions(categories), [categories]);
   const accountOptions = useMemo(() => buildAccountOptions(accounts), [accounts]);
   const billOptions = useMemo(() => {
-    const acctId = _.get(expense, 'bill.account.id');
+    const acctId = _.get(expense, "bill.account.id");
     return acctId ? buildBillOptions(bills, acctId) : [];
   }, [expense, bills]);
 
   const handleEditCancel = () => {
-    setOpenEdit(false);
     dispatch(resetForm());
+    setOpenEdit(false);
   };
+
+  const body = (
+    <ExpenseEditForm
+      expense={expense}
+      billOptions={billOptions}
+      accountOptions={accountOptions}
+      categoriesOptions={categoriesOptions}
+      descriptions={descriptions}
+      bills={bills}
+      setOpenEdit={setOpenEdit}
+    />
+  );
 
   return (
     <>
-      {expense && (
-        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={'180px'}>
-          <DialogContent style={{ padding: '0px' }}>
-            <Card style={{ marginBottom: '0px' }}>
-              <CardHeader color='success'>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={1}>
-                    {expense.adjust ? <TransformIcon /> : <AddShoppingCartIcon />}
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={11}>
-                    <h4 className={classes.cardTitleWhite} style={{ marginTop: '6px' }}>
-                      {expense.adjust ? 'MODIFY ADJUSTMENT' : 'MODIFY EXPENSE'}
-                    </h4>
-                  </GridItem>
-                </GridContainer>
-              </CardHeader>
-              <CardBody>
-                <ExpenseEditForm
-                  expense={expense}
-                  billOptions={billOptions}
-                  accountOptions={accountOptions}
-                  categoriesOptions={categoriesOptions}
-                  descriptions={descriptions}
-                  bills={bills}
-                  setOpenEdit={setOpenEdit}
-                />
-              </CardBody>
-            </Card>
+      {expense && openEdit && (
+        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={"180px"}>
+          <DialogContent style={{ padding: "0px" }}>
+            <AppCard
+              color="info"
+              titleIcon={expense.adjust ? ICONS.TransformIcon : ICONS.AddShoppingCartIcon}
+              title={expense.adjust ? "MODIFY ADJUSTMENT" : "MODIFY EXPENSE"}
+              body={body}
+            />
           </DialogContent>
         </Dialog>
       )}

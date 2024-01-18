@@ -1,12 +1,12 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 // import { createLogger } from 'redux-logger';
 
-import appGlobalReducer from 'features/appGlobalSlice';
-import startupReducer from 'features/startup/startupSlice';
-import dashboardReducer from 'features/dashboard/dashboardReducer';
-import searchReducer from 'features/search/searchReducer';
-import summaryReducer from 'features/summary/summarySlice';
-import accountReducer from 'features/accounts/accountSlice';
+import appGlobalReducer from "features/appGlobalSlice";
+import startupReducer from "features/startup/startupSlice";
+import dashboardReducer from "features/dashboard/dashboardReducer";
+import searchReducer from "features/search/searchReducer";
+import summaryReducer from "features/summary/summarySlice";
+import accountReducer from "features/accounts/accountSlice";
 
 // disabling these 2 default middleware since they are causing slow down.
 const customizedMiddleware = getDefaultMiddleware({

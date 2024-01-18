@@ -1,54 +1,41 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { useEffect } from "react";
 
-import Dashboard from 'features/dashboard/Dashboard';
-import Search from 'features/search/Search';
-import Summary from 'features/summary/Summary';
-import Admin from 'features/admin/Admin';
+// react-router components
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-// import _ from 'lodash';
+import moment from "moment";
 
-import 'app/app.css';
+// @mui material components
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
-import { ROUTE } from 'app/config';
-import { Startup, Loading } from 'features/startup/Startup';
-import { MenuBar } from 'features/menu/MenuBar';
+// Material Dashboard 2 React themes
+import theme from "assets/theme";
 
-import { selectStartup, selectStartupReload, STATE } from 'features/startup/startupSlice';
+import { AppRoutes } from "app/routes";
 
-// lazy loaded modules.
-// const Dashboard = React.lazy(() => import('features/dashboard/Dashboard'));
-// const Search = React.lazy(() => import('features/search/Search'));
-// const Summary = React.lazy(() => import('features/summary/Summary'));
+import "app/app.css";
 
-// const WithSuspense = (props) => {
-//   const loading = <Loading connected inprogress />;
-//   return (
-//     <DocumentTitle title={props.title}>
-//       <Suspense fallback={loading}>{props.render()}</Suspense>
-//     </DocumentTitle>
-//   );
-// };
+import { Startup, Loading } from "features/startup/Startup";
+import { MenuBar } from "features/menu/MenuBar";
+
+import { selectStartup, selectStartupReload, STATE } from "features/startup/startupSlice";
 
 const FullApp = () => {
+  const { pathname } = useLocation();
+
+  // Setting page scroll to 0 when changing the route
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+    document.scrollingElement.scrollTop = 0;
+  }, [pathname]);
+
   return (
     <>
+      <CssBaseline />
       <MenuBar />
-      <Routes>
-        <Route path={ROUTE.DASHBOARD} element={<Dashboard />} />
-        <Route path={ROUTE.SUMMARY} element={<Summary />} />
-        <Route path={ROUTE.SEARCH} element={<Search />} />
-        <Route path={ROUTE.ADMIN} element={<Admin />} />
-        {/* Removed lazy loading since it's not working with React-Router-6 */}
-        {/* <Route path={ROUTE.SUMMARY}>
-          <WithSuspense title='Expense - Summary' render={() => <Summary />} />
-        </Route>
-        <Route path={ROUTE.SEARCH}>
-          <WithSuspense title='Expense - Search' render={() => <Search />} />
-        </Route> */}
-        <Route path={ROUTE.BASE} element={<Dashboard />} />
-      </Routes>
+      <AppRoutes />
     </>
   );
 };
@@ -56,6 +43,8 @@ const FullApp = () => {
 export const App = () => {
   const { connection } = useSelector(selectStartup);
   const { reloadDashboard, loadingCompleted, loadingFailed } = useSelector(selectStartupReload);
+
+  moment.locale("en");
 
   const connectionOK = connection === STATE.FULFILLED;
   const connectionFailed = connection === STATE.REJECTED;
@@ -71,9 +60,11 @@ export const App = () => {
   }
 
   return (
-    <>
-      <Startup />
-      {display}
-    </>
+    <ThemeProvider theme={theme}>
+      <>
+        <Startup />
+        {display}
+      </>
+    </ThemeProvider>
   );
 };

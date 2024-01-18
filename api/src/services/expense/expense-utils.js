@@ -42,13 +42,13 @@ export const buildTranBasic = (data) => {
   return tran;
 };
 
-export const buildTranAccountsNew = ({ from, to }) => {
+export const buildTranAccountsNew = ({ from, to }, adjust) => {
   const accounts = { from: blankAcct, to: blankAcct };
   if (from?.id) {
     const { id, name, balance } = from;
     accounts.from = { id, name, balanceBf: balance, balanceAf: 0 };
   }
-  if (to?.id) {
+  if (adjust && to?.id) {
     const { id, name, balance } = to;
     accounts.to = { id, name, balanceBf: balance, balanceAf: 0 };
   }

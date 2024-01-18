@@ -1,82 +1,62 @@
-import React from 'react';
+import _ from "lodash";
+import moment from "moment";
+import memoize from "memoize-one";
 
-import _ from 'lodash';
-import moment from 'moment';
-import memoize from 'memoize-one';
+import { COUNTS } from "app/config";
+import { FORMATS } from "app/constants";
 
-// @mui/icons-material
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-import MuseumIcon from '@mui/icons-material/Museum';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import SubtitlesIcon from '@mui/icons-material/Subtitles';
-
-import { COUNTS } from 'app/config';
-import { format, formatAmt, formatDate } from 'features/utils';
-
-export const buildAccountIcon = memoize((icon) => {
-  switch (icon) {
-    case 'account_balance':
-      return <AccountBalanceIcon />;
-    case 'credit_card':
-      return <CreditCardIcon />;
-    case 'attach_money':
-      return <AttachMoneyIcon />;
-    case 'museum':
-      return <MuseumIcon />;
-    default:
-      return <SubtitlesIcon />;
-  }
-});
+import { formatAmt, formatDate } from "features/utils";
 
 export const buildAccountColor = memoize((color) => {
   switch (color) {
-    case 'red':
-      return 'danger';
-    case 'blue':
-      return 'info';
-    case 'green':
-      return 'success';
+    case "red":
+      return "error";
+    case "blue":
+      return "info";
+    case "green":
+      return "success";
+    case "purple":
+      return "primary";
     default:
-      return 'success';
+      return "primary";
   }
 });
 
 export const buildTallyInfo = memoize((tallyBalance, tallyDt) => {
   const tallyAmt = formatAmt(tallyBalance, true);
-  const tallyDate = moment(tallyDt, format.YYYYMMDDHHmmss).format(format.DDMMMYYYYHHMM);
-  return tallyAmt + ' @ ' + tallyDate;
+  const tallyDate = moment(tallyDt, FORMATS.YYYYMMDDHHmmss).format(FORMATS.DDMMMYYYYHHMM);
+  return tallyAmt + " @ " + tallyDate;
 });
 
 export const buildBillInfo = memoize((billed, lastBill, openBill) => {
   if (!billed) {
-    return 'No bills.';
+    return "No bills.";
   }
   if (lastBill && lastBill.balance > 0) {
     const dueAmt = formatAmt(lastBill.balance, true);
-    const dueDt = formatDate(lastBill.dueDt, format.DDMMM);
-    return dueAmt + ' (Due on ' + dueDt + ')';
+    const dueDt = formatDate(lastBill.dueDt, FORMATS.DDMMM);
+    return dueAmt + " (Due on " + dueDt + ")";
   }
   if (openBill) {
-    const billDt = formatDate(openBill.billDt, format.DDMMM);
-    return 'Next bill on ' + billDt;
+    const billDt = formatDate(openBill.billDt, FORMATS.DDMMM);
+    return "Next bill on " + billDt;
   }
 });
 
 export const buildAccountTallyInfoColor = memoize((tallyDt) => {
-  const sameDay = moment(tallyDt, format.YYYYMMDDHHmmss).isSame(moment(), 'day');
-  return sameDay ? 'success' : 'warning';
+  const sameDay = moment(tallyDt, FORMATS.YYYYMMDDHHmmss).isSame(moment(), "day");
+  return sameDay ? "success" : "warning";
 });
 
 export const buildAccountBillInfoColor = memoize((billed, lastBill, openBill) => {
   if (!billed) {
-    return 'warning';
+    return "warning";
   }
   if (lastBill && lastBill.balance > 0) {
-    return 'rose';
+    return "primary";
   }
   if (openBill) {
-    return 'info';
+    return "info";
   }
 });
 

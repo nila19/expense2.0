@@ -42,7 +42,7 @@ const buildTran = async (db, data) => {
   const accounts = await fetchAccounts(db, data.accounts);
   const seq = await sequenceModel.findNextSeq(db, data.cityId, COLLECTION.TRANSACTION);
   const tranBasic = buildTranBasic(data);
-  const tranAccts = buildTranAccountsNew(accounts);
+  const tranAccts = buildTranAccountsNew(accounts, tranBasic.adjust);
   const tranBill = buildTranBillNew(accounts);
   return { ...tranBasic, ...tranAccts, ...tranBill, id: seq, seq };
 };
