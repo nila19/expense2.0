@@ -43,7 +43,7 @@ In the project directory, you can run:
 
 - `docker login --username=balavigneswaran --password=<pwd>`
 - `docker push balavigneswaran/exp-api:2.10`
-- `docker push balavigneswaran/exp-ui:2.10`
+- `docker push balavigneswaran/exp-ui:3.00`
 
 ## Database
 

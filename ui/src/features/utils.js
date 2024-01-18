@@ -92,12 +92,12 @@ export const formatDate = memoize((date, fmt) => {
 });
 
 export const entrySchema = Yup.object().shape({
-  category: Yup.object({
-    id: Yup.number().when('adjust', {
-      is: false,
-      then: Yup.number().required('Required'),
-    }),
-  }),
+  // category: Yup.object({
+  //   id: Yup.number().when('adjust', {
+  //     is: false,
+  //     then: Yup.number().required('Required'),
+  //   }),
+  // }),
   description: Yup.string().required('Required').trim().min(2, 'Min length'),
   transDt: Yup.string().required('Required'),
   amount: Yup.number().required('Required').notOneOf([0]),
