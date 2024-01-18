@@ -27,7 +27,7 @@ const initialValues = memoize((bill) => ({
   bill: bill,
   account: { id: null },
   paidAmt: bill.balance,
-  paidDt: formatDate(moment(), FORMATS.YYYYMMDD),
+  paidDt: moment(),
 }));
 
 const validationSchema = memoize((bill) =>

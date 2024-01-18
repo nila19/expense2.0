@@ -101,7 +101,6 @@ export const BillTab = ({ paid, closed }) => {
     [accountFilter]
   );
 
-  console.log('Rendering Bills.. ' + paid + ' : ' + closed);
   const filteredBills = useMemo(
     () => filterAndSortBills(bills, closed, paid, accountFilter),
     [bills, closed, paid, accountFilter]

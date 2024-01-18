@@ -51,7 +51,6 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
     [accountFilter, billFilter, rowsPerPage]
   );
 
-  console.log('Rendering Expense.. : ' + rowsPerPage + ' : ' + JSON.stringify(paginationModel));
   const filteredExpenses = useMemo(
     () => filterAndSortExpenses(expenses, accountFilter, billFilter),
     [expenses, accountFilter, billFilter]

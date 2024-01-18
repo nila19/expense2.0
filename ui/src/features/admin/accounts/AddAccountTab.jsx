@@ -40,7 +40,6 @@ export const AddAccountTab = memo(() => {
       initialValues={initialValues()}
       validationSchema={acctSchema}
       onSubmit={(values, { setSubmitting }) => {
-        console.log('Submitting');
         setSubmitting(false);
         dispatch(addAccount(values));
       }}
