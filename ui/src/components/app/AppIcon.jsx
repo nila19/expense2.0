@@ -30,6 +30,10 @@ import MuseumIcon from '@mui/icons-material/Museum';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
+import RectangleIcon from '@mui/icons-material/Rectangle';
+
 const iconMap = {
   home: HomeIcon,
   power: PowerIcon,
@@ -55,6 +59,9 @@ const iconMap = {
   credit_card: CreditCardIcon,
   attach_money: AttachMoneyIcon,
   museum: MuseumIcon,
+  yes: DoneIcon,
+  no: CloseIcon,
+  rectangle: RectangleIcon,
 };
 
 export const AppIcon = memoize(({ icon, clickable, color, fontSize }) => {
@@ -67,4 +74,15 @@ export const AppIcon = memoize(({ icon, clickable, color, fontSize }) => {
       style={{ top: '1px', cursor: cursor }}
     />
   );
+});
+
+export const buildIconOptions = memoize(() => {
+  return ['savings', 'account_balance', 'credit_card', 'attach_money', 'museum'].map((e) => ({
+    key: e,
+    label: e,
+  }));
+});
+
+export const buildColorOptions = memoize(() => {
+  return ['red', 'blue', 'green'].map((e) => ({ key: e, label: e }));
 });

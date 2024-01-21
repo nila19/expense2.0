@@ -12,7 +12,7 @@ import MDTypography from 'components/MDTypography';
 import { acctSchema } from 'features/utils';
 import { FormikTextField } from 'features/inputs';
 import { FormikAmount, FormikCheckBox, FormikComboBox } from 'features/inputs';
-import { buildIconOptions, buildColorOptions } from 'features/utils';
+import { buildIconOptions, buildColorOptions } from 'components/app/AppIcon';
 
 import { addAccount } from 'features/accounts/accountSlice';
 

@@ -60,7 +60,7 @@ export const COUNTS = {
 };
 
 export const COLOR = {
-  GREY: '#999',
+  GREY: '#cfd8dc',
   GREEN: 'green',
   WHITE: 'white',
   ROSE: '#E91E63',

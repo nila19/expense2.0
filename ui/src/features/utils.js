@@ -42,17 +42,6 @@ export const buildAdhocOptions = memoize(() => {
   return ['Y', 'N'].map((e) => ({ key: e, label: e }));
 });
 
-export const buildIconOptions = memoize(() => {
-  return ['savings', 'account_balance', 'credit_card', 'attach_money', 'museum'].map((e) => ({
-    key: e,
-    label: e,
-  }));
-});
-
-export const buildColorOptions = memoize(() => {
-  return ['red', 'blue', 'green'].map((e) => ({ key: e, label: e }));
-});
-
 export const prepareChartData = (chartData) => {
   const { labels, regulars, adhocs, totals } = chartData;
   return labels.slice(0, 24).map((e, idx) => ({

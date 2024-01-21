@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 
-// @mui/icons-material
+import { Box } from '@mui/material';
+
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
@@ -43,6 +44,8 @@ export const AccountsTab = () => {
     const handleDelete = (acct) => {
       dispatch(deleteAccount(acct.id));
     };
+
+    const getFlagIcon = (flag) => {};
 
     return [
       {
@@ -87,53 +90,66 @@ export const AccountsTab = () => {
       },
       {
         field: 'cash',
-        sortable: false,
+        sortable: true,
         headerAlign: 'center',
         align: 'center',
         flex: 0.5,
         headerName: 'CASH',
-        valueFormatter: ({ value }) => (value ? 'Y' : ''),
+        renderCell: ({ value }) => {
+          return value ? <AppIcon icon={'yes'} /> : '';
+        },
       },
       {
         field: 'billed',
-        sortable: false,
+        sortable: true,
         headerAlign: 'center',
         align: 'center',
         flex: 0.5,
         headerName: 'BILLED',
-        valueFormatter: ({ value }) => (value ? 'Y' : ''),
+        renderCell: ({ value }) => {
+          return value ? <AppIcon icon={'yes'} /> : '';
+        },
       },
       {
         field: 'active',
-        sortable: false,
+        sortable: true,
         headerAlign: 'center',
         align: 'center',
         flex: 0.5,
         headerName: 'ACTIVE',
-        valueFormatter: ({ value }) => (value ? 'Y' : ''),
-      },
-      {
-        field: 'icon',
-        sortable: false,
-        headerAlign: 'center',
-        align: 'center',
-        flex: 1,
-        headerName: 'ICON',
-        renderCell: ({ row }) => {
-          return <AppIcon icon={row.icon} color={buildAccountColor(row.color)} />;
+        renderCell: ({ value }) => {
+          return value ? <AppIcon icon={'yes'} /> : <AppIcon icon={'no'} color='error' />;
         },
       },
       {
-        field: 'color',
-        sortable: false,
+        field: 'icon',
+        sortable: true,
         headerAlign: 'center',
-        align: 'center',
-        flex: 0.5,
-        headerName: 'COLOR',
+        align: 'left',
+        flex: 1,
+        headerName: 'ICON',
+        renderCell: ({ row }) => {
+          return (
+            <Box display='flex' justifyContent='center' alignItems='center'>
+              <AppIcon icon={row.icon} color={buildAccountColor(row.color)} /> {row.icon}
+            </Box>
+          );
+        },
       },
+      // {
+      //   field: 'color',
+      //   sortable: false,
+      //   headerAlign: 'center',
+      //   align: 'center',
+      //   flex: 0.5,
+      //   headerName: 'COLOR',
+      //   renderCell: ({ value }) => {
+      //     return <AppIcon icon='rectangle' color={buildAccountColor(value)} />;
+      //   },
+      // },
       {
         field: 'seq',
-        sortable: false,
+        sortable: true,
         headerAlign: 'center',
         align: 'center',
         flex: 0.5,
@@ -157,7 +173,7 @@ export const AccountsTab = () => {
       },
       {
         field: 'balance',
-        sortable: false,
+        sortable: true,
         headerAlign: 'center',
         flex: 1,
         type: 'number',
@@ -175,15 +191,25 @@ export const AccountsTab = () => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[rowsPerPage]}
-        disableColumnFilter
-        disableColumnMenu
+        // slots={{ columnMenuColumnsItem: null }}
+        // disableColumnFilter
+        // disableColumnMenu
+        disableColumnSelector
         columnHeaderHeight={45}
         rowHeight={35}
+        getRowClassName={({ row }) => {
+          if (!row.active) {
+            return 'accounts-closed';
+          }
+        }}
         sx={{
           fontSize: 12,
           '& .MuiDataGrid-columnHeaders': {
             color: COLOR.RED,
             fontWeight: 'normal',
+          },
+          '& .accounts-closed': {
+            backgroundColor: COLOR.GREY,
           },
         }}
       />
