@@ -12,10 +12,12 @@ import FilterTiltShiftIcon from '@mui/icons-material/FilterTiltShift';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
+import { AppPagination } from 'components/app/AppPagination';
+
 import { COUNTS, COLOR } from 'app/config';
 
 import { BillPayDialog } from 'features/dashboard/bills/billPay/BillPayDialog';
-import { formatAmt, formatDate } from 'features/utils';
+import { formatAmt, formatDate, getTotalBillBalance } from 'features/utils';
 import { filterAndSortBills } from 'features/dashboard/bills/billUtils';
 
 import { selectDashboardGlobal, setBillFilter } from 'features/dashboard/dashboardGlobalSlice';
@@ -85,7 +87,6 @@ export const BillTab = ({ paid, closed }) => {
   const [page, setPage] = useState(0);
   const [openEdit, setOpenEdit] = useState(false);
 
-  // TODO - implement custom pagination
   const [paginationModel, setPaginationModel] = useState({
     pageSize: COUNTS.DASHBOARD_BILLS,
     page: 0,
@@ -105,6 +106,7 @@ export const BillTab = ({ paid, closed }) => {
     () => filterAndSortBills(bills, closed, paid, accountFilter),
     [bills, closed, paid, accountFilter]
   );
+  const totalAmt = useMemo(() => getTotalBillBalance(filteredBills), [filteredBills]);
 
   const columnDefs = useMemo(() => {
     const handleBillFilter = (id) => {
@@ -203,10 +205,21 @@ export const BillTab = ({ paid, closed }) => {
         disableColumnMenu
         columnHeaderHeight={45}
         rowHeight={35}
+        slots={{
+          pagination: AppPagination,
+        }}
+        slotProps={{
+          pagination: { totalAmt },
+        }}
         sx={{
           fontSize: 12,
           '& .MuiDataGrid-columnHeaders': {
             color: COLOR.RED,
+            fontWeight: 'normal',
+          },
+          '& .MuiTablePagination-displayedRows': {
+            color: COLOR.RED,
+            fontSize: '0.9rem',
             fontWeight: 'normal',
           },
           '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {

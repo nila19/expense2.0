@@ -70,4 +70,5 @@ export const COLOR = {
   BLACK: '#212121',
   ORANGE: '#FF9800',
   RED: '#F44335',
+  PURPLE: '#9c27b0',
 };

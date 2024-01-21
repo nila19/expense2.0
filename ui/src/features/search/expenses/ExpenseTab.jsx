@@ -17,6 +17,8 @@ import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import FlagIcon from '@mui/icons-material/Flag';
 
+import { AppPagination } from 'components/app/AppPagination';
+
 import { COLOR } from 'app/config';
 import { FORMATS } from 'app/constants';
 
@@ -236,11 +238,25 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
         disableColumnMenu
         columnHeaderHeight={45}
         rowHeight={35}
+        slots={{
+          pagination: AppPagination,
+        }}
+        slotProps={{
+          pagination: { totalAmt },
+        }}
         sx={{
           fontSize: 12,
           '& .MuiDataGrid-columnHeaders': {
             color: COLOR.RED,
             fontWeight: 'normal',
+          },
+          '& .MuiTablePagination-displayedRows': {
+            color: COLOR.RED,
+            fontSize: '0.9rem',
+            fontWeight: 'normal',
+          },
+          '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+            display: 'none',
           },
         }}
       />

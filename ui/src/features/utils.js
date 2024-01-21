@@ -14,8 +14,12 @@ export const getSliceForPage = memoize((data, page, rowsPerPage) => {
   return _.slice(data, start, end);
 });
 
-export const getTotalAmount = memoize((list) => {
-  return _.reduce(list, (sum, e) => sum + e.amount, 0);
+export const getTotalAmount = memoize((expenses) => {
+  return _.reduce(expenses, (sum, exp) => sum + exp.amount, 0);
+});
+
+export const getTotalBillBalance = memoize((bills) => {
+  return _.reduce(bills, (sum, bill) => sum + bill.balance, 0);
 });
 
 export const buildCategoriesOptions = memoize((categories) => {

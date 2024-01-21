@@ -83,7 +83,7 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
           <MDTypography variant='button' fontWeight='light' color='text'>
             {title1}
           </MDTypography>
-          <MDTypography variant='h4' fontWeight='light'>
+          <MDTypography variant='subtitle2' fontWeight='light'>
             {title2}
           </MDTypography>
         </MDBox>
