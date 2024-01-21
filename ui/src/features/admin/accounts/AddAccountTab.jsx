@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 // import memoize from 'memoize-one';
 
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 import MDButton from 'components/MDButton';
@@ -46,9 +46,9 @@ export const AddAccountTab = memo(() => {
     >
       {({ isSubmitting }) => (
         <Form>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} alignItems='center' justifyContent='center'>
             <Grid item xs={12} sm={12} md={5}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} alignItems='center' justifyContent='center'>
                 <Grid item xs={12} sm={12} md={5}>
                   <Field name='name' id='name' label='Account Name' component={FormikTextField} />
                 </Grid>
@@ -61,7 +61,7 @@ export const AddAccountTab = memo(() => {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={2}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} alignItems='center' justifyContent='center'>
                 <Grid item xs={12} sm={12} md={4}>
                   <MDTypography variant='body2' fontWeight='light'>
                     Cash
@@ -83,7 +83,7 @@ export const AddAccountTab = memo(() => {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={5}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} alignItems='center' justifyContent='center'>
                 <Grid item xs={12} sm={12} md={2}>
                   <Field name='seq' id='seq' label='Seq' component={FormikTextField} />
                 </Grid>
@@ -97,9 +97,11 @@ export const AddAccountTab = memo(() => {
                   <Field name='balance' id='balance' label='Balance' component={FormikAmount} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
-                  <MDButton color='success' type='submit' variant='gradient' size='large' disabled={isSubmitting}>
-                    <AddIcon />
-                  </MDButton>
+                  <Box display='flex' justifyContent='center' alignItems='center'>
+                    <MDButton color='success' type='submit' variant='gradient' size='large' disabled={isSubmitting}>
+                      <AddIcon />
+                    </MDButton>
+                  </Box>
                 </Grid>
               </Grid>
             </Grid>

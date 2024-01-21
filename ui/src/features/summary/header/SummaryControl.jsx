@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 
 import { CustomCheckBox } from 'features/inputs';
 
@@ -34,27 +34,29 @@ export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
   };
 
   return (
-    <Grid container spacing={2} marginTop={0}>
-      <Grid item xs={12} sm={12} md={2}>
-        <CustomCheckBox id='forecast' title='Forecast' checked={forecast} onClick={toggleForecast} />
+    <Box display='flex' justifyContent='center' alignItems='center'>
+      <Grid container spacing={0} marginTop={0} alignItems='center' justifyContent='center'>
+        <Grid item xs={12} sm={12} md={2}>
+          <CustomCheckBox id='forecast' title='Forecast' checked={forecast} onClick={toggleForecast} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={2}>
+          <CustomCheckBox id='regular' title='Regular' disabled={!adhoc} checked={regular} onClick={toggleRegular} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={2}>
+          <CustomCheckBox id='adhoc' title='Adhoc' disabled={!regular} checked={adhoc} onClick={toggleAdhoc} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={2}></Grid>
+        <Grid item xs={12} sm={12} md={2}>
+          <IconButton size='small' disabled={!hasPrevious} onClick={() => changePage(-1)}>
+            <ArrowBackIcon fontSize='inherit' />
+          </IconButton>
+        </Grid>
+        <Grid item xs={12} sm={12} md={2}>
+          <IconButton size='small' disabled={!hasNext} onClick={() => changePage(+1)}>
+            <ArrowForwardIcon fontSize='inherit' />
+          </IconButton>
+        </Grid>
       </Grid>
-      <Grid item xs={12} sm={12} md={2}>
-        <CustomCheckBox id='regular' title='Regular' disabled={!adhoc} checked={regular} onClick={toggleRegular} />
-      </Grid>
-      <Grid item xs={12} sm={12} md={2}>
-        <CustomCheckBox id='adhoc' title='Adhoc' disabled={!regular} checked={adhoc} onClick={toggleAdhoc} />
-      </Grid>
-      <Grid item xs={12} sm={12} md={2}></Grid>
-      <Grid item xs={12} sm={12} md={2}>
-        <IconButton size='small' disabled={!hasPrevious} onClick={() => changePage(-1)}>
-          <ArrowBackIcon fontSize='inherit' />
-        </IconButton>
-      </Grid>
-      <Grid item xs={12} sm={12} md={2}>
-        <IconButton size='small' disabled={!hasNext} onClick={() => changePage(+1)}>
-          <ArrowForwardIcon fontSize='inherit' />
-        </IconButton>
-      </Grid>
-    </Grid>
+    </Box>
   );
 };

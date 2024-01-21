@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 
 import _ from 'lodash';
 
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 import MDButton from 'components/MDButton';
@@ -41,6 +41,14 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
     adhoc: adhoc ? adhoc : false,
   });
 
+  const fixCategory = (values) => {
+    if (values.adjust) {
+      values.category.id = 0;
+    }
+    const category = values.category.id ? _.find(categories, { id: values.category.id }) : null;
+    values.category.name = category ? category.name : null;
+  };
+
   const handleFrom = (field, value) => dispatch(setFrom({ field, value }));
   const handleTo = (field, value) => dispatch(setTo({ field, value }));
   const handleCategory = (field, value) => dispatch(setCategory({ field, value }));
@@ -62,8 +70,8 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
         validationSchema={entrySchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          const category = values.category.id ? _.find(categories, { id: values.category.id }) : null;
-          values.category.name = category ? category.name : null;
+          values = { ...values, adjust: adjust };
+          fixCategory(values);
           dispatch(addExpense(values));
           resetForm({ values: { ...values, description: null, amount: '' } });
           dispatch(resetEntry());
@@ -71,7 +79,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
       >
         {({ isSubmitting, handleSubmit }) => (
           <Form>
-            <Grid container spacing={2} marginTop={2}>
+            <Grid container spacing={2} marginTop={2} alignItems='center' justifyContent='center'>
               <Grid item xs={12} sm={12} md={4}>
                 <Field
                   name='accounts.from.id'
@@ -107,7 +115,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                 <Field name='amount' id='amount' label='Amount' onFieldChange={handleAmount} component={FormikAmount} />
               </Grid>
             </Grid>
-            <Grid container spacing={2} marginTop={2}>
+            <Grid container spacing={2} marginTop={2} alignItems='center' justifyContent='center'>
               <Grid item xs={12} sm={12} md={6}>
                 <Field
                   freeSolo
@@ -119,7 +127,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                   options={descriptions}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} md={3}>
+              <Grid item xs={12} sm={12} md={2}>
                 <Field
                   name='transDt'
                   id='transDt'
@@ -128,10 +136,18 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                   component={FormikDatePicker}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} md={1}>
-                {!adjust && (
-                  <Field name='adhoc' id='adhoc' title='Adhoc' onFieldChange={handleAdhoc} component={FormikCheckBox} />
-                )}
+              <Grid item xs={12} sm={12} md={2}>
+                <Box display='flex' justifyContent='center' alignItems='center'>
+                  {!adjust && (
+                    <Field
+                      name='adhoc'
+                      id='adhoc'
+                      title='Adhoc'
+                      onFieldChange={handleAdhoc}
+                      component={FormikCheckBox}
+                    />
+                  )}
+                </Box>
               </Grid>
               <Grid item xs={12} sm={12} md={2}>
                 <MDButton

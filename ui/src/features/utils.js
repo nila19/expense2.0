@@ -19,17 +19,14 @@ export const getTotalAmount = memoize((list) => {
 });
 
 export const buildCategoriesOptions = memoize((categories) => {
-  console.log('Building categories options');
   return categories.map((e) => ({ key: e.id, label: e.name }));
 });
 
 export const buildAccountOptions = memoize((accounts) => {
-  console.log('Building accounts options');
   return accounts.map((e) => ({ key: e.id, label: e.name }));
 });
 
 export const buildBillOptions = memoize((bills, accountId) => {
-  console.log('Building bills options');
   const filteredBills = _.filter(bills, (e) => e.account.id === accountId);
   return filteredBills.map((e) => ({
     key: e.id,
@@ -38,12 +35,10 @@ export const buildBillOptions = memoize((bills, accountId) => {
 });
 
 export const buildMonthOptions = memoize((months) => {
-  console.log('Building months options');
   return months.map((e) => ({ key: e.id, label: e.name }));
 });
 
 export const buildAdhocOptions = memoize(() => {
-  console.log('Building adhoc options');
   return ['Y', 'N'].map((e) => ({ key: e, label: e }));
 });
 

@@ -7,7 +7,7 @@ import { billService, transactionService } from 'data/services';
 
 import { transferCash } from 'services/cash-service';
 import { addToLookups } from 'services/lookup-services';
-import { buildTranBasic, buildTranAccountsNew, buildTranBillNew } from 'services/expense/expense-utils';
+import { buildTranBasic, buildTranAccountsAdd, buildTranBillAdd } from 'services/expense/expense-utils';
 
 import { checkCityEditable, fetchAccounts } from 'utils/common-utils';
 
@@ -42,7 +42,7 @@ const buildTran = async (db, data) => {
   const accounts = await fetchAccounts(db, data.accounts);
   const seq = await sequenceModel.findNextSeq(db, data.cityId, COLLECTION.TRANSACTION);
   const tranBasic = buildTranBasic(data);
-  const tranAccts = buildTranAccountsNew(accounts, tranBasic.adjust);
-  const tranBill = buildTranBillNew(accounts);
+  const tranAccts = buildTranAccountsAdd(accounts, data.adjust);
+  const tranBill = buildTranBillAdd(accounts);
   return { ...tranBasic, ...tranAccts, ...tranBill, id: seq, seq };
 };

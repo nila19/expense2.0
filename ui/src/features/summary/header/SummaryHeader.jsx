@@ -28,7 +28,7 @@ const MonthNames = ({ monthsForPage }) => {
     <>
       {monthsForPage &&
         monthsForPage.map((e) => (
-          <TableCell key={e.id} style={{ textAlign: 'center' }}>
+          <TableCell key={e.id} align='right' style={{ verticalAlign: 'center' }}>
             <span className={classes.label}>{_.toUpper(e.name)}</span>
           </TableCell>
         ))}
@@ -41,7 +41,7 @@ export const SummaryHeader = ({ monthsForPage, ...controlProps }) => {
 
   return (
     <TableRow className={classes.tableRow}>
-      <TableCell colSpan={3}>
+      <TableCell colSpan={3} style={{ verticalAlign: 'center' }}>
         <SummaryControl {...controlProps} />
       </TableCell>
       <MonthNames monthsForPage={monthsForPage} />

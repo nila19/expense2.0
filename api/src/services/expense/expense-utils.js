@@ -10,6 +10,7 @@ import { buildBillName } from 'utils/common-utils';
 
 const blankAcct = { id: 0, name: '', balanceBf: 0, balanceAf: 0 };
 const blankCategory = { id: 0, name: ' ~ ' };
+
 const getCategory = (category) => {
   return category?.id ? { id: category.id, name: category.name } : blankCategory;
 };
@@ -42,7 +43,7 @@ export const buildTranBasic = (data) => {
   return tran;
 };
 
-export const buildTranAccountsNew = ({ from, to }, adjust) => {
+export const buildTranAccountsAdd = ({ from, to }, adjust) => {
   const accounts = { from: blankAcct, to: blankAcct };
   if (from?.id) {
     const { id, name, balance } = from;
@@ -55,7 +56,7 @@ export const buildTranAccountsNew = ({ from, to }, adjust) => {
   return { accounts };
 };
 
-export const buildTranBillNew = ({ from }) => {
+export const buildTranBillAdd = ({ from }) => {
   let bill = null;
   if (from?.id && from?.billed && from?.bills?.open) {
     const openBill = from.bills.open;

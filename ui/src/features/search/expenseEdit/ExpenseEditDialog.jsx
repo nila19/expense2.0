@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 
 import _ from 'lodash';
 
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -65,7 +65,7 @@ const ExpenseEditForm = ({
     >
       {({ isSubmitting, handleSubmit }) => (
         <Form>
-          <Grid container spacing={1}>
+          <Grid container spacing={1} alignItems='center' justifyContent='center'>
             <Grid item xs={12} sm={12}>
               <Field
                 name='accounts.from.id'
@@ -112,11 +112,13 @@ const ExpenseEditForm = ({
             <Grid item xs={12} sm={12} md={4} marginTop={1}>
               <Field name='amount' id='amount' label='Amount' component={FormikAmount} />
             </Grid>
-            <Grid item xs={12} sm={12} md={3} marginTop={1}>
+            <Grid item xs={12} sm={12} md={4} marginTop={1}>
               <Field name='transDt' id='transDt' label='Date' component={FormikDatePicker} />
             </Grid>
             <Grid item xs={12} sm={12} md={2} marginTop={1}>
-              {!expense.adjust && <Field name='adhoc' id='adhoc' title='Adhoc' component={FormikCheckBox} />}
+              <Box display='flex' justifyContent='center' alignItems='center'>
+                {!expense.adjust && <Field name='adhoc' id='adhoc' title='Adhoc' component={FormikCheckBox} />}
+              </Box>
             </Grid>
             <Grid item xs={12} sm={12} md={2} marginTop={1}>
               <MDButton
@@ -171,7 +173,7 @@ export const ExpenseEditDialog = ({ openEdit, setOpenEdit }) => {
   return (
     <>
       {expense && openEdit && (
-        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={'180px'}>
+        <Dialog open={openEdit} onClose={handleEditCancel} fullWidth width={'300px'}>
           <DialogContent style={{ padding: '0px' }}>
             <AppCard
               color='info'

@@ -5,7 +5,7 @@ import memoize from 'memoize-one';
 
 import _ from 'lodash';
 
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import MDButton from 'components/MDButton';
@@ -66,9 +66,9 @@ export const SearchTab = memo(() => {
     >
       {({ isSubmitting }) => (
         <Form>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={5} marginTop={2}>
-              <Grid container spacing={2}>
+          <Grid container spacing={2} alignItems='center' justifyContent='center'>
+            <Grid item xs={12} sm={12} md={6} marginTop={2}>
+              <Grid container spacing={2} alignItems='center' justifyContent='center'>
                 <Grid item xs={12} sm={12} md={4}>
                   <Field
                     name='category.id'
@@ -99,8 +99,8 @@ export const SearchTab = memo(() => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={12} md={4} marginTop={2}>
-              <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={3} marginTop={2}>
+              <Grid container spacing={2} alignItems='center' justifyContent='center'>
                 <Grid item xs={12} sm={12} md={4}>
                   <Field
                     name='transMonth.id'
@@ -125,7 +125,7 @@ export const SearchTab = memo(() => {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={3} marginTop={2}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} alignItems='center' justifyContent='center'>
                 <Grid item xs={12} sm={12} md={3}>
                   <Field name='adjust' id='adjust' label='Adjust' component={FormikComboBox} options={adhocOptions} />
                 </Grid>
@@ -133,7 +133,9 @@ export const SearchTab = memo(() => {
                   <Field name='adhoc' id='adhoc' label='Adhoc' component={FormikComboBox} options={adhocOptions} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
-                  <Field name='allRecords' id='allRecords' title='Fetch all records' component={FormikSwitch} />
+                  <Box display='flex' justifyContent='center' alignItems='center'>
+                    <Field name='allRecords' id='allRecords' title='Fetch all records' component={FormikSwitch} />
+                  </Box>
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
                   <MDButton color='primary' type='submit' variant='gradient' size='large' disabled={isSubmitting}>

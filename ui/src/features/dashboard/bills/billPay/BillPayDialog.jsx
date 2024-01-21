@@ -57,7 +57,7 @@ const BillPayForm = ({ bill, accountOptions, setOpenEdit }) => {
     >
       {({ isSubmitting, handleSubmit }) => (
         <Form>
-          <Grid container spacing={1}>
+          <Grid container spacing={1} alignItems='center' justifyContent='center'>
             <Grid item xs={12} sm={12}>
               <CustomTextField disabled id='acct' label='Account' value={bill.account.name} />
             </Grid>
@@ -82,13 +82,13 @@ const BillPayForm = ({ bill, accountOptions, setOpenEdit }) => {
                 options={accountOptions}
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={4} marginTop={2}>
+            <Grid item xs={12} sm={12} md={5} marginTop={2}>
               <Field name='paidAmt' id='paidAmt' label='Payment Amount' component={FormikAmount} />
             </Grid>
-            <Grid item xs={12} sm={12} md={4} marginTop={2}>
+            <Grid item xs={12} sm={12} md={5} marginTop={2}>
               <Field name='paidDt' id='paidDt' label='Payment Date' component={FormikDatePicker} />
             </Grid>
-            <Grid item xs={12} sm={12} md={4} marginTop={2}>
+            <Grid item xs={12} sm={12} md={2} marginTop={2}>
               <MDButton
                 color='primary'
                 type='button'
