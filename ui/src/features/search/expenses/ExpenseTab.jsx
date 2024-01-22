@@ -58,6 +58,7 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
     [expenses, accountFilter, billFilter]
   );
   const totalAmt = useMemo(() => getTotalAmount(filteredExpenses), [filteredExpenses]);
+  const filterApplied = accountFilter || billFilter;
 
   const columnDefs = useMemo(() => {
     const handleMove = (exp, up) => {
@@ -242,7 +243,7 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
           pagination: AppPagination,
         }}
         slotProps={{
-          pagination: { totalAmt },
+          pagination: { totalAmt, filterApplied },
         }}
         sx={{
           fontSize: 12,

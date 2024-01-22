@@ -107,6 +107,7 @@ export const BillTab = ({ paid, closed }) => {
     [bills, closed, paid, accountFilter]
   );
   const totalAmt = useMemo(() => getTotalBillBalance(filteredBills), [filteredBills]);
+  const filterApplied = accountFilter;
 
   const columnDefs = useMemo(() => {
     const handleBillFilter = (id) => {
@@ -209,7 +210,7 @@ export const BillTab = ({ paid, closed }) => {
           pagination: AppPagination,
         }}
         slotProps={{
-          pagination: { totalAmt },
+          pagination: { totalAmt, filterApplied },
         }}
         sx={{
           fontSize: 12,
