@@ -11,7 +11,7 @@ import { AccountCard } from 'features/dashboard/accounts/AccountCard';
 import { sliceAccounts } from 'features/dashboard/accounts/accountUtils';
 
 import { selectAppGlobal } from 'features/appGlobalSlice';
-import { selectAccounts } from 'features/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountsSlice';
 import { sortAccounts } from 'features/accounts/accountUtils';
 
 export const AccountSection = () => {

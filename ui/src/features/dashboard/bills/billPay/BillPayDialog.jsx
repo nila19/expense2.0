@@ -16,11 +16,11 @@ import MDButton from 'components/MDButton';
 
 import { AppCard } from 'components/app/AppCard';
 
-import { ICONS, FORMATS } from 'app/constants';
+import { ICONS } from 'app/constants';
 import { CustomTextField, FormikAmount, FormikComboBox, FormikDatePicker } from 'features/inputs';
 import { formatAmt, formatDate, buildAccountOptions } from 'features/utils';
 
-import { selectAccounts } from 'features/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountsSlice';
 import { selectBillPay, resetBillPay, savePayBill } from 'features/dashboard/bills/billPay/billPaySlice';
 
 const initialValues = memoize((bill) => ({

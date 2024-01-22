@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 
-import { Box } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,8 +15,11 @@ import { formatAmt } from 'features/utils';
 import { AppIcon } from 'components/app/AppIcon';
 
 import { sortAccounts } from 'features/accounts/accountUtils';
-import { modifyAccount, selectAccounts, deleteAccount } from 'features/accounts/accountSlice';
 import { buildAccountColor } from 'features/dashboard/accounts/accountUtils';
+import { AccountEditDialog } from 'features/admin/accountEdit/AccountEditDialog';
+
+import { selectAccounts, deleteAccount } from 'features/accounts/accountsSlice';
+import { editAccount } from 'features/accounts/accountEditSlice';
 
 export const AccountsTab = () => {
   const dispatch = useDispatch();
@@ -37,15 +40,13 @@ export const AccountsTab = () => {
 
   const columnDefs = useMemo(() => {
     const handleEdit = (acct) => {
-      dispatch(modifyAccount(acct));
+      dispatch(editAccount(acct));
       setOpenEdit(true);
     };
 
     const handleDelete = (acct) => {
       dispatch(deleteAccount(acct.id));
     };
-
-    const getFlagIcon = (flag) => {};
 
     return [
       {
@@ -126,13 +127,18 @@ export const AccountsTab = () => {
         sortable: true,
         headerAlign: 'center',
         align: 'left',
-        flex: 1,
+        flex: 1.5,
         headerName: 'ICON',
         renderCell: ({ row }) => {
           return (
-            <Box display='flex' justifyContent='center' alignItems='center'>
-              <AppIcon icon={row.icon} color={buildAccountColor(row.color)} /> {row.icon}
-            </Box>
+            <Grid container alignItems='center' justifyContent='center'>
+              <Grid item xs={12} sm={2}>
+                <AppIcon icon={row.icon} color={buildAccountColor(row.color)} />
+              </Grid>
+              <Grid item xs={12} sm={10}>
+                {row.icon}
+              </Grid>
+            </Grid>
           );
         },
       },
@@ -178,7 +184,7 @@ export const AccountsTab = () => {
         flex: 1,
         type: 'number',
         headerName: 'BALANCE',
-        valueFormatter: ({ value }) => formatAmt(value, false),
+        valueFormatter: ({ value }) => formatAmt(value, true),
       },
     ];
   }, [dispatch]);
@@ -191,9 +197,6 @@ export const AccountsTab = () => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[rowsPerPage]}
-        // slots={{ columnMenuColumnsItem: null }}
-        // disableColumnFilter
-        // disableColumnMenu
         disableColumnSelector
         columnHeaderHeight={45}
         rowHeight={35}
@@ -213,6 +216,7 @@ export const AccountsTab = () => {
           },
         }}
       />
+      <AccountEditDialog openEdit={openEdit} setOpenEdit={setOpenEdit} />
     </>
   );
 };

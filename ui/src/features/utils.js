@@ -27,7 +27,8 @@ export const buildCategoriesOptions = memoize((categories) => {
 });
 
 export const buildAccountOptions = memoize((accounts) => {
-  return accounts.map((e) => ({ key: e.id, label: e.name }));
+  const acctsSorted = _.sortBy(accounts, 'seq');
+  return acctsSorted.map((e) => ({ key: e.id, label: e.name }));
 });
 
 export const buildBillOptions = memoize((bills, accountId) => {

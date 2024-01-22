@@ -6,7 +6,7 @@ import { axios } from 'app/axios';
 import { API } from 'app/config';
 
 import { setSelectedCity } from 'features/appGlobalSlice';
-import { loadAccounts } from 'features/accounts/accountSlice';
+import { loadAccounts } from 'features/accounts/accountsSlice';
 import { loadBills } from 'features/dashboard/bills/billTab/billTabSlice';
 import { loadExpenses } from 'features/search/expenses/expenseSlice';
 import { loadSummary } from 'features/summary/summarySlice';

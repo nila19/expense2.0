@@ -14,7 +14,7 @@ import { FormikAmount, FormikComboBox, FormikSwitch } from 'features/inputs';
 import { buildCategoriesOptions, buildAccountOptions, buildMonthOptions, buildAdhocOptions } from 'features/utils';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountsSlice';
 import { selectExpenses, searchExpenses } from 'features/search/expenses/expenseSlice';
 
 const initialValues = memoize((summaryFilter) =>

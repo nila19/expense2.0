@@ -19,7 +19,10 @@ export const closeBill = async ({ db }, data) => {
 
   await closeOldBill(db, bill);
   const acct = await accountService.findById(db, bill.account.id);
-  await createNewBill(db, bill.cityId, acct);
+  const newBill = await createNewBill(db, bill.cityId, acct);
+  if (newBill) {
+    await accountService.updateOpenBill(db, acct.id, { id: newBill.id, name: newBill.name });
+  }
 };
 
 // step 2.2: close each bill.
@@ -36,7 +39,7 @@ const closeOldBill = async (db, bill) => {
 };
 
 // step 3.3: create a new OpenBill..
-const createNewBill = async (db, cityId, ac) => {
+export const createNewBill = async (db, cityId, ac) => {
   // use default id of -1, if the bill obj is null.
   const billId = ac.bills && ac.bills.open ? ac.bills.open.id : -1;
   const bill = await billService.findById(db, billId);
@@ -45,7 +48,7 @@ const createNewBill = async (db, cityId, ac) => {
     const seq = await sequenceModel.findNextSeq(db, cityId, COLLECTION.BILL);
     const newBill = buildEmptyBill(cityId, ac, seq);
     await billService.addBill(db, newBill);
-    await accountService.updateOpenBill(db, ac.id, { id: newBill.id, name: newBill.name });
+    return newBill;
   }
 };
 
@@ -54,10 +57,10 @@ const isNewBillNeeded = (ac, bill) => {
   if (!ac.billed) {
     // if the account is not billed, new bill NOT needed.
     return false;
-  } else if (!ac.bills.open || !bill) {
+  } else if (!ac.bills?.open || !bill) {
     // if the 'openbill' on the account is null, new bill IS needed.
     return true;
-  } else if (bill.closed) {
+  } else if (bill?.closed) {
     // if the 'openbill' on the account is closed, new bill IS needed.
     return true;
   } else {

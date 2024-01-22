@@ -11,6 +11,8 @@ import { accountService } from 'data/services';
 import { checkCityEditable, checkAccountDeletable } from 'utils/common-utils';
 import { async } from 'regenerator-runtime';
 
+import { createNewBill } from 'services/bill/bill-service';
+
 export const findAll = async ({ db }, data) => {
   return await accountService.findAllForCity(db, data.cityId);
 };
@@ -22,7 +24,23 @@ export const addAccount = async ({ db }, data) => {
   return await accountService.addAccount(db, data.cityId, acct);
 };
 
+const fixBills = async (db, data) => {
+  const oldAcc = await accountService.findById(db, data.id);
+  // retain old bills
+  data.bills = oldAcc?.bills;
+
+  if (!data.billed && data.bills) {
+    data.bills = null;
+  } else if (data.billed && !data.bills) {
+    const newBill = await createNewBill(db, data.cityId, data);
+    data.bills = { last: {}, open: { id: newBill.id, name: newBill.name } };
+  }
+};
+
 export const modifyAccount = async ({ db }, data) => {
+  data.balance = numeral(data.balance).value();
+  await fixBills(db, data);
+
   await checkCityEditable(db, data.cityId);
   return await accountService.modifyAccount(db, data.cityId, data);
 };

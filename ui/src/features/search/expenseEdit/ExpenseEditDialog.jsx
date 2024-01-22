@@ -21,7 +21,7 @@ import { buildCategoriesOptions, buildAccountOptions, buildBillOptions } from 'f
 // import { editSchema } from "features/utils";
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountsSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 import { selectExpenseEdit, resetForm, saveEditExpense } from 'features/search/expenseEdit/expenseEditSlice';
 import moment from 'moment';

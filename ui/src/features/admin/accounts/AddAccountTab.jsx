@@ -9,12 +9,12 @@ import AddIcon from '@mui/icons-material/Add';
 import MDButton from 'components/MDButton';
 import MDTypography from 'components/MDTypography';
 
-import { acctSchema } from 'features/utils';
-import { FormikTextField } from 'features/inputs';
-import { FormikAmount, FormikCheckBox, FormikComboBox } from 'features/inputs';
 import { buildIconOptions, buildColorOptions } from 'components/app/AppIcon';
 
-import { addAccount } from 'features/accounts/accountSlice';
+import { acctSchema } from 'features/utils';
+import { FormikAmount, FormikCheckBox, FormikComboBox, FormikTextField } from 'features/inputs';
+
+import { addAccount } from 'features/accounts/accountsSlice';
 
 export const AddAccountTab = memo(() => {
   const dispatch = useDispatch();

@@ -49,6 +49,7 @@ export const modifyAccount = (db, cityId, acct) => {
   const mod = {
     $set: {
       name: acct.name,
+      active: acct.active,
       cash: acct.cash,
       billed: acct.billed,
       icon: acct.icon,
@@ -57,7 +58,7 @@ export const modifyAccount = (db, cityId, acct) => {
       closingDay: acct.closingDay,
       dueDay: acct.dueDay,
       balance: acct.balance,
-      active: acct.active,
+      bills: acct.bills,
     },
   };
   return accountModel.findOneAndUpdate(db, filter, mod);

@@ -18,7 +18,7 @@ import BeenhereIcon from '@mui/icons-material/Beenhere';
 import { AppIcon } from 'components/app/AppIcon';
 
 import { selectDashboardGlobal, setAccountFilter } from 'features/dashboard/dashboardGlobalSlice';
-import { tallyAccount } from 'features/accounts/accountSlice';
+import { tallyAccount } from 'features/accounts/accountsSlice';
 import { selectBills } from 'features/dashboard/bills/billTab/billTabSlice';
 
 import { formatAmt } from 'features/utils';

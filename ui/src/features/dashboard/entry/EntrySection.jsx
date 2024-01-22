@@ -8,7 +8,7 @@ import { EntryTab } from 'features/dashboard/entry/EntryTab';
 import { buildCategoriesOptions, buildAccountOptions } from 'features/utils';
 
 import { selectStartupData } from 'features/startup/startupSlice';
-import { selectAccounts } from 'features/accounts/accountSlice';
+import { selectAccounts } from 'features/accounts/accountsSlice';
 
 export const EntrySection = memo(() => {
   const { categories, descriptions } = useSelector(selectStartupData);
