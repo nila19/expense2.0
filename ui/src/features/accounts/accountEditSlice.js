@@ -15,9 +15,7 @@ const accountEditSlice = createSlice({
   initialState: {},
   reducers: {
     editAccount: (state, action) => {
-      let account = _.cloneDeep(action.payload);
-      // account = _.set(account, 'bill.billed', expense.bill && expense.bill.id != null);
-      return account;
+      return _.cloneDeep(action.payload);
     },
     resetForm: () => {
       return null;

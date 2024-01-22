@@ -9,7 +9,6 @@ import { sequenceModel } from 'data/models';
 import { accountService } from 'data/services';
 
 import { checkCityEditable, checkAccountDeletable } from 'utils/common-utils';
-import { async } from 'regenerator-runtime';
 
 import { createNewBill } from 'services/bill/bill-service';
 
