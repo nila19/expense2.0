@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 
-import { Grid, Box } from '@mui/material';
+import { Grid } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
