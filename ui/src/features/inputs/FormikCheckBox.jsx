@@ -1,8 +1,7 @@
 import React from 'react';
 import { useField } from 'formik';
 
-import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
+import { Checkbox, Tooltip } from '@mui/material';
 
 export const CustomCheckBox = (props) => {
   const { title, ...other } = props;

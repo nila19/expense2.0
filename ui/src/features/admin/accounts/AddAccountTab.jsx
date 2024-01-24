@@ -67,19 +67,19 @@ export const AddAccountTab = memo(() => {
                   <MDTypography variant='body2' fontWeight='light'>
                     Cash
                   </MDTypography>
-                  <Field name='cash' id='cash' label='Cash' component={FormikCheckBox} />
+                  <Field name='cash' id='cash' title='Cash' component={FormikCheckBox} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={4}>
                   <MDTypography variant='body2' fontWeight='light'>
                     Billed
                   </MDTypography>
-                  <Field name='billed' id='billed' label='Billed' component={FormikCheckBox} />
+                  <Field name='billed' id='billed' title='Billed' component={FormikCheckBox} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={4}>
                   <MDTypography variant='body2' fontWeight='light'>
                     Active
                   </MDTypography>
-                  <Field name='active' id='active' label='Active' component={FormikCheckBox} />
+                  <Field name='active' id='active' title='Active' component={FormikCheckBox} />
                 </Grid>
               </Grid>
             </Grid>

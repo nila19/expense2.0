@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Card, Divider, Icon } from '@mui/material';
+import { Card, Divider, Icon, Tooltip } from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
@@ -87,9 +87,11 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
       </MDBox>
       <Divider style={{ margin: '0.5rem' }} />
       <MDBox pb={1} px={2} display='flex'>
-        <Icon fontSize='small' title='Tally' color={tallyInfoColor} onClick={() => handleTallyClick(account.id)}>
-          {<BeenhereIcon fontSize='small' style={{ top: '1px', cursor: 'pointer' }} />}
-        </Icon>
+        <Tooltip title='Tally' placement='top'>
+          <Icon fontSize='small' title='Tally' color={tallyInfoColor} onClick={() => handleTallyClick(account.id)}>
+            {<BeenhereIcon fontSize='small' style={{ top: '1px', cursor: 'pointer' }} />}
+          </Icon>
+        </Tooltip>
         <MDTypography component='p' variant='button' fontSize='small' color='secondary' display='flex'>
           &nbsp;&nbsp;{tallyInfo}
         </MDTypography>

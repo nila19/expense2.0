@@ -1,10 +1,7 @@
 // @mui material components
 import React, { useState } from 'react';
 
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import Badge from '@mui/material/Badge';
-import Tooltip from '@mui/material/Tooltip';
+import { Grid, Card, Badge, Tooltip } from '@mui/material';
 
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
@@ -24,13 +21,13 @@ const buildAppTabs = (tabs, handleTabChange) => {
     tabs && (
       <Grid container spacing={2} columns={3}>
         {tabs.map(({ tabName, tabIcon, badge }, i) => (
-          <Grid item xs={1} key={i}>
-            <AppTabBadge badge={badge} idx={i} handleTabChange={handleTabChange}>
-              <Tooltip title={tabName} placement='top'>
+          <Tooltip title={tabName} placement='top'>
+            <Grid item xs={1} key={i}>
+              <AppTabBadge badge={badge} idx={i} handleTabChange={handleTabChange}>
                 <AppIcon icon={tabIcon} clickable={true} color='white' />
-              </Tooltip>
-            </AppTabBadge>
-          </Grid>
+              </AppTabBadge>
+            </Grid>
+          </Tooltip>
         ))}
       </Grid>
     )

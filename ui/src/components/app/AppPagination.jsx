@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Grid, Icon } from '@mui/material';
+import { Grid, Icon, Tooltip } from '@mui/material';
 import { GridPagination } from '@mui/x-data-grid';
 
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -23,9 +23,11 @@ export const AppPagination = (props) => {
       <Grid item xs={12} sm={12} md={1}></Grid>
       <Grid item xs={12} sm={12} md={1}>
         {props.filterApplied && (
-          <Icon fontSize='small' title='Tally' color='error' onClick={() => handleResetFilters()}>
-            {<FilterAltIcon fontSize='small' style={{ top: '1px', cursor: 'pointer' }} />}
-          </Icon>
+          <Tooltip title='Reset Filter' placement='top'>
+            <Icon fontSize='small' title='Tally' color='error' onClick={() => handleResetFilters()}>
+              {<FilterAltIcon fontSize='small' style={{ top: '1px', cursor: 'pointer' }} />}
+            </Icon>
+          </Tooltip>
         )}
       </Grid>
       <Grid item xs={12} sm={12} md={7} style={{ textAlign: 'right' }}>
