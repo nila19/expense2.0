@@ -168,6 +168,7 @@ export const AccountsTab = () => {
         flex: 0.5,
         type: 'number',
         headerName: 'CLOSING DAY',
+        valueGetter: ({ row }) => (row.billed ? row.closingDay : ''),
       },
       {
         field: 'dueDay',
@@ -176,6 +177,7 @@ export const AccountsTab = () => {
         flex: 0.5,
         type: 'number',
         headerName: 'DUE DAY',
+        valueGetter: ({ row }) => (row.billed ? row.dueDay : ''),
       },
       {
         field: 'balance',
