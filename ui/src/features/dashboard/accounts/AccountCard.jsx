@@ -1,10 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// @mui material components
-import Card from '@mui/material/Card';
-import Divider from '@mui/material/Divider';
-import Icon from '@mui/material/Icon';
+import { Card, Divider, Icon } from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';

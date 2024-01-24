@@ -6,6 +6,7 @@ import memoize from 'memoize-one';
 import _ from 'lodash';
 
 import { Grid, Box } from '@mui/material';
+
 import SearchIcon from '@mui/icons-material/Search';
 
 import MDButton from 'components/MDButton';

@@ -4,9 +4,8 @@ import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 
 import makeStyles from '@mui/styles/makeStyles';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import Tooltip from '@mui/material/Tooltip';
+
+import { TableRow, TableCell, Tooltip } from '@mui/material';
 
 import { COUNTS, COLOR } from 'app/config';
 import { AppIcon } from 'components/app/AppIcon';

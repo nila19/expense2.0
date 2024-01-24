@@ -3,8 +3,8 @@ import React from 'react';
 import _ from 'lodash';
 
 import makeStyles from '@mui/styles/makeStyles';
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
+
+import { TableCell, TableRow } from '@mui/material';
 
 import { COLOR } from 'app/config';
 

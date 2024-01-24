@@ -5,6 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import _ from 'lodash';
 
 import { Grid, Box } from '@mui/material';
+
 import AddIcon from '@mui/icons-material/Add';
 
 import MDButton from 'components/MDButton';
@@ -79,7 +80,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
       >
         {({ isSubmitting, handleSubmit }) => (
           <Form>
-            <Grid container spacing={2} marginTop={2} alignItems='center' justifyContent='center'>
+            <Grid container marginTop={1} spacing={2} alignItems='center' justifyContent='center'>
               <Grid item xs={12} sm={12} md={4}>
                 <Field
                   name='accounts.from.id'
@@ -112,10 +113,18 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                 )}
               </Grid>
               <Grid item xs={12} sm={12} md={3}>
-                <Field name='amount' id='amount' label='Amount' onFieldChange={handleAmount} component={FormikAmount} />
+                <Box display='flex' justifyContent='center' alignItems='center'>
+                  <Field
+                    name='amount'
+                    id='amount'
+                    label='Amount'
+                    onFieldChange={handleAmount}
+                    component={FormikAmount}
+                  />
+                </Box>
               </Grid>
             </Grid>
-            <Grid container spacing={2} marginTop={2} alignItems='center' justifyContent='center'>
+            <Grid container marginTop={1} spacing={2} alignItems='center' justifyContent='center'>
               <Grid item xs={12} sm={12} md={6}>
                 <Field
                   freeSolo
@@ -150,16 +159,18 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                 </Box>
               </Grid>
               <Grid item xs={12} sm={12} md={2}>
-                <MDButton
-                  color='success'
-                  type='button'
-                  variant='gradient'
-                  size='large'
-                  disabled={isSubmitting}
-                  onClick={handleSubmit}
-                >
-                  <AddIcon />
-                </MDButton>
+                <Box display='flex' justifyContent='center' alignItems='center'>
+                  <MDButton
+                    color='success'
+                    type='button'
+                    variant='gradient'
+                    size='large'
+                    disabled={isSubmitting}
+                    onClick={handleSubmit}
+                  >
+                    <AddIcon />
+                  </MDButton>
+                </Box>
               </Grid>
             </Grid>
           </Form>

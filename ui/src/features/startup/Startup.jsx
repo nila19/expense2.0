@@ -4,11 +4,11 @@ import { useSnackbar } from 'notistack';
 
 import 'typeface-roboto';
 
-import Typography from '@mui/material/Typography';
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
-import LinearProgress from '@mui/material/LinearProgress';
+
+import { LinearProgress, Typography } from '@mui/material';
 
 import ErrorIcon from '@mui/icons-material/Error';
 

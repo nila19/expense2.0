@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 
 // @mui/material components
-import Grid from '@mui/material/Grid';
+import { Grid } from '@mui/material';
 
 import { COUNTS } from 'app/config';
 import { AccountCard } from 'features/dashboard/accounts/AccountCard';

@@ -6,10 +6,8 @@ import memoize from 'memoize-one';
 
 import moment from 'moment';
 
-import { Grid } from '@mui/material';
+import { Grid, Dialog, DialogContent } from '@mui/material';
 
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
 import SaveIcon from '@mui/icons-material/Save';
 
 import MDButton from 'components/MDButton';

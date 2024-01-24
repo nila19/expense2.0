@@ -1,7 +1,6 @@
 import React from 'react';
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
+import { Table, TableBody } from '@mui/material';
 
 import { SummaryHeader } from 'features/summary/header/SummaryHeader';
 import { SummaryBody } from 'features/summary/body/SummaryBody';

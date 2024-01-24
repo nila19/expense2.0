@@ -4,10 +4,8 @@ import { Formik, Form, Field } from 'formik';
 
 import _ from 'lodash';
 
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Dialog, DialogContent } from '@mui/material';
 
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
 import SaveIcon from '@mui/icons-material/Save';
 
 import MDButton from 'components/MDButton';
@@ -18,7 +16,6 @@ import { buildIconOptions, buildColorOptions } from 'components/app/AppIcon';
 
 import { ICONS } from 'app/constants';
 import { FormikAmount, FormikCheckBox, FormikComboBox, FormikTextField } from 'features/inputs';
-
 // import { editSchema } from "features/utils";
 
 import { selectAccountEdit, resetForm, saveEditAccount } from 'features/accounts/accountEditSlice';

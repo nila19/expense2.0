@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import IconButton from '@mui/material/IconButton';
+import { Grid, Box, IconButton } from '@mui/material';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
-import { Grid, Box } from '@mui/material';
 
 import { CustomCheckBox } from 'features/inputs';
 
