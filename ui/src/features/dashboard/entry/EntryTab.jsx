@@ -6,10 +6,9 @@ import _ from 'lodash';
 
 import { Grid, Box } from '@mui/material';
 
-import AddIcon from '@mui/icons-material/Add';
-
 import MDButton from 'components/MDButton';
 
+import { AppIcon } from 'components/app/AppIcon';
 import { entrySchema } from 'features/utils';
 import { FormikAmount, FormikCheckBox, FormikComboBox, FormikDatePicker } from 'features/inputs';
 
@@ -168,7 +167,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                     disabled={isSubmitting}
                     onClick={handleSubmit}
                   >
-                    <AddIcon />
+                    <AppIcon icon='AddIcon' color='white' />
                   </MDButton>
                 </Box>
               </Grid>

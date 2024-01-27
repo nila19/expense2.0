@@ -3,9 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { Grid, Box, IconButton } from '@mui/material';
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
+import { AppIcon } from 'components/app/AppIcon';
 import { CustomCheckBox } from 'features/inputs';
 
 import { loadSummary } from 'features/summary/summarySlice';
@@ -45,13 +43,13 @@ export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
         </Grid>
         <Grid item xs={12} sm={12} md={2}></Grid>
         <Grid item xs={12} sm={12} md={2}>
-          <IconButton size='small' disabled={!hasPrevious} onClick={() => changePage(-1)}>
-            <ArrowBackIcon fontSize='inherit' />
+          <IconButton disabled={!hasPrevious} onClick={() => changePage(-1)}>
+            <AppIcon icon='ArrowBackIcon' color={hasPrevious ? 'warning' : 'secondary'} />
           </IconButton>
         </Grid>
         <Grid item xs={12} sm={12} md={2}>
-          <IconButton size='small' disabled={!hasNext} onClick={() => changePage(+1)}>
-            <ArrowForwardIcon fontSize='inherit' />
+          <IconButton disabled={!hasNext} onClick={() => changePage(+1)}>
+            <AppIcon icon='ArrowForwardIcon' color={hasNext ? 'warning' : 'secondary'} />
           </IconButton>
         </Grid>
       </Grid>

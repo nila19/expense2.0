@@ -4,7 +4,7 @@ import { Grid } from '@mui/material';
 
 import { EXPENSE_BLOCK } from 'app/constants';
 
-import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
+import { ExpensesSection } from 'features/search/expenses/ExpensesSection';
 import { SearchSection } from 'features/search/form/SearchSection';
 
 const Search = () => {
@@ -15,7 +15,7 @@ const Search = () => {
           <SearchSection />
         </Grid>
         <Grid item lg={12}>
-          <ExpenseSection section={EXPENSE_BLOCK.SEARCH} />
+          <ExpensesSection section={EXPENSE_BLOCK.SEARCH} />
         </Grid>
       </Grid>
     </>

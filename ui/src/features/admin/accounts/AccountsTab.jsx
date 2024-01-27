@@ -5,10 +5,6 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 
 import { Grid } from '@mui/material';
 
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import TouchAppIcon from '@mui/icons-material/TouchApp';
-
 import { COUNTS, COLOR } from 'app/config';
 import { formatAmt } from 'features/utils';
 
@@ -56,16 +52,16 @@ export const AccountsTab = () => {
         headerAlign: 'center',
         align: 'center',
         flex: 1,
-        renderHeader: () => <TouchAppIcon fontSize='small' />,
+        renderHeader: () => <AppIcon icon='TouchAppIcon' color='error' />,
         getActions: ({ row }) => [
           <GridActionsCellItem
-            icon={<EditIcon fontSize='small' />}
+            icon={<AppIcon icon='EditIcon' color='warning' />}
             label='Edit'
             color='warning'
             onClick={() => handleEdit(row)}
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon fontSize='small' />}
+            icon={<AppIcon icon='DeleteIcon' color='error' />}
             label='Delete'
             color='error'
             onClick={() => handleDelete(row)}
@@ -142,17 +138,6 @@ export const AccountsTab = () => {
           );
         },
       },
-      // {
-      //   field: 'color',
-      //   sortable: false,
-      //   headerAlign: 'center',
-      //   align: 'center',
-      //   flex: 0.5,
-      //   headerName: 'COLOR',
-      //   renderCell: ({ value }) => {
-      //     return <AppIcon icon='rectangle' color={buildAccountColor(value)} />;
-      //   },
-      // },
       {
         field: 'seq',
         sortable: true,

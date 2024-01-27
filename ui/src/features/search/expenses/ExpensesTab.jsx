@@ -1,42 +1,34 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import _ from 'lodash';
 import moment from 'moment';
+import memoize from 'memoize-one';
 
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-
-// @mui/icons-material
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import TransformIcon from '@mui/icons-material/Transform';
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
-import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
-import TouchAppIcon from '@mui/icons-material/TouchApp';
-import FlagIcon from '@mui/icons-material/Flag';
 
 import { AppPagination } from 'components/app/AppPagination';
 
 import { COLOR } from 'app/config';
 import { FORMATS } from 'app/constants';
+import { AppIcon } from 'components/app/AppIcon';
 
 import { ExpenseEditDialog } from 'features/search/expenseEdit/ExpenseEditDialog';
 import { formatAmt, formatDate, getTotalAmount } from 'features/utils';
 import { filterAndSortExpenses, findTargetTransId } from 'features/search/expenses/expenseUtils';
 
 import { selectDashboardGlobal } from 'features/dashboard/dashboardGlobalSlice';
+import { selectStartupData } from 'features/startup/startupSlice';
 import { deleteExpense, swapExpenses } from 'features/search/expenses/expenseSlice';
 import { editExpense } from 'features/search/expenseEdit/expenseEditSlice';
 
-export const ExpenseTab = ({ expenses, rowsPerPage }) => {
+export const ExpensesTab = ({ expenses, rowsPerPage }) => {
   const dispatch = useDispatch();
   const { accountFilter, billFilter } = useSelector(selectDashboardGlobal);
+  const { categories } = useSelector(selectStartupData);
 
   const [openEdit, setOpenEdit] = useState(false);
 
-  // TODO - implement custom pagination
   const [paginationModel, setPaginationModel] = useState({
     pageSize: rowsPerPage,
     page: 0,
@@ -77,6 +69,11 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
       dispatch(deleteExpense(exp.id));
     };
 
+    const getCategoryIcon = memoize((id) => {
+      const category = _.find(categories, { id: id });
+      return category?.icon;
+    });
+
     return [
       {
         field: 'actions',
@@ -85,30 +82,26 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
         headerAlign: 'center',
         align: 'center',
         flex: 2,
-        renderHeader: () => <TouchAppIcon fontSize='small' />,
+        renderHeader: () => <AppIcon icon='TouchAppIcon' color='error' />,
         getActions: ({ row }) => [
           <GridActionsCellItem
-            icon={<EditIcon fontSize='small' />}
+            icon={<AppIcon icon='EditIcon' color='warning' />}
             label='Edit'
-            color='warning'
             onClick={() => handleEdit(row)}
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon fontSize='small' />}
+            icon={<AppIcon icon='DeleteIcon' color='error' />}
             label='Delete'
-            color='error'
             onClick={() => handleDelete(row)}
           />,
           <GridActionsCellItem
-            icon={<ArrowUpwardIcon fontSize='small' />}
+            icon={<AppIcon icon='ArrowUpwardIcon' color='info' />}
             label='Move up'
-            color='info'
             onClick={() => handleMove(row, true)}
           />,
           <GridActionsCellItem
-            icon={<ArrowDownwardIcon fontSize='small' />}
+            icon={<AppIcon icon='ArrowDownwardIcon' color='info' />}
             label='Move down'
-            color='info'
             onClick={() => handleMove(row, false)}
           />,
         ],
@@ -117,7 +110,6 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
         field: 'id',
         sortable: false,
         flex: 1,
-        type: 'number',
         headerAlign: 'center',
         align: 'center',
         headerName: 'ID',
@@ -134,18 +126,29 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
       {
         field: 'transDt',
         sortable: false,
-        flex: 1.2,
+        flex: 1.5,
         headerAlign: 'center',
         align: 'center',
         headerName: 'TRANS',
-        valueFormatter: ({ value }) => formatDate(value, FORMATS.DDMMM),
+        valueFormatter: ({ value }) => formatDate(value),
+      },
+      {
+        field: 'categoryIcon',
+        sortable: false,
+        headerAlign: 'center',
+        align: 'center',
+        flex: 0.5,
+        renderHeader: () => <AppIcon icon='FlagIcon' color='error' />,
+        renderCell: ({ row }) => {
+          return row.category?.id ? <AppIcon icon={getCategoryIcon(row.category.id)} /> : <></>;
+        },
       },
       {
         field: 'category',
         sortable: false,
-        flex: 2.5,
+        flex: 2,
         headerName: 'CATEGORY',
-        valueGetter: ({ row }) => (row.category ? row.category.name : '-'),
+        valueGetter: ({ row }) => (row.category?.id ? row.category.name : '-'),
       },
       {
         field: 'description',
@@ -164,48 +167,48 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
       {
         field: 'fromAc',
         sortable: false,
-        flex: 2,
+        flex: 1.5,
         headerName: 'FROM',
-        valueGetter: ({ row }) => (row.accounts.from ? row.accounts.from.name : '-'),
+        valueGetter: ({ row }) => (row.accounts.from?.id ? row.accounts.from.name : '-'),
       },
       {
         field: 'fromBf',
         sortable: false,
         flex: 1.5,
         type: 'number',
-        renderHeader: () => <TrendingFlatIcon fontSize='small' />,
-        valueGetter: ({ row }) => (row.accounts.from ? formatAmt(row.accounts.from.balanceBf, false) : '-'),
+        renderHeader: () => <AppIcon icon='TrendingFlatIcon' color='error' />,
+        valueGetter: ({ row }) => (row.accounts.from?.id ? formatAmt(row.accounts.from.balanceBf, false) : '-'),
       },
       {
         field: 'fromAf',
         sortable: false,
         flex: 1.5,
         type: 'number',
-        renderHeader: () => <KeyboardTabIcon fontSize='small' />,
-        valueGetter: ({ row }) => (row.accounts.from ? formatAmt(row.accounts.from.balanceAf, false) : '-'),
+        renderHeader: () => <AppIcon icon='KeyboardTabIcon' color='error' />,
+        valueGetter: ({ row }) => (row.accounts.from?.id ? formatAmt(row.accounts.from.balanceAf, false) : '-'),
       },
       {
         field: 'toAc',
         sortable: false,
-        flex: 2,
+        flex: 1.5,
         headerName: 'TO',
-        valueGetter: ({ row }) => (row.accounts.to ? row.accounts.to.name : '-'),
+        valueGetter: ({ row }) => (row.accounts.to?.id ? row.accounts.to.name : '-'),
       },
       {
         field: 'toBf',
         sortable: false,
         flex: 1.5,
         type: 'number',
-        renderHeader: () => <TrendingFlatIcon fontSize='small' />,
-        valueGetter: ({ row }) => (row.accounts.to ? formatAmt(row.accounts.to.balanceBf, false) : '-'),
+        renderHeader: () => <AppIcon icon='TrendingFlatIcon' color='error' />,
+        valueGetter: ({ row }) => (row.accounts.to?.id ? formatAmt(row.accounts.to.balanceBf, false) : '-'),
       },
       {
         field: 'toAf',
         sortable: false,
         flex: 1.5,
         type: 'number',
-        renderHeader: () => <KeyboardTabIcon fontSize='small' />,
-        valueGetter: ({ row }) => (row.accounts.to ? formatAmt(row.accounts.to.balanceAf, false) : '-'),
+        renderHeader: () => <AppIcon icon='KeyboardTabIcon' color='error' />,
+        valueGetter: ({ row }) => (row.accounts.to?.id ? formatAmt(row.accounts.to.balanceAf, false) : '-'),
       },
       {
         field: 'flag',
@@ -213,19 +216,17 @@ export const ExpenseTab = ({ expenses, rowsPerPage }) => {
         headerAlign: 'center',
         align: 'center',
         flex: 1.5,
-        renderHeader: () => <FlagIcon fontSize='small' />,
+        renderHeader: () => <AppIcon icon='FlagIcon' color='error' />,
         renderCell: ({ row }) => {
-          return row.adjust ? (
-            <TransformIcon fontSize='small' color='primary' />
-          ) : row.adhoc ? (
-            <ShoppingBasketIcon fontSize='small' color='primary' />
+          return row.adjust || row.adhoc ? (
+            <AppIcon icon={row.adjust ? 'TransformIcon' : 'ShoppingBasketIcon'} />
           ) : (
             <></>
           );
         },
       },
     ];
-  }, [dispatch, filteredExpenses]);
+  }, [dispatch, filteredExpenses, categories]);
 
   return (
     <>

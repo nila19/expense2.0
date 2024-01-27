@@ -6,11 +6,11 @@ import { COUNTS } from 'app/config';
 
 import { AppSection } from 'components/app/AppSection';
 
-import { ExpenseTab } from 'features/search/expenses/ExpenseTab';
+import { ExpensesTab } from 'features/search/expenses/ExpensesTab';
 import { selectExpenses } from 'features/search/expenses/expenseSlice';
 import { selectAppGlobal } from 'features/appGlobalSlice';
 
-export const ExpenseSection = ({ section }) => {
+export const ExpensesSection = ({ section }) => {
   const { data, searchResults } = useSelector(selectExpenses);
   const { accountsExpanded } = useSelector(selectAppGlobal);
 
@@ -34,7 +34,7 @@ export const ExpenseSection = ({ section }) => {
     <AppSection
       title='EXPENSES'
       headerColor='info'
-      content=<ExpenseTab expenses={expenses} rowsPerPage={rowsPerPage} />
+      content=<ExpensesTab expenses={expenses} rowsPerPage={rowsPerPage} />
     />
   );
 };

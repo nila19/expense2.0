@@ -6,22 +6,9 @@ import _ from 'lodash';
 
 import { Grid, Menu, MenuItem } from '@mui/material';
 
-// @mui/icons-material
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import FilterNoneIcon from '@mui/icons-material/FilterNone';
-import SearchIcon from '@mui/icons-material/Search';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import EuroIcon from '@mui/icons-material/Euro';
-import AddIcon from '@mui/icons-material/Add';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
-
 import MDButton from 'components/MDButton';
 
+import { AppIcon } from 'components/app/AppIcon';
 import { ROUTE } from 'app/config';
 import { ENV } from 'app/constants';
 import { selectStartup, selectStartupData, setReloadDashboard } from 'features/startup/startupSlice';
@@ -32,11 +19,11 @@ import { loadChart } from 'features/dashboard/chart/chartSlice';
 const buildCityIcon = (currency) => {
   switch (currency) {
     case 'USD':
-      return <AttachMoneyIcon />;
+      return <AppIcon icon='AttachMoneyIcon' color='success' />;
     case 'INR':
-      return <EuroIcon />;
+      return <AppIcon icon='EuroIcon' color='success' />;
     default:
-      return '';
+      return <></>;
   }
 };
 
@@ -95,7 +82,7 @@ export const MenuBar = () => {
             color='primary'
             variant='text'
             size='medium'
-            startIcon={<DashboardIcon />}
+            startIcon={<AppIcon icon='DashboardIcon' />}
           >
             Dashboard
           </MDButton>
@@ -106,7 +93,7 @@ export const MenuBar = () => {
             color='warning'
             variant='text'
             size='medium'
-            startIcon={<FilterNoneIcon />}
+            startIcon={<AppIcon icon='FilterNoneIcon' color='warning' />}
           >
             Monthly Summary
           </MDButton>
@@ -117,7 +104,7 @@ export const MenuBar = () => {
             color='info'
             variant='text'
             size='medium'
-            startIcon={<SearchIcon />}
+            startIcon={<AppIcon icon='SearchIcon' color='info' />}
           >
             Search
           </MDButton>
@@ -128,7 +115,7 @@ export const MenuBar = () => {
             color='success'
             variant='text'
             size='medium'
-            startIcon={<SupervisorAccountIcon />}
+            startIcon={<AppIcon icon='SupervisorAccountIcon' color='success' />}
           >
             Admin
           </MDButton>
@@ -145,7 +132,7 @@ export const MenuBar = () => {
             variant='text'
             size='large'
           >
-            <AutorenewIcon />
+            <AppIcon icon='AutorenewIcon' color={reloadDashboard ? 'warning' : 'error'} />
           </MDButton>
           <MDButton
             disabled={!isDashboard}
@@ -155,7 +142,10 @@ export const MenuBar = () => {
             iconOnly={true}
             variant='text'
           >
-            {showChartBlock ? <AddIcon /> : <BarChartIcon />}
+            <AppIcon
+              icon={showChartBlock ? 'AddIcon' : 'BarChartIcon'}
+              color={showChartBlock ? 'success' : 'warning'}
+            />
           </MDButton>
           <MDButton
             disabled={!isDashboard}
@@ -165,18 +155,18 @@ export const MenuBar = () => {
             iconOnly={true}
             variant='text'
           >
-            {accountsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            <AppIcon icon={accountsExpanded ? 'ExpandLessIcon' : 'ExpandMoreIcon'} color='info' />
           </MDButton>
           {city && (
             <MDButton
               disabled={!isDashboard}
               onClick={handleCityClick}
-              color='secondary'
+              color='info'
               iconOnly={true}
               variant='text'
               size='large'
               style={{ minWidth: 120 }}
-              startIcon={<LocationCityIcon />}
+              startIcon={<AppIcon icon='LocationCityIcon' color='info' />}
             >
               {city.name}
             </MDButton>
@@ -193,7 +183,7 @@ export const MenuBar = () => {
             </Menu>
           )}
           {city && (
-            <MDButton iconOnly={true} variant='text' color='success' size='large'>
+            <MDButton disabled iconOnly={true} variant='text' color='success' size='large'>
               {buildCityIcon(city.currency)}
             </MDButton>
           )}

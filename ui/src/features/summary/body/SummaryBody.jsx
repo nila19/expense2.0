@@ -13,7 +13,7 @@ import { formatAmt } from 'features/utils';
 
 import { searchExpenses, setSummaryFilter } from 'features/search/expenses/expenseSlice';
 
-const cellStyle = { textAlign: 'right', padding: '10px 8px', fontSize: 12 };
+const cellStyle = { textAlign: 'right', padding: '8px 8px', fontSize: 12 };
 
 const useStyles = makeStyles(() => ({
   tableRow: {
@@ -55,7 +55,7 @@ const SummaryCell = ({ row, month, idx, header, setGoToSearch }) => {
   const events = header || count > 0 ? { onClick, onMouseEnter, onMouseLeave } : {};
 
   return (
-    <Tooltip title={count > 1 ? count : ''} placement='right-start'>
+    <Tooltip title={count > 0 ? count : ''} placement='right-start'>
       <TableCell
         {...events}
         style={{
@@ -98,7 +98,7 @@ export const SummaryBody = ({ page, monthsForPage, gridRows, totalRow, setGoToSe
         gridRows.map((row) => (
           <TableRow key={row.category.id} className={classes.tableRow} hover>
             <TableCell style={{ ...cellStyle, textAlign: 'center' }}>
-              <AppIcon icon={row.category.icon} />
+              <AppIcon icon={row.category.icon} fontSize='medium' />
             </TableCell>
             <TableCell style={{ ...cellStyle, textAlign: 'left' }}>{row.category.mainDesc}</TableCell>
             <TableCell style={{ ...cellStyle, textAlign: 'left' }}>{row.category.subDesc}</TableCell>

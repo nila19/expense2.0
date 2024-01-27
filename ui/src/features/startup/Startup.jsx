@@ -8,11 +8,7 @@ import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
 
-import { LinearProgress, Typography } from '@mui/material';
-
-import ErrorIcon from '@mui/icons-material/Error';
-
-import MDSnackbar from 'components/MDSnackbar';
+import { LinearProgress, Typography, Alert } from '@mui/material';
 
 import { SOCKETS, COLOR } from 'app/config';
 import { axios } from 'app/axios';
@@ -65,11 +61,7 @@ export const Loading = ({ connected, inprogress }) => {
   const item = inprogress ? (
     <BorderLinearProgress className={classes.margin} color='secondary' />
   ) : (
-    <MDSnackbar
-      content={connected ? 'Trouble Loading data...' : 'Trouble connecting to backend...'}
-      color='danger'
-      icon={ErrorIcon}
-    />
+    <Alert severity='error'>{connected ? 'Trouble Loading data...' : 'Trouble connecting to backend...'}</Alert>
   );
   return (
     <div style={{ textAlign: 'center', width: '100%', height: '100%', marginTop: 300 }}>

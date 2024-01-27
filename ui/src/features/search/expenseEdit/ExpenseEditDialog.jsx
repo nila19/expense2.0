@@ -7,10 +7,9 @@ import _ from 'lodash';
 
 import { Grid, Box, Dialog, DialogContent } from '@mui/material';
 
-import SaveIcon from '@mui/icons-material/Save';
-
 import MDButton from 'components/MDButton';
 
+import { AppIcon } from 'components/app/AppIcon';
 import { AppCard } from 'components/app/AppCard';
 
 import { ICONS } from 'app/constants';
@@ -127,7 +126,7 @@ const ExpenseEditForm = ({
                 disabled={isSubmitting}
                 onClick={handleSubmit}
               >
-                <SaveIcon />
+                <AppIcon icon='SaveIcon' color='white' />
               </MDButton>
             </Grid>
           </Grid>

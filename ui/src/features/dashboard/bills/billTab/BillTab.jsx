@@ -5,13 +5,7 @@ import moment from 'moment';
 
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 
-// @mui/icons-material
-import PaymentIcon from '@mui/icons-material/Payment';
-import DehazeIcon from '@mui/icons-material/Dehaze';
-import FilterTiltShiftIcon from '@mui/icons-material/FilterTiltShift';
-import TouchAppIcon from '@mui/icons-material/TouchApp';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-
+import { AppIcon } from 'components/app/AppIcon';
 import { AppPagination } from 'components/app/AppPagination';
 
 import { COUNTS, COLOR } from 'app/config';
@@ -40,7 +34,7 @@ const buildBillActions = (bill, dispatch, setOpenEdit) => {
   if (!bill.closed && moment().isAfter(bill.billDt, 'day')) {
     actions.push(
       <GridActionsCellItem
-        icon={<FilterTiltShiftIcon fontSize='small' />}
+        icon={<AppIcon icon='FilterTiltShiftIcon' />}
         label='Close Bill'
         color='primary'
         onClick={() => handleBillClose(bill.id)}
@@ -52,7 +46,7 @@ const buildBillActions = (bill, dispatch, setOpenEdit) => {
   if (bill.closed && bill.balance > 0) {
     actions.push(
       <GridActionsCellItem
-        icon={<PaymentIcon fontSize='small' />}
+        icon={<AppIcon icon='PaymentIcon' />}
         label='Pay Bill'
         color='primary'
         onClick={() => handleBillPay(bill)}
@@ -122,17 +116,17 @@ export const BillTab = ({ paid, closed }) => {
         headerAlign: 'center',
         align: 'center',
         flex: 1,
-        renderHeader: () => <MenuOpenIcon fontSize='small' />,
+        renderHeader: () => <AppIcon icon='MenuOpenIcon' color='error' />,
         getActions: ({ row }) => [
           <GridActionsCellItem
-            icon={<DehazeIcon fontSize='small' />}
+            icon={<AppIcon icon='DehazeIcon' />}
             label='Filter Expenses'
             color={row.id === billFilter ? 'warning' : 'primary'}
             onClick={() => handleBillFilter(row.id)}
           />,
         ],
       },
-      { field: 'id', sortable: false, width: 100, headerName: 'ID' },
+      { field: 'id', sortable: false, headerAlign: 'center', align: 'center', flex: 1, headerName: 'ID' },
       {
         field: 'acctName',
         sortable: false,
@@ -185,7 +179,7 @@ export const BillTab = ({ paid, closed }) => {
         sortable: false,
         headerAlign: 'center',
         flex: 1.5,
-        renderHeader: () => <TouchAppIcon fontSize='small' />,
+        renderHeader: () => <AppIcon icon='TouchAppIcon' color='error' />,
         getActions: ({ row }) => buildBillActions(row, dispatch, setOpenEdit),
       },
     ];

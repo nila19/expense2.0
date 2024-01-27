@@ -24,7 +24,7 @@ const buildAppTabs = (tabs, handleTabChange) => {
           <Tooltip title={tabName} placement='top'>
             <Grid item xs={1} key={i}>
               <AppTabBadge badge={badge} idx={i} handleTabChange={handleTabChange}>
-                <AppIcon icon={tabIcon} clickable={true} color='white' />
+                <AppIcon icon={tabIcon} color='white' clickable />
               </AppTabBadge>
             </Grid>
           </Tooltip>

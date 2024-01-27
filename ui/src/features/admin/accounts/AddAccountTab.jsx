@@ -5,12 +5,10 @@ import { Formik, Form, Field } from 'formik';
 
 import { Grid, Box } from '@mui/material';
 
-import AddIcon from '@mui/icons-material/Add';
-
 import MDButton from 'components/MDButton';
 import MDTypography from 'components/MDTypography';
 
-import { buildIconOptions, buildColorOptions } from 'components/app/AppIcon';
+import { AppIcon, buildIconOptions, buildColorOptions } from 'components/app/AppIcon';
 
 import { acctSchema } from 'features/utils';
 import { FormikAmount, FormikCheckBox, FormikComboBox, FormikTextField } from 'features/inputs';
@@ -100,7 +98,7 @@ export const AddAccountTab = memo(() => {
                 <Grid item xs={12} sm={12} md={3}>
                   <Box display='flex' justifyContent='center' alignItems='center'>
                     <MDButton color='success' type='submit' variant='gradient' size='large' disabled={isSubmitting}>
-                      <AddIcon />
+                      <AppIcon icon='AddIcon' color='white' />
                     </MDButton>
                   </Box>
                 </Grid>

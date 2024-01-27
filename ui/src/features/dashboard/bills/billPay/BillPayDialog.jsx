@@ -8,11 +8,10 @@ import moment from 'moment';
 
 import { Grid, Dialog, DialogContent } from '@mui/material';
 
-import SaveIcon from '@mui/icons-material/Save';
-
 import MDButton from 'components/MDButton';
 
 import { AppCard } from 'components/app/AppCard';
+import { AppIcon } from 'components/app/AppIcon';
 
 import { ICONS } from 'app/constants';
 import { CustomTextField, FormikAmount, FormikComboBox, FormikDatePicker } from 'features/inputs';
@@ -95,7 +94,7 @@ const BillPayForm = ({ bill, accountOptions, setOpenEdit }) => {
                 disabled={isSubmitting}
                 onClick={handleSubmit}
               >
-                <SaveIcon />
+                <AppIcon icon='SaveIcon' color='white' />
               </MDButton>
             </Grid>
           </Grid>

@@ -7,10 +7,9 @@ import _ from 'lodash';
 
 import { Grid, Box } from '@mui/material';
 
-import SearchIcon from '@mui/icons-material/Search';
-
 import MDButton from 'components/MDButton';
 
+import { AppIcon } from 'components/app/AppIcon';
 import { FormikAmount, FormikComboBox, FormikSwitch } from 'features/inputs';
 import { buildCategoriesOptions, buildAccountOptions, buildMonthOptions, buildAdhocOptions } from 'features/utils';
 
@@ -140,7 +139,7 @@ export const SearchTab = memo(() => {
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
                   <MDButton color='primary' type='submit' variant='gradient' size='large' disabled={isSubmitting}>
-                    <SearchIcon />
+                    <AppIcon icon='SearchIcon' color='white' />
                   </MDButton>
                 </Grid>
               </Grid>

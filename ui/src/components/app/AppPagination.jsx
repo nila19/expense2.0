@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux';
 import { Grid, Icon, Tooltip } from '@mui/material';
 import { GridPagination } from '@mui/x-data-grid';
 
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-
 import MDTypography from 'components/MDTypography';
+
+import { AppIcon } from 'components/app/AppIcon';
 
 import { formatAmt } from 'features/utils';
 import { resetFilters } from 'features/dashboard/dashboardGlobalSlice';
@@ -24,8 +24,8 @@ export const AppPagination = (props) => {
       <Grid item xs={12} sm={12} md={1}>
         {props.filterApplied && (
           <Tooltip title='Reset Filter' placement='top'>
-            <Icon fontSize='small' title='Tally' color='error' onClick={() => handleResetFilters()}>
-              {<FilterAltIcon fontSize='small' style={{ top: '1px', cursor: 'pointer' }} />}
+            <Icon fontSize='small' title='Tally' onClick={() => handleResetFilters()}>
+              {<AppIcon icon='FilterAltIcon' color='error' clickable />}
             </Icon>
           </Tooltip>
         )}

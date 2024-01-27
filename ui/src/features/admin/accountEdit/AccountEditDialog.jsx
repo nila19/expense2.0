@@ -6,15 +6,13 @@ import _ from 'lodash';
 
 import { Grid, Box, Dialog, DialogContent } from '@mui/material';
 
-import SaveIcon from '@mui/icons-material/Save';
-
 import MDButton from 'components/MDButton';
 import MDTypography from 'components/MDTypography';
 
-import { AppCard } from 'components/app/AppCard';
-import { buildIconOptions, buildColorOptions } from 'components/app/AppIcon';
-
 import { ICONS } from 'app/constants';
+import { AppCard } from 'components/app/AppCard';
+import { AppIcon, buildIconOptions, buildColorOptions } from 'components/app/AppIcon';
+
 import { FormikAmount, FormikCheckBox, FormikComboBox, FormikTextField } from 'features/inputs';
 // import { editSchema } from "features/utils";
 
@@ -103,7 +101,7 @@ const AccountEditForm = ({ account, setOpenEdit }) => {
                   disabled={isSubmitting}
                   onClick={handleSubmit}
                 >
-                  <SaveIcon />
+                  <AppIcon icon='SaveIcon' color='white' />
                 </MDButton>
               </Box>
             </Grid>

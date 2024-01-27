@@ -11,7 +11,7 @@ import { AccountSection } from 'features/dashboard/accounts/AccountSection';
 import { BillSection } from 'features/dashboard/bills/BillSection';
 import { EntrySection } from 'features/dashboard/entry/EntrySection';
 import { ChartSection } from 'features/dashboard/chart/ChartSection';
-import { ExpenseSection } from 'features/search/expenses/ExpenseSection';
+import { ExpensesSection } from 'features/search/expenses/ExpensesSection';
 
 import { selectAppGlobal } from 'features/appGlobalSlice';
 import { clearSearchResults } from 'features/search/expenses/expenseSlice';
@@ -42,7 +42,7 @@ const Dashboard = () => {
       <Grid container spacing={2} style={{ marginTop: -5 }}>
         <Grid item lg={12}>
           <Suspense fallback={loading}>
-            <ExpenseSection section={EXPENSE_BLOCK.DASHBOARD} />
+            <ExpensesSection section={EXPENSE_BLOCK.DASHBOARD} />
           </Suspense>
         </Grid>
       </Grid>

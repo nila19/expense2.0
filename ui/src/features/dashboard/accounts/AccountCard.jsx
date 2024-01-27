@@ -3,14 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Card, Divider, Icon, Tooltip } from '@mui/material';
 
-// Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
-
-// @mui/icons-material
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import BlockIcon from '@mui/icons-material/Block';
-import BeenhereIcon from '@mui/icons-material/Beenhere';
 
 import { AppIcon } from 'components/app/AppIcon';
 
@@ -48,9 +42,9 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
   const tallyInfo = buildTallyInfo(account.tallyBalance, account.tallyDt);
   const billInfoColor = buildAccountBillInfoColor(account.billed, lastBill, openBill);
   const billInfoIcon = account.billed ? (
-    <AccessTimeIcon fontSize='small' style={{ top: '1px' }} />
+    <AppIcon icon='AccessTimeIcon' color={billInfoColor} />
   ) : (
-    <BlockIcon fontSize='small' style={{ top: '1px' }} />
+    <AppIcon icon='BlockIcon' color='warning' />
   );
   const billInfo = buildBillInfo(account.billed, lastBill, openBill);
 
@@ -88,8 +82,8 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
       <Divider style={{ margin: '0.5rem' }} />
       <MDBox pb={1} px={2} display='flex'>
         <Tooltip title='Tally' placement='top'>
-          <Icon fontSize='small' title='Tally' color={tallyInfoColor} onClick={() => handleTallyClick(account.id)}>
-            {<BeenhereIcon fontSize='small' style={{ top: '1px', cursor: 'pointer' }} />}
+          <Icon fontSize='small' title='Tally' onClick={() => handleTallyClick(account.id)}>
+            {<AppIcon icon='BeenhereIcon' color={tallyInfoColor} clickable />}
           </Icon>
         </Tooltip>
         <MDTypography component='p' variant='button' fontSize='small' color='secondary' display='flex'>
