@@ -110,6 +110,7 @@ const iconMap = {
   credit_card: CreditCardIcon,
   account_balance: AccountBalanceIcon,
   attach_money: AttachMoneyIcon,
+  savings: MuseumIcon,
   museum: MuseumIcon,
   AccessTimeIcon: AccessTimeIcon,
   BlockIcon: BlockIcon,

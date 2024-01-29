@@ -50,10 +50,10 @@ export const buildAccountTallyInfoColor = memoize((tallyDt) => {
 
 export const buildAccountBillInfoColor = memoize((billed, lastBill, openBill) => {
   if (!billed) {
-    return 'warning';
+    return 'secondary';
   }
   if (lastBill && lastBill.balance > 0) {
-    return 'primary';
+    return 'warning';
   }
   if (openBill) {
     return 'info';

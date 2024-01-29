@@ -29,7 +29,7 @@ const Dashboard = () => {
   return (
     <>
       <AccountSection />
-      <Grid container spacing={2} style={{ marginTop: -10 }}>
+      <Grid container spacing={1} style={{ marginTop: 5 }}>
         <Grid item lg={6}>
           <Suspense fallback={loading}>
             <BillSection />
@@ -39,7 +39,7 @@ const Dashboard = () => {
           <Suspense fallback={loading}>{showChartBlock ? <ChartSection /> : <EntrySection />}</Suspense>
         </Grid>
       </Grid>
-      <Grid container spacing={2} style={{ marginTop: -5 }}>
+      <Grid container spacing={1} style={{ marginTop: 5 }}>
         <Grid item lg={12}>
           <Suspense fallback={loading}>
             <ExpensesSection section={EXPENSE_BLOCK.DASHBOARD} />

@@ -49,7 +49,7 @@ export const AppSection = ({ headerColor, title, content, tabs }) => {
   const getContent = () => content || getTabContent(currentTab);
 
   return (
-    <Card sx={{ marginTop: '35px', marginLeft: '5px', marginRight: '10px' }}>
+    <Card sx={{ marginTop: '35px', marginLeft: '5px', marginRight: '5px' }}>
       <MDBox padding='0.25rem'>
         <MDBox
           variant='gradient'

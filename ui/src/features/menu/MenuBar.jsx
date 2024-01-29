@@ -124,24 +124,10 @@ export const MenuBar = () => {
           <MDButton variant='text' color={isNonPROD ? 'warning' : 'success'} size='large'>
             {env}
           </MDButton>
-          <MDButton
-            disabled={!isDashboard}
-            onClick={handleReloadDashboard}
-            color={reloadDashboard ? 'warning' : 'error'}
-            iconOnly={true}
-            variant='text'
-            size='large'
-          >
-            <AppIcon icon='AutorenewIcon' color={reloadDashboard ? 'warning' : 'error'} />
+          <MDButton disabled={!isDashboard} onClick={handleReloadDashboard} iconOnly={true} variant='text' size='large'>
+            <AppIcon icon='AutorenewIcon' color={reloadDashboard ? 'error' : 'warning'} />
           </MDButton>
-          <MDButton
-            disabled={!isDashboard}
-            onClick={handleShowChartBlock}
-            color={showChartBlock ? 'success' : 'warning'}
-            size='large'
-            iconOnly={true}
-            variant='text'
-          >
+          <MDButton disabled={!isDashboard} onClick={handleShowChartBlock} size='large' iconOnly={true} variant='text'>
             <AppIcon
               icon={showChartBlock ? 'AddIcon' : 'BarChartIcon'}
               color={showChartBlock ? 'success' : 'warning'}

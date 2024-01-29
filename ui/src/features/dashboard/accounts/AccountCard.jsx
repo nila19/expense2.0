@@ -22,7 +22,6 @@ import {
   findBill,
 } from 'features/dashboard/accounts/accountUtils';
 
-// TODO - create common component, move icons to CONSTANTS
 const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
   const dispatch = useDispatch();
 
@@ -41,11 +40,6 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
   const tallyInfoColor = buildAccountTallyInfoColor(account.tallyDt);
   const tallyInfo = buildTallyInfo(account.tallyBalance, account.tallyDt);
   const billInfoColor = buildAccountBillInfoColor(account.billed, lastBill, openBill);
-  const billInfoIcon = account.billed ? (
-    <AppIcon icon='AccessTimeIcon' color={billInfoColor} />
-  ) : (
-    <AppIcon icon='BlockIcon' color='warning' />
-  );
   const billInfo = buildBillInfo(account.billed, lastBill, openBill);
 
   return (
@@ -92,7 +86,7 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
       </MDBox>
       <MDBox pb={2} px={2} display='flex'>
         <Icon fontSize='small' color={billInfoColor}>
-          {billInfoIcon}
+          <AppIcon icon={account.billed ? 'AccessTimeIcon' : 'BlockIcon'} color={billInfoColor} />
         </Icon>
         <MDTypography component='p' variant='button' fontSize='small' color='secondary' display='flex'>
           &nbsp;&nbsp;{billInfo}
