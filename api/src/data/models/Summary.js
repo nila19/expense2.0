@@ -14,10 +14,17 @@ class SummaryModel extends Model {
     this.schema = SummaryType;
   }
 
-  findForCity(db, cityId, regular, adhoc) {
-    const filter = { cityId };
+  findForCity(db, cityId, regular, adhoc, recurring, nonRecurring) {
+    let filter = { cityId };
     if (!(regular && adhoc)) {
       filter.adhoc = adhoc;
+    }
+    if (!(recurring && nonRecurring)) {
+      if (recurring) {
+        filter.recurring = recurring;
+      } else {
+        filter = { ...filter, $or: [{ recurring: { $exists: false } }, { recurring: { $eq: false } }] };
+      }
     }
     return super.find(db, filter);
   }
@@ -31,17 +38,17 @@ class SummaryModel extends Model {
     return super.find(db, filter);
   }
 
-  incrementOrInsert(db, cityId, category, transMonth, adhoc, amount) {
-    const filter = { cityId, category, transMonth, adhoc };
+  incrementOrInsert(db, cityId, category, transMonth, adhoc, recurring, amount) {
+    const filter = { cityId, category, transMonth, adhoc, recurring };
     const mod = {
       $inc: { count: 1, amount: amount },
-      $set: { cityId, category, transMonth, adhoc },
+      $set: { cityId, category, transMonth, adhoc, recurring },
     };
     return super.updateOne(db, filter, mod, { upsert: true });
   }
 
-  decrement(db, cityId, category, transMonth, adhoc, amount) {
-    const filter = { cityId, category, transMonth, adhoc };
+  decrement(db, cityId, category, transMonth, adhoc, recurring, amount) {
+    const filter = { cityId, category, transMonth, adhoc, recurring };
     const mod = { $inc: { count: -1, amount: -amount } };
     return super.updateOne(db, filter, mod);
   }

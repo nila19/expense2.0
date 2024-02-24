@@ -10,7 +10,15 @@ export const addToLookups = async (db, tran) => {
   await monthModel.incrementOrInsert(db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
   if (!tran.adjust && tran.category?.id) {
     const category = { id: tran.category.id, name: tran.category.name };
-    await summaryModel.incrementOrInsert(db, tran.cityId, category, tran.transMonth, tran.adhoc, tran.amount);
+    await summaryModel.incrementOrInsert(
+      db,
+      tran.cityId,
+      category,
+      tran.transMonth,
+      tran.adhoc,
+      tran.recurring,
+      tran.amount
+    );
   }
 };
 
@@ -20,6 +28,6 @@ export const removeFromLookups = async (db, tran) => {
   await monthModel.decrement(db, tran.cityId, MONTH_TYPE.TRANS, tran.transMonth);
   if (!tran.adjust && tran.category?.id) {
     const category = { id: tran.category.id, name: tran.category.name };
-    await summaryModel.decrement(db, tran.cityId, category, tran.transMonth, tran.adhoc, tran.amount);
+    await summaryModel.decrement(db, tran.cityId, category, tran.transMonth, tran.adhoc, tran.recurring, tran.amount);
   }
 };

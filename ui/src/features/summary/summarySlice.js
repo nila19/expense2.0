@@ -7,9 +7,24 @@ import { selectAppGlobal } from 'features/appGlobalSlice';
 
 export const loadSummary = createAsyncThunk('summary/loadSummary', async (payload = {}, thunkApi) => {
   const { selectedCity } = selectAppGlobal(thunkApi.getState());
-  let { forecast = false, regular = true, adhoc = true, cityId = null } = payload;
+  let {
+    forecast = false,
+    regular = true,
+    adhoc = true,
+    recurring = true,
+    nonRecurring = true,
+    cityId = null,
+  } = payload;
   cityId = cityId || selectedCity;
-  const { data } = await axios().post(API.SUMMARY.SUMMARY, { cityId, forecast, regular, adhoc });
+
+  const { data } = await axios().post(API.SUMMARY.SUMMARY, {
+    cityId,
+    forecast,
+    regular,
+    adhoc,
+    recurring,
+    nonRecurring,
+  });
   return data.data;
 });
 

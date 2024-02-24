@@ -65,6 +65,7 @@ export const TransactionType = joi.object({
   bill: BillTypeMin.allow(null),
   adhoc: joi.boolean(),
   adjust: joi.boolean(),
+  recurring: joi.boolean(),
   status: joi.boolean(),
   tallied: joi.boolean(),
   tallyDt: joi.string().allow(null),

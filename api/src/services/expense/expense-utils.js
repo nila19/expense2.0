@@ -35,6 +35,7 @@ export const buildTranBasic = (data) => {
     transYear: transDt.year(),
     adhoc: data.adhoc,
     adjust: data.adjust,
+    recurring: data.recurring,
     status: true,
     tallied: false,
     tallyDt: null,

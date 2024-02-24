@@ -25,14 +25,14 @@ export const buildSummary = async ({ forecast, ...others }) => {
 };
 
 // step - 0 : initial method to fetch all data from DB..
-const getDataFromDB = async ({ db, log, cityId, regular, adhoc }) => {
+const getDataFromDB = async ({ db, log, cityId, regular, adhoc, recurring, nonRecurring }) => {
   const categories = await categoryModel.findForCity(db, cityId);
 
   const transMonths = await monthModel.findForCity(db, cityId, MONTH_TYPE.TRANS);
   const _months = transMonths.map((e) => e.id);
   const months = buildMonthsList(_months, log);
 
-  const summaries = await summaryModel.findForCity(db, cityId, regular, adhoc);
+  const summaries = await summaryModel.findForCity(db, cityId, regular, adhoc, recurring, nonRecurring);
   const forecastSummaries = await summaryModel.findForForecast(db, cityId);
   return { categories, months, summaries, forecastSummaries };
 };

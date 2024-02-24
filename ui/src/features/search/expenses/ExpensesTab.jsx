@@ -218,8 +218,8 @@ export const ExpensesTab = ({ expenses, rowsPerPage }) => {
         flex: 1.5,
         renderHeader: () => <AppIcon icon='FlagIcon' color='error' />,
         renderCell: ({ row }) => {
-          return row.adjust || row.adhoc ? (
-            <AppIcon icon={row.adjust ? 'TransformIcon' : 'ShoppingBasketIcon'} />
+          return row.adjust || row.adhoc || row.recurring ? (
+            <AppIcon icon={row.adjust ? 'TransformIcon' : row.recurring ? 'AutorenewIcon' : 'ShoppingBasketIcon'} />
           ) : (
             <></>
           );

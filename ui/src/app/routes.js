@@ -59,6 +59,6 @@ const buildRoutes = (routes) =>
 export const AppRoutes = () => (
   <Routes>
     {buildRoutes(routes)}
-    <Route path='*' element={<Navigate to='/dashboard' />} />
+    <Route path='*' element={<Navigate to='/dashboard' />} key={'default'} />
   </Routes>
 );

@@ -19,6 +19,7 @@ const entrySlice = createSlice({
     amount: null,
     transDt: null,
     adhoc: null,
+    recurring: null,
   },
   reducers: {
     setFrom: (state, action) => {
@@ -42,6 +43,9 @@ const entrySlice = createSlice({
     setAdhoc: (state, action) => {
       state.adhoc = action.payload.value;
     },
+    setRecurring: (state, action) => {
+      state.recurring = action.payload.value;
+    },
     resetEntry: (state) => {
       state.description = null;
       state.amount = null;
@@ -51,5 +55,6 @@ const entrySlice = createSlice({
 
 export const selectEntry = (state) => state.dashboard.entry;
 
-export const { setFrom, setTo, setCategory, setDesc, setAmount, setTransDt, setAdhoc, resetEntry } = entrySlice.actions;
+export const { setFrom, setTo, setCategory, setDesc, setAmount, setTransDt, setAdhoc, setRecurring, resetEntry } =
+  entrySlice.actions;
 export default entrySlice.reducer;

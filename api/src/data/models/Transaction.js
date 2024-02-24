@@ -18,6 +18,7 @@ const searchForm = {
   amount: 'float',
   adhoc: 'string default-N',
   adjust: 'string default-N',
+  recurring: 'string default-N',
   entryMonth: { id: 'date', year: 'boolean' },
   transMonth: { id: 'date', year: 'boolean' },
   allRecords: 'boolean',

@@ -30,6 +30,7 @@ const initialValues = memoize((summaryFilter) =>
       entryMonth: { id: null, year: false },
       adjust: null,
       adhoc: null,
+      recurring: null,
     },
     summaryFilter
   )
@@ -126,11 +127,20 @@ export const SearchTab = memo(() => {
             </Grid>
             <Grid item xs={12} sm={12} md={3} marginTop={2}>
               <Grid container spacing={2} alignItems='center' justifyContent='center'>
-                <Grid item xs={12} sm={12} md={3}>
+                <Grid item xs={12} sm={4} md={2}>
                   <Field name='adjust' id='adjust' label='Adjust' component={FormikComboBox} options={adhocOptions} />
                 </Grid>
-                <Grid item xs={12} sm={12} md={3}>
+                <Grid item xs={12} sm={4} md={2}>
                   <Field name='adhoc' id='adhoc' label='Adhoc' component={FormikComboBox} options={adhocOptions} />
+                </Grid>
+                <Grid item xs={12} sm={4} md={2}>
+                  <Field
+                    name='recurring'
+                    id='recurring'
+                    label='Recurring'
+                    component={FormikComboBox}
+                    options={adhocOptions}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={12} md={3}>
                   <Box display='flex' justifyContent='center' alignItems='center'>

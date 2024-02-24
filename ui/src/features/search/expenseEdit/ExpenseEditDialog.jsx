@@ -112,9 +112,16 @@ const ExpenseEditForm = ({
             <Grid item xs={12} sm={12} md={4} marginTop={1}>
               <Field name='transDt' id='transDt' label='Date' component={FormikDatePicker} />
             </Grid>
-            <Grid item xs={12} sm={12} md={2} marginTop={1}>
+            <Grid item xs={12} sm={6} md={1} marginTop={1}>
               <Box display='flex' justifyContent='center' alignItems='center'>
                 {!expense.adjust && <Field name='adhoc' id='adhoc' title='Adhoc' component={FormikCheckBox} />}
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6} md={1} marginTop={1}>
+              <Box display='flex' justifyContent='center' alignItems='center'>
+                {!expense.adjust && (
+                  <Field name='recurring' id='recurring' title='Recurring' component={FormikCheckBox} />
+                )}
               </Box>
             </Grid>
             <Grid item xs={12} sm={12} md={2} marginTop={1}>

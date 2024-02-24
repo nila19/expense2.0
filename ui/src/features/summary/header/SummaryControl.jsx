@@ -13,20 +13,32 @@ export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
   const [forecast, setForecast] = useState(false);
   const [regular, setRegular] = useState(true);
   const [adhoc, setAdhoc] = useState(true);
+  const [recurring, setRecurring] = useState(true);
+  const [nonRecurring, setNonRecurring] = useState(true);
 
   const toggleForecast = () => {
     setForecast(!forecast);
-    dispatch(loadSummary({ forecast: !forecast, regular, adhoc }));
+    dispatch(loadSummary({ forecast: !forecast, regular, adhoc, recurring, nonRecurring }));
   };
 
   const toggleRegular = () => {
     setRegular(!regular);
-    dispatch(loadSummary({ forecast, regular: !regular, adhoc }));
+    dispatch(loadSummary({ forecast, regular: !regular, adhoc, recurring, nonRecurring }));
   };
 
   const toggleAdhoc = () => {
     setAdhoc(!adhoc);
-    dispatch(loadSummary({ forecast, regular, adhoc: !adhoc }));
+    dispatch(loadSummary({ forecast, regular, adhoc: !adhoc, recurring, nonRecurring }));
+  };
+
+  const toggleRecurring = () => {
+    setRecurring(!recurring);
+    dispatch(loadSummary({ forecast, regular, adhoc, recurring: !recurring, nonRecurring }));
+  };
+
+  const toggleNonRecurring = () => {
+    setNonRecurring(!nonRecurring);
+    dispatch(loadSummary({ forecast, regular, adhoc, recurring, nonRecurring: !nonRecurring }));
   };
 
   return (
@@ -35,11 +47,29 @@ export const SummaryControl = ({ hasNext, hasPrevious, changePage }) => {
         <Grid item xs={12} sm={12} md={2}>
           <CustomCheckBox id='forecast' title='Forecast' checked={forecast} onClick={toggleForecast} />
         </Grid>
-        <Grid item xs={12} sm={12} md={2}>
-          <CustomCheckBox id='regular' title='Regular' disabled={!adhoc} checked={regular} onClick={toggleRegular} />
-        </Grid>
-        <Grid item xs={12} sm={12} md={2}>
+        <Grid item xs={12} sm={12} md={1}>
           <CustomCheckBox id='adhoc' title='Adhoc' disabled={!regular} checked={adhoc} onClick={toggleAdhoc} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={1}>
+          <CustomCheckBox id='regular' title='Non Adhoc' disabled={!adhoc} checked={regular} onClick={toggleRegular} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={1}>
+          <CustomCheckBox
+            id='recurring'
+            title='Recurring'
+            disabled={!nonRecurring}
+            checked={recurring}
+            onClick={toggleRecurring}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={1}>
+          <CustomCheckBox
+            id='nonRecurring'
+            title='Non Recurring'
+            disabled={!recurring}
+            checked={nonRecurring}
+            onClick={toggleNonRecurring}
+          />
         </Grid>
         <Grid item xs={12} sm={12} md={2}></Grid>
         <Grid item xs={12} sm={12} md={2}>

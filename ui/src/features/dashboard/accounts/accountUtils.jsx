@@ -22,41 +22,35 @@ export const buildAccountColor = memoize((color) => {
   }
 });
 
-export const buildTallyInfo = memoize((tallyBalance, tallyDt) => {
-  const tallyAmt = formatAmt(tallyBalance, true);
-  const tallyDate = moment(tallyDt, FORMATS.YYYYMMDDHHmmss).format(FORMATS.DDMMMYYYYHHMM);
-  return tallyAmt + ' @ ' + tallyDate;
-});
-
-export const buildBillInfo = memoize((billed, lastBill, openBill) => {
-  if (!billed) {
-    return 'No bills.';
-  }
-  if (lastBill && lastBill.balance > 0) {
-    const dueAmt = formatAmt(lastBill.balance, true);
-    const dueDt = formatDate(lastBill.dueDt, FORMATS.DDMMM);
-    return dueAmt + ' (Due on ' + dueDt + ')';
-  }
-  if (openBill) {
-    const billDt = formatDate(openBill.billDt, FORMATS.DDMMM);
-    return 'Next bill on ' + billDt;
-  }
-});
-
-export const buildAccountTallyInfoColor = memoize((tallyDt) => {
+export const buildTallyInfoColor = memoize((tallyDt) => {
   const sameDay = moment(tallyDt, FORMATS.YYYYMMDDHHmmss).isSame(moment(), 'day');
   return sameDay ? 'success' : 'warning';
 });
 
-export const buildAccountBillInfoColor = memoize((billed, lastBill, openBill) => {
-  if (!billed) {
-    return 'secondary';
-  }
-  if (lastBill && lastBill.balance > 0) {
+export const buildTallyInfo = memoize((tallyBalance, tallyDt) => {
+  const tallyAmt = formatAmt(tallyBalance, false);
+  const tallyDate = moment(tallyDt, FORMATS.YYYYMMDDHHmmss).format(FORMATS.DDMMMYYYYHHMM);
+  return tallyAmt + ' @ ' + tallyDate;
+});
+
+export const buildBillInfoColor = memoize((billed, hasLastBill) => {
+  if (hasLastBill) {
     return 'warning';
   }
-  if (openBill) {
-    return 'info';
+  return billed ? 'info' : 'secondary';
+});
+
+export const buildBillInfo = memoize((billed, hasLastBill, lastBill, openBill) => {
+  if (hasLastBill) {
+    const dueAmt = formatAmt(lastBill.balance, false);
+    const dueDt = formatDate(lastBill.dueDt, FORMATS.DDMMM);
+    return dueAmt + ' due ' + dueDt;
+  }
+  if (billed) {
+    const billDt = formatDate(openBill.billDt, FORMATS.DDMMM);
+    return 'Next Bill ' + billDt;
+  } else {
+    return 'No bills.';
   }
 });
 

@@ -48,6 +48,9 @@ const buildSearchFilterOne = (form) => {
   if (form.adjust) {
     filter.adjust = form.adjust === 'Y';
   }
+  if (form.recurring) {
+    filter.recurring = form.recurring === 'Y';
+  }
   return filter;
 };
 

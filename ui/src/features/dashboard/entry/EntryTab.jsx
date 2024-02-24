@@ -21,12 +21,13 @@ import {
   setAmount,
   setTransDt,
   setAdhoc,
+  setRecurring,
 } from 'features/dashboard/entry/entrySlice';
 
 export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions, categoriesOptions }) => {
   const dispatch = useDispatch();
 
-  const { accounts, category, description, amount, transDt, adhoc } = useSelector(selectEntry);
+  const { accounts, category, description, amount, transDt, adhoc, recurring } = useSelector(selectEntry);
 
   const initialValues = (adjust) => ({
     adjust: adjust,
@@ -39,6 +40,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
     amount: amount ? amount : '',
     transDt: transDt,
     adhoc: adhoc ? adhoc : false,
+    recurring: recurring ? recurring : false,
   });
 
   const fixCategory = (values) => {
@@ -56,6 +58,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
   const handleAmount = (field, value) => dispatch(setAmount({ field, value }));
   const handleTransDt = (field, value) => dispatch(setTransDt({ field, value }));
   const handleAdhoc = (field, value) => dispatch(setAdhoc({ field, value }));
+  const handleRecurring = (field, value) => dispatch(setRecurring({ field, value }));
 
   return (
     <div
@@ -144,7 +147,7 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                   component={FormikDatePicker}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} md={2}>
+              <Grid item xs={12} sm={6} md={1}>
                 <Box display='flex' justifyContent='center' alignItems='center'>
                   {!adjust && (
                     <Field
@@ -152,6 +155,19 @@ export const EntryTab = memo(({ adjust, descriptions, categories, accountOptions
                       id='adhoc'
                       title='Adhoc'
                       onFieldChange={handleAdhoc}
+                      component={FormikCheckBox}
+                    />
+                  )}
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={6} md={1}>
+                <Box display='flex' justifyContent='center' alignItems='center'>
+                  {!adjust && (
+                    <Field
+                      name='recurring'
+                      id='recurring'
+                      title='Recurring'
+                      onFieldChange={handleRecurring}
                       component={FormikCheckBox}
                     />
                   )}

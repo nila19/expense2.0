@@ -11,7 +11,7 @@ const appGlobalSlice = createSlice({
   name: 'appGlobal',
   initialState: {
     selectedCity: null,
-    accountsExpanded: false,
+    accountsExpanded: true,
     showChartBlock: false,
   },
   reducers: {

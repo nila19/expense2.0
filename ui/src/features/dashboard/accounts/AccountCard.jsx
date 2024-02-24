@@ -17,8 +17,8 @@ import {
   buildAccountColor,
   buildTallyInfo,
   buildBillInfo,
-  buildAccountTallyInfoColor,
-  buildAccountBillInfoColor,
+  buildTallyInfoColor,
+  buildBillInfoColor,
   findBill,
 } from 'features/dashboard/accounts/accountUtils';
 
@@ -37,10 +37,17 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
   const acctIcon = <AppIcon icon={account.icon} color='white' />;
   const title1 = account.name + ' #' + account.id + '';
   const title2 = formatAmt(account.balance, false);
-  const tallyInfoColor = buildAccountTallyInfoColor(account.tallyDt);
+  const tallyInfoColor = buildTallyInfoColor(account.tallyDt);
   const tallyInfo = buildTallyInfo(account.tallyBalance, account.tallyDt);
-  const billInfoColor = buildAccountBillInfoColor(account.billed, lastBill, openBill);
-  const billInfo = buildBillInfo(account.billed, lastBill, openBill);
+
+  const billed = account.billed && openBill;
+  const hasLastBill = lastBill && lastBill.balance > 0;
+
+  const openBillColor = buildBillInfoColor(billed, false);
+  const openBillInfo = buildBillInfo(billed, false, lastBill, openBill);
+
+  const lastBillColor = buildBillInfoColor(billed, hasLastBill);
+  const lastBillInfo = buildBillInfo(billed, hasLastBill, lastBill, openBill);
 
   return (
     <Card style={{ marginTop: '0px', marginBottom: '0px' }}>
@@ -80,17 +87,48 @@ const AccountCardUI = memo(({ account, isSelected, lastBill, openBill }) => {
             {<AppIcon icon='BeenhereIcon' color={tallyInfoColor} clickable />}
           </Icon>
         </Tooltip>
-        <MDTypography component='p' variant='button' fontSize='small' color='secondary' display='flex'>
-          &nbsp;&nbsp;{tallyInfo}
+        <MDTypography
+          component='p'
+          variant='button'
+          fontSize='small'
+          color='secondary'
+          display='flex'
+          style={{ paddingLeft: '3px' }}
+        >
+          {tallyInfo}
         </MDTypography>
       </MDBox>
       <MDBox pb={2} px={2} display='flex'>
-        <Icon fontSize='small' color={billInfoColor}>
-          <AppIcon icon={account.billed ? 'AccessTimeIcon' : 'BlockIcon'} color={billInfoColor} />
+        <Icon fontSize='small' color={openBillColor}>
+          <AppIcon icon={billed ? 'AccessTimeIcon' : 'BlockIcon'} color={openBillColor} />
         </Icon>
-        <MDTypography component='p' variant='button' fontSize='small' color='secondary' display='flex'>
-          &nbsp;&nbsp;{billInfo}
+        <MDTypography
+          component='p'
+          variant='button'
+          fontSize='small'
+          color='secondary'
+          display='flex'
+          style={{ paddingLeft: '3px', paddingRight: '6px' }}
+        >
+          {openBillInfo}
         </MDTypography>
+        {billed && hasLastBill && (
+          <>
+            <Icon fontSize='small' color={lastBillColor}>
+              <AppIcon icon='AccessTimeIcon' color={lastBillColor} />
+            </Icon>
+            <MDTypography
+              component='p'
+              variant='button'
+              fontSize='small'
+              color='secondary'
+              display='flex'
+              style={{ paddingLeft: '3px' }}
+            >
+              {lastBillInfo}
+            </MDTypography>
+          </>
+        )}
       </MDBox>
     </Card>
   );

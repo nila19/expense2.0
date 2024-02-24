@@ -89,6 +89,7 @@ export const modifyTransaction = (db, tran) => {
       transYear: tran.transYear,
       adhoc: tran.adhoc,
       adjust: tran.adjust,
+      recurring: tran.recurring,
       tallied: tran.tallied,
       tallyDt: tran.tallyDt,
       accounts: tran.accounts,

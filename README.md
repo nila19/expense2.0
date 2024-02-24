@@ -42,8 +42,8 @@ In the project directory, you can run:
 - App runs under [http://localhost:80](http://localhost:80)
 
 - `docker login --username=balavigneswaran --password=<pwd>`
-- `docker push balavigneswaran/exp-api:2.34`
-- `docker push balavigneswaran/exp-ui:3.34`
+- `docker push balavigneswaran/exp-api:3.35`
+- `docker push balavigneswaran/exp-ui:3.35`
 
 ## Database
 
